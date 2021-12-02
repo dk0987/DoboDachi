@@ -1,6 +1,7 @@
 package com.devdk.socialmedia.core.presentation.util
 
 import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.rememberScaffoldState
@@ -19,13 +20,14 @@ import com.devdk.socialmedia.feature_post.presentation.add_post_screen.AddPost
 import com.devdk.socialmedia.feature_post.presentation.feed_screen.Feed
 import com.devdk.socialmedia.feature_post.presentation.post_detail_screen.PostDetail
 
+@ExperimentalMaterialApi
 @ExperimentalAnimationApi
 @Composable
 fun Navigation() {
     val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val bottomNavigation = listOf<BottomNavigationItem>(
+     val bottomNavigation = listOf(
         BottomNavigationItem(
             Icons.Outlined.Home,
             stringResource(id = R.string.home),
