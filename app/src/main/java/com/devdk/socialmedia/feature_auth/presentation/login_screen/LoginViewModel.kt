@@ -3,15 +3,25 @@ package com.devdk.socialmedia.feature_auth.presentation.login_screen
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.devdk.socialmedia.core.presentation.util.Error
 import com.devdk.socialmedia.core.presentation.states.StandardTextFieldStates
+import com.devdk.socialmedia.core.presentation.util.Navigation
+import com.devdk.socialmedia.core.presentation.util.Routes
+import com.devdk.socialmedia.feature_auth.domain.modal.RegisterUser
+import com.devdk.socialmedia.feature_auth.domain.use_cases.AuthenticateUseCase
+import com.devdk.socialmedia.feature_auth.domain.use_cases.LoginUseCase
+import com.devdk.socialmedia.feature_auth.presentation.util.UiEvent
 import com.devdk.socialmedia.feature_auth.presentation.util.Validation
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val validation: Validation
+    private val loginUseCase: LoginUseCase
 ) : ViewModel() {
 
     private val _eMailTextFieldState = mutableStateOf(StandardTextFieldStates())
@@ -19,6 +29,9 @@ class LoginViewModel @Inject constructor(
 
     private val _passwordTextFieldState = mutableStateOf(StandardTextFieldStates())
     val passwordTextFieldState : State<StandardTextFieldStates> = _passwordTextFieldState
+
+    private val _eventFlow = MutableSharedFlow<UiEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
 
     fun onEvent(events: LoginEvents){
         when(events){
@@ -44,32 +57,44 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun login() {
-        val emailError = validation.validateEmail(eMailTextFieldState.value.text)
-        val passwordError = validation.validatePassword(passwordTextFieldState.value.text)
-        if (emailError != null){
-            _eMailTextFieldState.value = eMailTextFieldState.value.copy(
-                isError = true,
-                error = emailError
-            )
-        }
-        else {
-            _eMailTextFieldState.value = eMailTextFieldState.value.copy(
-                isError = false,
-            )
-        }
-        if (passwordError?.contains(Error.FIELD_EMPTY) == true || passwordError?.contains(Error.SHORT_LENGTH) == true){
-            _passwordTextFieldState.value = passwordTextFieldState.value.copy(
-                isError = true,
-                error = passwordError
-            )
-        }
-        else{
-            _passwordTextFieldState.value = passwordTextFieldState.value.copy(
-                isError = false,
-            )
-        }
-        if (!eMailTextFieldState.value.isError && !passwordTextFieldState.value.isError){
-
+        viewModelScope.launch {
+            val email = eMailTextFieldState.value.text
+            val password = passwordTextFieldState.value.text
+            val error = loginUseCase(email, password)
+            if (error == null){
+                _eventFlow.emit(
+                    UiEvent.Navigate(Routes.Feed.screen)
+                )
+            }
+            else{
+                if (error.emailError != null){
+                    _eMailTextFieldState.value = eMailTextFieldState.value.copy(
+                        isError = true ,
+                        error = error.emailError!!
+                    )
+                }
+                else{
+                    _eMailTextFieldState.value = eMailTextFieldState.value.copy(
+                        isError = false ,
+                    )
+                }
+                if (error.passwordError != null){
+                    _passwordTextFieldState.value = passwordTextFieldState.value.copy(
+                        isError = true ,
+                        error = error.passwordError!!
+                    )
+                }
+                else{
+                    _passwordTextFieldState.value = passwordTextFieldState.value.copy(
+                        isError = false ,
+                    )
+                }
+                if (error.responseError != null){
+                    _eventFlow.emit(
+                        UiEvent.ShowSnackBar(error.responseError)
+                    )
+                }
+            }
         }
     }
 

@@ -3,6 +3,7 @@ package com.devdk.socialmedia.core.presentation.util
 import com.devdk.socialmedia.R
 
 sealed class Routes(val screen : String) {
+    object Splash : Routes("Splash Screen")
     object Login : Routes(R.string.login_screen.toString())
     object Register : Routes(R.string.register_screen.toString())
     object Feed : Routes(R.string.feed_screen.toString())

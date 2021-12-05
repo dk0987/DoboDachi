@@ -1,6 +1,5 @@
 package com.devdk.socialmedia.feature_auth.presentation.util
 
-import android.util.Patterns
 import com.devdk.socialmedia.core.presentation.util.Error.FIELD_EMPTY
 import com.devdk.socialmedia.core.presentation.util.Error.INVALID_EMAIL
 import com.devdk.socialmedia.core.presentation.util.Error.SHORT_LENGTH

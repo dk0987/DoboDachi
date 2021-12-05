@@ -4,8 +4,10 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -24,15 +26,33 @@ import com.devdk.socialmedia.core.presentation.ui.theme.background
 import com.devdk.socialmedia.core.presentation.ui.theme.onBackground
 import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
 import com.devdk.socialmedia.core.presentation.util.Routes
+import com.devdk.socialmedia.feature_auth.presentation.util.UiEvent
+import kotlinx.coroutines.flow.collectLatest
 
 @SuppressLint("PrivateResource")
 @Composable
 fun Login(
     navController: NavController,
-    loginViewModel: LoginViewModel = hiltViewModel()
+    loginViewModel: LoginViewModel = hiltViewModel(),
+    scaffoldState: ScaffoldState
 ) {
     val usernameState = loginViewModel.eMailTextFieldState.value
     val passwordState = loginViewModel.passwordTextFieldState.value
+
+    LaunchedEffect(key1 = true ){
+        loginViewModel.eventFlow.collectLatest {event ->
+            when(event){
+                is UiEvent.Navigate -> {
+                    navController.popBackStack()
+                    navController.navigate(event.route)
+                }
+                is UiEvent.ShowSnackBar -> {
+                    scaffoldState.snackbarHostState.showSnackbar(event.message.toString())
+                }
+            }
+        }
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -77,8 +97,6 @@ fun Login(
                 text = stringResource(id = R.string.sign_in),
                 onClick = {
                     loginViewModel.onEvent(LoginEvents.Login)
-                    navController.popBackStack()
-                    navController.navigate(Routes.Feed.screen)
                 },
             )
         }

@@ -1,6 +1,5 @@
 package com.devdk.socialmedia.core.presentation.util
 
-import android.graphics.drawable.Icon
 import androidx.compose.ui.graphics.vector.ImageVector
 
 data class BottomNavigationItem(

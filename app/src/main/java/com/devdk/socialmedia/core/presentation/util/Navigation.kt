@@ -16,6 +16,7 @@ import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.components.StandardScaffold
 import com.devdk.socialmedia.feature_auth.presentation.login_screen.Login
 import com.devdk.socialmedia.feature_auth.presentation.registration_screen.Register
+import com.devdk.socialmedia.feature_auth.presentation.splash_screen.Splash
 import com.devdk.socialmedia.feature_post.presentation.add_post_screen.AddPost
 import com.devdk.socialmedia.feature_post.presentation.feed_screen.Feed
 import com.devdk.socialmedia.feature_post.presentation.post_detail_screen.PostDetail
@@ -27,6 +28,7 @@ fun Navigation() {
     val navController = rememberNavController()
     val scaffoldState = rememberScaffoldState()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
+
      val bottomNavigation = listOf(
         BottomNavigationItem(
             Icons.Outlined.Home,
@@ -61,17 +63,22 @@ fun Navigation() {
             Routes.Feed.screen,
             Routes.Search.screen,
             Routes.Chat.screen,
-            Routes.Activity.screen
+            Routes.Activity.screen,
         ),
         scaffoldState = scaffoldState,
         bottomNavigationItems = bottomNavigation,
         content = {
-            NavHost(navController, startDestination = Routes.Login.screen) {
+            NavHost(navController,
+                startDestination = Routes.Splash.screen
+            ) {
+                composable(Routes.Splash.screen){
+                    Splash(navController = navController)
+                }
                 composable(Routes.Login.screen) {
-                    Login(navController)
+                    Login(navController , scaffoldState = scaffoldState)
                 }
                 composable(Routes.Register.screen) {
-                    Register(navController)
+                    Register(navController = navController , scaffoldState = scaffoldState)
                 }
                 composable(Routes.Feed.screen){
                     Feed(navController = navController)

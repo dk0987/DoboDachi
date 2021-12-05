@@ -3,20 +3,17 @@ package com.devdk.socialmedia.feature_auth.presentation.registration_screen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -28,15 +25,33 @@ import com.devdk.socialmedia.core.presentation.ui.theme.background
 import com.devdk.socialmedia.core.presentation.ui.theme.onBackground
 import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
 import com.devdk.socialmedia.core.presentation.util.Routes
+import com.devdk.socialmedia.feature_auth.presentation.util.UiEvent
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun Register(
     navController: NavController,
-    registerViewModel: RegisterViewModel = hiltViewModel()
+    registerViewModel: RegisterViewModel = hiltViewModel(),
+    scaffoldState: ScaffoldState
+
 ) {
     val usernameState = registerViewModel.usernameTextFieldState.value
     val passwordState = registerViewModel.passwordTextFieldState.value
     val eMailState = registerViewModel.eMailTextFieldState.value
+
+    LaunchedEffect(key1 = true ){
+        registerViewModel.eventFlow.collectLatest {event ->
+            when(event){
+                is UiEvent.Navigate -> {
+                    navController.popBackStack()
+                    navController.navigate(event.route)
+                }
+                is UiEvent.ShowSnackBar -> {
+                    scaffoldState.snackbarHostState.showSnackbar(message = event.message.toString())
+                }
+            }
+        }
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()

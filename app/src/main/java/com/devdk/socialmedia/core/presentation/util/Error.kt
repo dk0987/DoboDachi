@@ -6,4 +6,11 @@ object Error {
     const val  SHORT_LENGTH = "is too short"
     const val  INVALID_EMAIL = "Please enter valid email"
     const val  WEAK_PASSWORD = "Strong password required (ex.123@Dk)"
+
+    data class Error(
+        var userNameError : String? = null,
+        var emailError : String? = null,
+        var passwordError : String? = null,
+        var responseError : String? = null
+    )
 }
