@@ -20,7 +20,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.components.StandardButtons
-import com.devdk.socialmedia.core.presentation.components.StandardTextField
+import com.devdk.socialmedia.core.presentation.components.StandardAuthTextField
 import com.devdk.socialmedia.core.presentation.ui.theme.background
 import com.devdk.socialmedia.core.presentation.ui.theme.onBackground
 import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
@@ -45,6 +45,7 @@ fun Register(
                 is UiEvent.Navigate -> {
                     navController.popBackStack()
                     navController.navigate(event.route)
+                    scaffoldState.snackbarHostState.showSnackbar(message = event.message ?: "")
                 }
                 is UiEvent.ShowSnackBar -> {
                     scaffoldState.snackbarHostState.showSnackbar(message = event.message.toString())
@@ -72,8 +73,8 @@ fun Register(
                 color = primaryText
             )
             Spacer(modifier = Modifier.height(5.dp))
-            StandardTextField(
-                placeholder = stringResource(id = R.string.username),
+            StandardAuthTextField(
+                label = stringResource(id = R.string.username),
                 text = usernameState.text,
                 keyboardType = KeyboardType.Text,
                 onValueChange = {registerViewModel.onEvent(RegisterEvents.Username(it))},
@@ -81,8 +82,8 @@ fun Register(
                 error = usernameState.error
             )
             Spacer(modifier = Modifier.height(8.dp))
-            StandardTextField(
-                placeholder = stringResource(id = R.string.eMail),
+            StandardAuthTextField(
+                label = stringResource(id = R.string.eMail),
                 text = eMailState.text,
                 keyboardType = KeyboardType.Email,
                 onValueChange = {registerViewModel.onEvent(RegisterEvents.Email(it))},
@@ -90,8 +91,8 @@ fun Register(
                 error = eMailState.error
             )
             Spacer(modifier = Modifier.height(8.dp))
-            StandardTextField(
-                placeholder = stringResource(id = R.string.password),
+            StandardAuthTextField(
+                label = stringResource(id = R.string.password),
                 text = passwordState.text,
                 onValueChange = {registerViewModel.onEvent(RegisterEvents.Password(it))},
                 keyboardType = KeyboardType.Password ,
@@ -104,6 +105,7 @@ fun Register(
             StandardButtons(
                 text = stringResource(id = R.string.sign_up),
                 onClick = { registerViewModel.onEvent(RegisterEvents.Register) },
+                isLoading = registerViewModel.isLoading.value
             )
         }
         Row(

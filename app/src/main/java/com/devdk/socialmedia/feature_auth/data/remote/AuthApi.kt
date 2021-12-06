@@ -1,8 +1,8 @@
 package com.devdk.socialmedia.feature_auth.data.remote
 
-import com.devdk.socialmedia.feature_auth.data.request.LoginUserRequest
-import com.devdk.socialmedia.feature_auth.data.request.RegisterUserRequest
-import com.devdk.socialmedia.feature_auth.data.response.AuthResponse
+import com.devdk.socialmedia.feature_auth.data.remote.dto.request.LoginUserRequest
+import com.devdk.socialmedia.feature_auth.data.remote.dto.request.RegisterUserRequest
+import com.devdk.socialmedia.feature_auth.data.remote.dto.response.AuthResponse
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST

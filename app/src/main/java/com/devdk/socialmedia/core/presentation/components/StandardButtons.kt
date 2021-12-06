@@ -30,6 +30,7 @@ fun StandardButtons(
     color : List<Color> = button ,
     roundedCornerShape: Dp = 20.dp ,
     elevation: Dp = 10.dp,
+    isLoading : Boolean = false
 ) {
     Card(
         onClick = onClick ,
@@ -48,14 +49,22 @@ fun StandardButtons(
                         startX = 500f
                     )
                 ))
-            Text(
-                text = text,
-                color = primaryText,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.SemiBold,
-                letterSpacing = 3.sp,
-                textAlign = TextAlign.Center,
-            )
+            if (!isLoading){
+                Text(
+                    text = text,
+                    color = primaryText,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    letterSpacing = 3.sp,
+                    textAlign = TextAlign.Center,
+                )
+            }
+            else{
+                CircularProgressIndicator(
+                    color = primaryText
+                )
+            }
+
         }
 
     }

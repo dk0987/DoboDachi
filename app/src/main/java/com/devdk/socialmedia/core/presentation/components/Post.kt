@@ -52,13 +52,16 @@ fun Post(
     onLike : () -> Unit = {} ,
     isLiked : Boolean = false ,
     onComment : () -> Unit = {} ,
+    onLikedText : () -> Unit = {} ,
     onShare : () -> Unit = {} ,
     onProfilePic : () -> Unit = {} ,
     roundedCornerShape : Dp = 15.dp ,
     elevation : Dp = 10.dp ,
     postCardColor : Color = container,
     postTextColor : Color = primaryText,
-    dropDownItem : List<String> = Items.dropDown
+    dropDownItem : List<String> = Items.dropDown,
+    maxLines : Int = 3,
+    isUser : Boolean = false
 ) {
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -93,7 +96,7 @@ fun Post(
                             Image(
                                 painter = profilePic,
                                 contentDescription = stringResource(id = R.string.profile_pic),
-                                contentScale = ContentScale.FillBounds
+                                contentScale = ContentScale.Crop
                             )
                         }
                         Spacer(modifier = Modifier.width(10.dp))
@@ -115,6 +118,7 @@ fun Post(
                             )
                         }
                     }
+                    if (isUser){
                         IconButton(onClick =  onDropDown ) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_menu),
@@ -139,8 +143,8 @@ fun Post(
                                 }
                             }
                         }
-
                     }
+                }
                 Spacer(modifier = Modifier.height(10.dp))
                 Image(
                     painter = postImage,
@@ -204,24 +208,27 @@ fun Post(
                                 + numberOfLike.toString() +" "
                                 + stringResource(id = R.string.people),
                         fontWeight = FontWeight.SemiBold,
-                        color = containerText,
+                        color = primaryText,
                         fontSize = 16.sp,
-                        textAlign = TextAlign.Start
+                        textAlign = TextAlign.Start,
                     )
                     Text(
                         text =  numberOfComment.toString() + " " + stringResource(id = R.string.comment),
-                        color = containerText,
+                        color = primaryText,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 16.sp,
-                        textAlign = TextAlign.End
+                        textAlign = TextAlign.End,
+                        modifier = Modifier.clickable(
+                            onClick = onLikedText
+                        )
                     )
                 }
                 Text(
                     text = description,
-                    color = postTextColor,
+                    color = containerText,
                     fontSize = 16.sp ,
                     fontStyle = FontStyle.Italic,
-                    maxLines = 3 ,
+                    maxLines = maxLines ,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.fillMaxWidth()
                 )

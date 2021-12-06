@@ -27,7 +27,7 @@ class LoginUseCase(
                     null
                 }
                 is Resource.Error -> {
-                    loginError.responseError = Resource.Error(result.message , Unit).toString()
+                    loginError.responseError = result.message
                     loginError
                 }
             }

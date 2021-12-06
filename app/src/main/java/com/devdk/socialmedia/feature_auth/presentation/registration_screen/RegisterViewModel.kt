@@ -4,7 +4,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.devdk.socialmedia.core.presentation.states.StandardTextFieldStates
+import com.devdk.socialmedia.core.presentation.states.TextFieldStates
 import com.devdk.socialmedia.core.presentation.util.Routes
 import com.devdk.socialmedia.feature_auth.domain.modal.RegisterUser
 import com.devdk.socialmedia.feature_auth.domain.use_cases.RegisterUseCase
@@ -20,14 +20,17 @@ class RegisterViewModel @Inject constructor(
     private val registerUseCase: RegisterUseCase
 ) : ViewModel() {
 
-    private val _usernameTextFieldState = mutableStateOf(StandardTextFieldStates())
-    val usernameTextFieldState : State<StandardTextFieldStates> = _usernameTextFieldState
+    private val _usernameTextFieldState = mutableStateOf(TextFieldStates())
+    val usernameTextFieldState : State<TextFieldStates> = _usernameTextFieldState
 
-    private val _eMailTextFieldState = mutableStateOf(StandardTextFieldStates())
-    val eMailTextFieldState : State<StandardTextFieldStates> = _eMailTextFieldState
+    private val _eMailTextFieldState = mutableStateOf(TextFieldStates())
+    val eMailTextFieldState : State<TextFieldStates> = _eMailTextFieldState
 
-    private val _passwordTextFieldState = mutableStateOf(StandardTextFieldStates())
-    val passwordTextFieldState : State<StandardTextFieldStates> = _passwordTextFieldState
+    private val _passwordTextFieldState = mutableStateOf(TextFieldStates())
+    val passwordTextFieldState : State<TextFieldStates> = _passwordTextFieldState
+
+    private val _isLoading = mutableStateOf(false)
+    val isLoading : State<Boolean> = _isLoading
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -65,15 +68,17 @@ class RegisterViewModel @Inject constructor(
             val userName = usernameTextFieldState.value.text
             val email = eMailTextFieldState.value.text
             val password = passwordTextFieldState.value.text
+            _isLoading.value = true
             val error = registerUseCase(
                 RegisterUser(
                 username = userName ,
                 email = email ,
                 password = password
             ))
+            _isLoading.value = false
             if (error == null){
                 _eventFlow.emit(
-                    UiEvent.Navigate(Routes.Feed.screen)
+                    UiEvent.Navigate(Routes.Feed.screen , "Registered Successfully")
                 )
             }
             else{

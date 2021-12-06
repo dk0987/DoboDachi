@@ -21,6 +21,7 @@ import androidx.navigation.NavController
 import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.components.Post
 import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
+import com.devdk.socialmedia.core.presentation.util.Routes
 
 @ExperimentalMaterialApi
 @Composable
@@ -53,27 +54,33 @@ fun Feed(
                    .size(38.dp)
            ) {
                Image(
-                   painter = painterResource(id = R.drawable.profile_pic),
+                   painter = painterResource(id = R.drawable.post_pic),
                    contentDescription = stringResource(id = R.string.profile_pic),
-                   contentScale = ContentScale.FillBounds
+                   contentScale = ContentScale.Crop
                )
            }
        }
        Spacer(modifier = Modifier.height(5.dp))
        LazyColumn(Modifier.fillMaxHeight(0.94f)){
-           items(2){
+           items(20){
                Post(
                    username = "Izuku Midoriya",
                    profilePic = painterResource(id = R.drawable.profile_pic),
                    postImage = painterResource(id = R.drawable.post_pic),
                    numberOfLike = 45,
                    numberOfComment = 7,
+                   onPost = {
+                            navController.navigate(Routes.PostDetail.screen)
+                   },
+                   onComment = {
+                       navController.navigate(Routes.PostDetail.screen)
+                   },
                    description = "used in various expressions indicating that a description or amount being stated is not exact a wry look, something between amusement and regret"
                )
                Post(
                    username = "Yuji Itadori",
-                   profilePic = painterResource(id = R.drawable.profile_pic),
-                   postImage = painterResource(id = R.drawable.image),
+                   profilePic = painterResource(id = R.drawable.post_pic),
+                   postImage = painterResource(id = R.drawable.profile_pic),
                    numberOfLike = 500,
                    numberOfComment = 80,
                    isLiked = true,

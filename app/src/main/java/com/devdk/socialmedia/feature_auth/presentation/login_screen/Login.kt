@@ -21,7 +21,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.components.StandardButtons
-import com.devdk.socialmedia.core.presentation.components.StandardTextField
+import com.devdk.socialmedia.core.presentation.components.StandardAuthTextField
 import com.devdk.socialmedia.core.presentation.ui.theme.background
 import com.devdk.socialmedia.core.presentation.ui.theme.onBackground
 import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
@@ -45,6 +45,7 @@ fun Login(
                 is UiEvent.Navigate -> {
                     navController.popBackStack()
                     navController.navigate(event.route)
+                    scaffoldState.snackbarHostState.showSnackbar(event.message ?: "")
                 }
                 is UiEvent.ShowSnackBar -> {
                     scaffoldState.snackbarHostState.showSnackbar(event.message.toString())
@@ -73,8 +74,8 @@ fun Login(
                 color = primaryText
             )
             Spacer(modifier = Modifier.height(5.dp))
-            StandardTextField(
-                placeholder = stringResource(id = R.string.eMail),
+            StandardAuthTextField(
+                label = stringResource(id = R.string.eMail),
                 text = usernameState.text,
                 keyboardType = KeyboardType.Text,
                 onValueChange = {loginViewModel.onEvent(LoginEvents.Email(it))},
@@ -82,8 +83,8 @@ fun Login(
                 error = usernameState.error
             )
             Spacer(modifier = Modifier.height(8.dp))
-            StandardTextField(
-                placeholder = stringResource(id = R.string.password),
+            StandardAuthTextField(
+                label = stringResource(id = R.string.password),
                 text = passwordState.text,
                 onValueChange = {loginViewModel.onEvent(LoginEvents.Password(it))},
                 keyboardType = KeyboardType.Password ,
@@ -98,6 +99,7 @@ fun Login(
                 onClick = {
                     loginViewModel.onEvent(LoginEvents.Login)
                 },
+                isLoading = loginViewModel.isLoading.value
             )
         }
         Row(

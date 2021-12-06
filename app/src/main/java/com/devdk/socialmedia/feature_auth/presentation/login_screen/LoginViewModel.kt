@@ -4,15 +4,10 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.devdk.socialmedia.core.presentation.util.Error
-import com.devdk.socialmedia.core.presentation.states.StandardTextFieldStates
-import com.devdk.socialmedia.core.presentation.util.Navigation
+import com.devdk.socialmedia.core.presentation.states.TextFieldStates
 import com.devdk.socialmedia.core.presentation.util.Routes
-import com.devdk.socialmedia.feature_auth.domain.modal.RegisterUser
-import com.devdk.socialmedia.feature_auth.domain.use_cases.AuthenticateUseCase
 import com.devdk.socialmedia.feature_auth.domain.use_cases.LoginUseCase
 import com.devdk.socialmedia.feature_auth.presentation.util.UiEvent
-import com.devdk.socialmedia.feature_auth.presentation.util.Validation
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -24,11 +19,14 @@ class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase
 ) : ViewModel() {
 
-    private val _eMailTextFieldState = mutableStateOf(StandardTextFieldStates())
-    val eMailTextFieldState : State<StandardTextFieldStates> = _eMailTextFieldState
+    private val _eMailTextFieldState = mutableStateOf(TextFieldStates())
+    val eMailTextFieldState : State<TextFieldStates> = _eMailTextFieldState
 
-    private val _passwordTextFieldState = mutableStateOf(StandardTextFieldStates())
-    val passwordTextFieldState : State<StandardTextFieldStates> = _passwordTextFieldState
+    private val _passwordTextFieldState = mutableStateOf(TextFieldStates())
+    val passwordTextFieldState : State<TextFieldStates> = _passwordTextFieldState
+
+    private val _isLoading = mutableStateOf(false)
+    val isLoading : State<Boolean> = _isLoading
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -58,12 +56,14 @@ class LoginViewModel @Inject constructor(
 
     private fun login() {
         viewModelScope.launch {
+            _isLoading.value = true
             val email = eMailTextFieldState.value.text
             val password = passwordTextFieldState.value.text
             val error = loginUseCase(email, password)
+            _isLoading.value = false
             if (error == null){
                 _eventFlow.emit(
-                    UiEvent.Navigate(Routes.Feed.screen)
+                    UiEvent.Navigate(Routes.Feed.screen , "LoggedIn Successfully")
                 )
             }
             else{

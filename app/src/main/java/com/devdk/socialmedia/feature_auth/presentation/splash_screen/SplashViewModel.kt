@@ -28,12 +28,12 @@ class SplashViewModel @Inject constructor(
             val authenticated = authenticateUseCase.invoke()
             if (authenticated){
                 _eventFlow.emit(
-                    UiEvent.Navigate(Routes.Feed.screen)
+                    UiEvent.Navigate(Routes.Feed.screen , null)
                 )
             }
             else
                 _eventFlow.emit(
-                    UiEvent.Navigate(Routes.Login.screen)
+                    UiEvent.Navigate(Routes.Login.screen , null)
                 )
         }
     }

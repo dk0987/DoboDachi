@@ -5,8 +5,8 @@ import android.content.SharedPreferences
 import com.devdk.socialmedia.core.util.AuthConst
 import com.devdk.socialmedia.core.util.Resource
 import com.devdk.socialmedia.feature_auth.data.remote.AuthApi
-import com.devdk.socialmedia.feature_auth.data.request.LoginUserRequest
-import com.devdk.socialmedia.feature_auth.data.request.RegisterUserRequest
+import com.devdk.socialmedia.feature_auth.data.remote.dto.request.LoginUserRequest
+import com.devdk.socialmedia.feature_auth.data.remote.dto.request.RegisterUserRequest
 import com.devdk.socialmedia.feature_auth.domain.modal.RegisterUser
 import com.devdk.socialmedia.feature_auth.domain.repository.AuthRepository
 import retrofit2.HttpException

@@ -69,13 +69,13 @@ fun Navigation() {
         bottomNavigationItems = bottomNavigation,
         content = {
             NavHost(navController,
-                startDestination = Routes.Splash.screen
+                startDestination = Routes.Feed.screen
             ) {
                 composable(Routes.Splash.screen){
                     Splash(navController = navController)
                 }
                 composable(Routes.Login.screen) {
-                    Login(navController , scaffoldState = scaffoldState)
+                    Login(navController = navController , scaffoldState = scaffoldState)
                 }
                 composable(Routes.Register.screen) {
                     Register(navController = navController , scaffoldState = scaffoldState)
