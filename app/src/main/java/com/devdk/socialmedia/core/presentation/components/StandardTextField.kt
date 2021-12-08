@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devdk.socialmedia.R
@@ -25,14 +26,16 @@ import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
 fun StandardTextField(
     value : String ,
     onValueChange : (String) -> Unit ,
-    trailingIcon : ImageVector?
+    trailingIcon : ImageVector? = null,
+    roundedCornerShape : Dp = 25.dp,
+    placeholder : String = stringResource(id = R.string.comment_on_post)
 ) {
     TextField(
         value = value,
         onValueChange = onValueChange,
         placeholder = {
             Text(
-                text = stringResource(id = R.string.comment_on_post),
+                text = placeholder,
                 color = containerText,
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Light,
@@ -47,7 +50,7 @@ fun StandardTextField(
         modifier = Modifier
             .fillMaxWidth()
             .background(Color.Transparent)
-            .clip(RoundedCornerShape(25.dp)),
+            .clip(RoundedCornerShape(roundedCornerShape)),
         trailingIcon = {
             IconButton(onClick = { /*TODO*/ }) {
                 (trailingIcon)?.let {

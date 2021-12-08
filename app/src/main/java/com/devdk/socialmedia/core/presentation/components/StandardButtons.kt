@@ -13,11 +13,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.ui.theme.button
 import com.devdk.socialmedia.core.presentation.ui.theme.onBackground
 import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
@@ -30,7 +33,8 @@ fun StandardButtons(
     color : List<Color> = button ,
     roundedCornerShape: Dp = 20.dp ,
     elevation: Dp = 10.dp,
-    isLoading : Boolean = false
+    isLoading : Boolean = false,
+    trailingIcon : ImageVector? = null
 ) {
     Card(
         onClick = onClick ,
@@ -64,7 +68,17 @@ fun StandardButtons(
                     color = primaryText
                 )
             }
-
+            trailingIcon?.let {
+                IconButton(
+                    onClick = { /*TODO*/ },
+                    modifier = Modifier.align(Alignment.CenterEnd)
+                ) {
+                    Icon(
+                        imageVector = trailingIcon,
+                        contentDescription = stringResource(id = R.string.post)
+                    )
+                }
+            }
         }
 
     }

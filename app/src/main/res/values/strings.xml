@@ -41,4 +41,7 @@
     <string name="back">Back</string>
     <string name="comment_on_post">Comment on the post...</string>
     <string name="textFieldIcon">TextFieldIcon</string>
+    <string name="upload_pic">Upload Pic</string>
+    <string name="post">Post</string>
+    <string name="description_for_post">Description for post .......</string>
 </resources>

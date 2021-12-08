@@ -69,7 +69,7 @@ fun Navigation() {
         bottomNavigationItems = bottomNavigation,
         content = {
             NavHost(navController,
-                startDestination = Routes.Feed.screen
+                startDestination = Routes.Splash.screen
             ) {
                 composable(Routes.Splash.screen){
                     Splash(navController = navController)
