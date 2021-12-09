@@ -31,35 +31,35 @@ import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.ui.theme.container
 import com.devdk.socialmedia.core.presentation.ui.theme.containerText
 import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
-import com.devdk.socialmedia.core.presentation.util.Items
+import com.devdk.socialmedia.core.presentation.util.MenuItems
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
 @ExperimentalMaterialApi
 @Composable
 fun Post(
-    username : String ,
+    username : String,
     timeStamp : Long = System.currentTimeMillis(),
-    profilePic : Painter ,
+    profilePic : Painter,
     profile_pic_size : Dp = 38.dp,
-    postImage : Painter ,
+    postImage : Painter,
     onDropDown : () -> Unit = {},
-    dropDownExpanded : Boolean = false ,
-    numberOfLike : Int ,
-    numberOfComment : Int ,
-    description : String ,
-    onPost : () -> Unit = {} ,
-    onLike : () -> Unit = {} ,
-    isLiked : Boolean = false ,
-    onComment : () -> Unit = {} ,
-    onLikedText : () -> Unit = {} ,
-    onShare : () -> Unit = {} ,
-    onProfilePic : () -> Unit = {} ,
-    roundedCornerShape : Dp = 15.dp ,
-    elevation : Dp = 10.dp ,
+    dropDownExpanded : Boolean = false,
+    numberOfLike : Int,
+    numberOfComment : Int,
+    description : String,
+    onPost : () -> Unit = {},
+    onLike : () -> Unit = {},
+    isLiked : Boolean = false,
+    onComment : () -> Unit = {},
+    onLikedText : () -> Unit = {},
+    onShare : () -> Unit = {},
+    onProfilePic : () -> Unit = {},
+    roundedCornerShape : Dp = 15.dp,
+    elevation : Dp = 10.dp,
     postCardColor : Color = container,
     postTextColor : Color = primaryText,
-    dropDownItem : List<String> = Items.dropDown,
+    dropDownItem : List<String> = MenuItems.dropDown,
     maxLines : Int = 3,
     isUser : Boolean = false
 ) {
@@ -119,30 +119,33 @@ fun Post(
                         }
                     }
                     if (isUser){
-                        IconButton(onClick =  onDropDown ) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_menu),
-                                contentDescription = stringResource(
-                                    id = R.string.drop_down_menu
-                                ),
-                                tint = postTextColor
-                            )
-                            DropdownMenu(
-                                expanded = dropDownExpanded,
-                                onDismissRequest = onDropDown,
-                                modifier = Modifier.background(container)
-                            ) {
-                                dropDownItem.forEach { DropDownItem ->
-                                    DropdownMenuItem(onClick = { /*TODO*/ }) {
-                                        Text(
-                                            text = DropDownItem,
-                                            color = postTextColor,
-                                            fontSize = 14.sp ,
-                                        )
+                        Row{
+                            IconButton(onClick =  onDropDown ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_menu),
+                                    contentDescription = stringResource(
+                                        id = R.string.drop_down_menu
+                                    ),
+                                    tint = postTextColor
+                                )
+                                DropdownMenu(
+                                    expanded = dropDownExpanded,
+                                    onDismissRequest = onDropDown,
+                                    modifier = Modifier.background(container)
+                                ) {
+                                    dropDownItem.forEach { DropDownItem ->
+                                        DropdownMenuItem(onClick = { /*TODO*/ }) {
+                                            Text(
+                                                text = DropDownItem,
+                                                color = postTextColor,
+                                                fontSize = 14.sp ,
+                                            )
+                                        }
                                     }
                                 }
                             }
                         }
+
                     }
                 }
                 Spacer(modifier = Modifier.height(10.dp))

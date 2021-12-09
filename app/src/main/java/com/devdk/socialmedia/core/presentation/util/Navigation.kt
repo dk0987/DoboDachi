@@ -20,6 +20,8 @@ import com.devdk.socialmedia.feature_auth.presentation.splash_screen.Splash
 import com.devdk.socialmedia.feature_post.presentation.add_post_screen.AddPost
 import com.devdk.socialmedia.feature_post.presentation.feed_screen.Feed
 import com.devdk.socialmedia.feature_post.presentation.post_detail_screen.PostDetail
+import com.devdk.socialmedia.feature_search.SearchEvents
+import com.devdk.socialmedia.feature_search.presentation.Search
 
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
@@ -69,7 +71,7 @@ fun Navigation() {
         bottomNavigationItems = bottomNavigation,
         content = {
             NavHost(navController,
-                startDestination = Routes.Splash.screen
+                startDestination = Routes.Feed.screen
             ) {
                 composable(Routes.Splash.screen){
                     Splash(navController = navController)
@@ -88,6 +90,9 @@ fun Navigation() {
                 }
                 composable(Routes.PostDetail.screen){
                     PostDetail(navController = navController)
+                }
+                composable(Routes.Search.screen){
+                    Search(navController = navController)
                 }
             }
         }

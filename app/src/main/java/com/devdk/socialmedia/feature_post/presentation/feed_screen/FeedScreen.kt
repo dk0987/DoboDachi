@@ -17,6 +17,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.components.Post
@@ -26,8 +27,10 @@ import com.devdk.socialmedia.core.presentation.util.Routes
 @ExperimentalMaterialApi
 @Composable
 fun Feed(
-    navController: NavController
+    navController: NavController,
+    feedScreenViewModel: FeedScreenViewModel = hiltViewModel()
 ) {
+    val feedScreenStates = feedScreenViewModel.feedScreenStates.value
    Column(
        modifier = Modifier
            .fillMaxSize()
@@ -75,17 +78,14 @@ fun Feed(
                    onComment = {
                        navController.navigate(Routes.PostDetail.screen)
                    },
+                   dropDownExpanded = feedScreenStates.menuExpanded,
+                   onDropDown = {
+                        feedScreenViewModel.onEvent(FeedScreenEvents.Toggle)
+                   },
+                   isUser = true,
                    description = "used in various expressions indicating that a description or amount being stated is not exact a wry look, something between amusement and regret"
                )
-               Post(
-                   username = "Yuji Itadori",
-                   profilePic = painterResource(id = R.drawable.post_pic),
-                   postImage = painterResource(id = R.drawable.profile_pic),
-                   numberOfLike = 500,
-                   numberOfComment = 80,
-                   isLiked = true,
-                   description = "used in various expressions indicating that a description or amount being stated is not exact a wry look, something between amusement and regret"
-               )
+
            }
        }
    }

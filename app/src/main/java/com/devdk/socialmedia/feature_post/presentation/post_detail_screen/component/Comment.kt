@@ -25,7 +25,7 @@ import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.ui.theme.container
 import com.devdk.socialmedia.core.presentation.ui.theme.containerText
 import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
-import com.devdk.socialmedia.core.presentation.util.Items
+import com.devdk.socialmedia.core.presentation.util.MenuItems
 
 @ExperimentalMaterialApi
 @Composable
@@ -45,7 +45,7 @@ fun Comment(
     roundedCornerShape : Dp = 15.dp,
     profile_pic_size : Dp = 38.dp,
     isLiked : Boolean = false,
-    dropDownItem : List<String> = Items.dropDown,
+    dropDownItem : List<String> = MenuItems.dropDown,
     isUser : Boolean = false
 ) {
     Card(
