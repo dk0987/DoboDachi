@@ -1,4 +1,4 @@
-package com.devdk.socialmedia.feature_post.presentation.liked_by_screen
+package com.devdk.socialmedia.feature_persons_list.person_list_screen
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -17,6 +17,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
@@ -24,11 +25,15 @@ import com.devdk.socialmedia.feature_search.presentation.component.SearchedItem
 
 @ExperimentalMaterialApi
 @Composable
-fun LikedBy(
-    navController : NavController ,
+fun PersonList(
+    navController : NavController,
+    personLIstViewModel: PersonLIstViewModel = hiltViewModel()
 ) {
+    val personListState = personLIstViewModel.personListScreenStates.value
     Column(
-        modifier = Modifier.fillMaxSize().padding(horizontal = 10.dp , vertical = 12.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 10.dp, vertical = 12.dp),
         horizontalAlignment = Alignment.CenterHorizontally ,
     ) {
         Row(
@@ -51,7 +56,8 @@ fun LikedBy(
                 )
             }
 
-            Text(text = stringResource(id = R.string.liked_by),
+            Text(
+                text = personListState.screenName,
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp ,
                 color = primaryText ,

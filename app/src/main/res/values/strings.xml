@@ -50,4 +50,9 @@
     <string name="follow">FOLLOW</string>
     <string name="search_by">Search by Username or Email</string>
     <string name="activity">Activity</string>
+    <string name="banner">Banner</string>
+    <string name="edit">Edit</string>
+    <string name="followers">FOLLOWERS</string>
+    <string name="following">FOLLOWING</string>
+    <string name="posts">POSTS</string>
 </resources>

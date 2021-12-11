@@ -29,13 +29,14 @@ import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
 @Composable
 fun StandardFollowButton(
     isFollowing : Boolean ,
-    OnClick : () -> Unit
-) {
+    modifier: Modifier = Modifier ,
+    OnClick : () -> Unit,
+    ) {
     Card(
         onClick = OnClick ,
         elevation = 10.dp ,
         shape = RoundedCornerShape(20.dp),
-        modifier = Modifier.size(110.dp , 35.dp)
+        modifier = modifier.size(80.dp , 35.dp)
     ) {
         Box(
             modifier = Modifier

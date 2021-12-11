@@ -8,10 +8,12 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.components.StandardScaffold
 import com.devdk.socialmedia.feature_activity.presentation.Activity
@@ -20,7 +22,7 @@ import com.devdk.socialmedia.feature_auth.presentation.registration_screen.Regis
 import com.devdk.socialmedia.feature_auth.presentation.splash_screen.Splash
 import com.devdk.socialmedia.feature_post.presentation.add_post_screen.AddPost
 import com.devdk.socialmedia.feature_post.presentation.feed_screen.Feed
-import com.devdk.socialmedia.feature_post.presentation.liked_by_screen.LikedBy
+import com.devdk.socialmedia.feature_persons_list.person_list_screen.PersonList
 import com.devdk.socialmedia.feature_post.presentation.post_detail_screen.PostDetail
 import com.devdk.socialmedia.feature_profile.presentation.profile_screen.Profile
 import com.devdk.socialmedia.feature_search.presentation.Search
@@ -96,8 +98,16 @@ fun Navigation() {
                 composable(Routes.Search.screen){
                     Search(navController = navController)
                 }
-                composable(Routes.LikedBy.screen){
-                    LikedBy(navController = navController)
+                composable(
+                    route = Routes.PersonList.screen + "?personList={personList}" ,
+                    arguments = listOf(
+                        navArgument("personList"){
+                            type = NavType.StringType
+                            defaultValue = "LikedBy"
+                        }
+                    )
+                ){
+                    PersonList(navController = navController)
                 }
                 composable(Routes.Profile.screen){
                     Profile(navController = navController)
