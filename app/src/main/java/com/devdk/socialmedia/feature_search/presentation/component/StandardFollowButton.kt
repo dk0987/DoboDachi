@@ -20,6 +20,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.devdk.socialmedia.R
+import com.devdk.socialmedia.core.presentation.ui.theme.background
 import com.devdk.socialmedia.core.presentation.ui.theme.containerText
 import com.devdk.socialmedia.core.presentation.ui.theme.followButton
 import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
@@ -34,18 +35,18 @@ fun StandardFollowButton(
         onClick = OnClick ,
         elevation = 10.dp ,
         shape = RoundedCornerShape(20.dp),
-        modifier = Modifier.size(100.dp , 30.dp)
+        modifier = Modifier.size(110.dp , 35.dp)
     ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
                 .background(if (isFollowing) Color.Transparent else followButton)
-                .border(BorderStroke(2.dp, if (isFollowing) followButton else Color.White) , shape = RoundedCornerShape(20.dp)),
+                .border(BorderStroke(1.5.dp, if (isFollowing) followButton else Color.White) , shape = RoundedCornerShape(20.dp)),
             contentAlignment = Alignment.Center
         ){
             Text(
                 text = if (isFollowing) stringResource(id = R.string.unfollow) else stringResource(id = R.string.follow),
-                color = if (isFollowing) primaryText else containerText ,
+                color = if (isFollowing) primaryText else background ,
                 fontSize = 11.5.sp ,
                 fontWeight = FontWeight.SemiBold,
                 textAlign = TextAlign.Center

@@ -65,6 +65,8 @@ dependencies {
     implementation "com.google.accompanist:accompanist-flowlayout:0.20.0"
     implementation 'com.valentinilk.shimmer:compose-shimmer:1.0.1'
     implementation  "androidx.compose.material:material-icons-extended:$compose_version"
+    implementation "me.onebone:toolbar-compose:2.3.0"
+
 
     // Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2'

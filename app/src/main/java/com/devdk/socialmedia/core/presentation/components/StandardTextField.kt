@@ -30,7 +30,7 @@ fun StandardTextField(
     value : String ,
     onValueChange : (String) -> Unit ,
     trailingIcon : ImageVector? = null,
-    roundedCornerShape : Dp = 25.dp,
+    roundedCornerShape : Dp = 10.dp,
     placeholder : String = stringResource(id = R.string.comment_on_post),
     isError : Boolean = false,
     error : String? = null
@@ -45,8 +45,8 @@ fun StandardTextField(
                 Text(
                     text = placeholder,
                     color = containerText,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Light,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Normal,
                     fontStyle = FontStyle.Italic,
                 )
             },
@@ -59,8 +59,8 @@ fun StandardTextField(
                 .background(Color.Transparent)
                 .clip(RoundedCornerShape(roundedCornerShape)),
             trailingIcon = {
+                (trailingIcon)?.let {
                 IconButton(onClick = { /*TODO*/ }) {
-                    (trailingIcon)?.let {
                         Icon(
                             imageVector = it,
                             contentDescription = stringResource(id = R.string.comment),

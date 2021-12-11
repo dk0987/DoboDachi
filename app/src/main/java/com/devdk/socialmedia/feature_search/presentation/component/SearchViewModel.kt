@@ -5,7 +5,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.devdk.socialmedia.core.presentation.states.TextFieldStates
-import com.devdk.socialmedia.feature_search.SearchEvents
+import com.devdk.socialmedia.feature_search.presentation.SearchEvents
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

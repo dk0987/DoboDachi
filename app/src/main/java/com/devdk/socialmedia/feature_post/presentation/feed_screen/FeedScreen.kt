@@ -51,7 +51,9 @@ fun Feed(
                color = primaryText ,
            )
            IconButton(
-               onClick = {},
+               onClick = {
+                    navController.navigate(Routes.Profile.screen)
+               },
                Modifier
                    .clip(CircleShape)
                    .size(38.dp)
@@ -81,6 +83,9 @@ fun Feed(
                    dropDownExpanded = feedScreenStates.menuExpanded,
                    onDropDown = {
                         feedScreenViewModel.onEvent(FeedScreenEvents.Toggle)
+                   },
+                   onLikedText = {
+                        navController.navigate(Routes.LikedBy.screen)
                    },
                    isUser = true,
                    description = "used in various expressions indicating that a description or amount being stated is not exact a wry look, something between amusement and regret"

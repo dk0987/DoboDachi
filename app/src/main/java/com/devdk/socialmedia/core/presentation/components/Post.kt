@@ -214,6 +214,9 @@ fun Post(
                         color = primaryText,
                         fontSize = 16.sp,
                         textAlign = TextAlign.Start,
+                        modifier = Modifier.clickable(
+                            onClick = onLikedText
+                        )
                     )
                     Text(
                         text =  numberOfComment.toString() + " " + stringResource(id = R.string.comment),
@@ -222,7 +225,7 @@ fun Post(
                         fontSize = 16.sp,
                         textAlign = TextAlign.End,
                         modifier = Modifier.clickable(
-                            onClick = onLikedText
+                            onClick = onComment
                         )
                     )
                 }

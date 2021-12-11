@@ -14,13 +14,15 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.components.StandardScaffold
+import com.devdk.socialmedia.feature_activity.presentation.Activity
 import com.devdk.socialmedia.feature_auth.presentation.login_screen.Login
 import com.devdk.socialmedia.feature_auth.presentation.registration_screen.Register
 import com.devdk.socialmedia.feature_auth.presentation.splash_screen.Splash
 import com.devdk.socialmedia.feature_post.presentation.add_post_screen.AddPost
 import com.devdk.socialmedia.feature_post.presentation.feed_screen.Feed
+import com.devdk.socialmedia.feature_post.presentation.liked_by_screen.LikedBy
 import com.devdk.socialmedia.feature_post.presentation.post_detail_screen.PostDetail
-import com.devdk.socialmedia.feature_search.SearchEvents
+import com.devdk.socialmedia.feature_profile.presentation.profile_screen.Profile
 import com.devdk.socialmedia.feature_search.presentation.Search
 
 @ExperimentalMaterialApi
@@ -93,6 +95,15 @@ fun Navigation() {
                 }
                 composable(Routes.Search.screen){
                     Search(navController = navController)
+                }
+                composable(Routes.LikedBy.screen){
+                    LikedBy(navController = navController)
+                }
+                composable(Routes.Profile.screen){
+                    Profile(navController = navController)
+                }
+                composable(Routes.Activity.screen){
+                    Activity(navController = navController)
                 }
             }
         }

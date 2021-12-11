@@ -13,7 +13,7 @@ sealed class Routes(val screen : String) {
     object Activity : Routes(R.string.activity_screen.toString())
     object PostDetail : Routes(R.string.post_detail_screen.toString())
     object Messages : Routes(R.string.message_screen.toString())
-    object PersonList : Routes(R.string.person_list_screen.toString())
+    object LikedBy : Routes(R.string.person_list_screen.toString())
     object Profile : Routes(R.string.profile_screen.toString())
     object EditProfile : Routes(R.string.edit_profile_screen.toString())
 }

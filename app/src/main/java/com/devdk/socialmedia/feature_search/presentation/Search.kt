@@ -52,13 +52,14 @@ fun Search(
             placeholder = stringResource(id = R.string.search_by),
             error = searchStates.error,
             onValueChange = {searchViewModel.onQueryTextChange(it)},
-            trailingIcon = Icons.Outlined.Search
+            trailingIcon = Icons.Outlined.Search,
         )
         Spacer(modifier = Modifier.height(10.dp))
         LazyColumn(modifier = Modifier
             .fillMaxWidth()
+            .fillMaxHeight(0.92f)
             .padding(horizontal = 5.dp)){
-            items(20){
+            items(100){
                 SearchedItem(
                     profileURL = painterResource(id = R.drawable.profile_pic),
                     username = "Izuku Midoriya",
@@ -66,7 +67,13 @@ fun Search(
                     following = false
                 )
                 SearchedItem(
-                    profileURL = painterResource(id = R.drawable.profile_pic),
+                    profileURL = painterResource(id = R.drawable.post_pic),
+                    username = "Izuku Midoriya",
+                    description = "used in various expressions indicating that a description or amount being stated is not exact",
+                    following = true
+                )
+                SearchedItem(
+                    profileURL = painterResource(id = R.drawable.mhawallparer),
                     username = "Izuku Midoriya",
                     description = "used in various expressions indicating that a description or amount being stated is not exact",
                     following = true

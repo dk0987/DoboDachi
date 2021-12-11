@@ -43,10 +43,11 @@
     <string name="textFieldIcon">TextFieldIcon</string>
     <string name="upload_pic">Upload Pic</string>
     <string name="post">Post</string>
-    <string name="description_for_post">Description for post .......</string>
+    <string name="description_for_post">Description for post ..</string>
     <string name="private_radio_button">Private</string>
     <string name="public_radio_button">Public</string>
     <string name="unfollow">UNFOLLOW</string>
     <string name="follow">FOLLOW</string>
     <string name="search_by">Search by Username or Email</string>
+    <string name="activity">Activity</string>
 </resources>

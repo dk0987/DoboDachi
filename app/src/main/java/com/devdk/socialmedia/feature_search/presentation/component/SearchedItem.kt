@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -31,7 +32,7 @@ import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
 fun SearchedItem(
     profileURL : Painter,
     username :String,
-    description : String,
+    description : String? = null,
     following : Boolean,
     elevation : Dp = 10.dp,
     roundedCornerShape : Dp = 15.dp,
@@ -75,17 +76,20 @@ fun SearchedItem(
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.clickable(
                             onClick = onProfilePic
+                        ).fillMaxWidth(0.7f)
+                    )
+                    description?.let { description ->
+                        Text(
+                            text = description,
+                            color = containerText,
+                            fontSize = 16.sp,
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis,
+                            fontWeight = FontWeight.Light,
+                            modifier = Modifier.fillMaxWidth(0.7f)
                         )
-                    )
-                    Text(
-                        text = description,
-                        color = containerText,
-                        fontSize = 16.sp,
-                        maxLines = 2,
-                        overflow = TextOverflow.Ellipsis,
-                        fontWeight = FontWeight.Light,
-                        modifier = Modifier.fillMaxWidth(0.7f)
-                    )
+                    }
+
                 }
             }
             StandardFollowButton(isFollowing = following) {
