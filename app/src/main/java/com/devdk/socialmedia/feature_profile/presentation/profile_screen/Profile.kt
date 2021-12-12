@@ -23,6 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.components.Post
@@ -37,8 +38,10 @@ import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 @ExperimentalMaterialApi
 @Composable
 fun Profile(
-    navController: NavController
+    navController: NavController,
+    profileViewModel: ProfileViewModel = hiltViewModel()
 ) {
+    val profileState = profileViewModel.profileStates.value
     val state = rememberCollapsingToolbarScaffoldState()
     val profilePic = 45.dp
     val progress = state.toolbarState.progress
@@ -69,18 +72,22 @@ fun Profile(
                         tint = primaryText
                     )
                 }
-                IconButton(onClick = {
 
-                },
-                    modifier = Modifier
-                        .size(30.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Edit,
-                        contentDescription = stringResource(id = R.string.edit),
-                        tint = primaryText
-                    )
+                if (profileState.isUser){
+                    IconButton(onClick = {
+                        navController.navigate(Routes.EditProfile.screen)
+                    },
+                        modifier = Modifier
+                            .size(30.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Edit,
+                            contentDescription = stringResource(id = R.string.edit),
+                            tint = primaryText
+                        )
+                    }
                 }
+
             }
             Image(
                 painter = painterResource(id = R.drawable.mhawallparer),
@@ -99,7 +106,10 @@ fun Profile(
                 .fillMaxWidth()
                 .height(200.dp + profilePic)
                 .padding(horizontal = 40.dp)
-                .parallax(0.1f),
+                .parallax(0.1f)
+                .graphicsLayer {
+                    alpha = progress
+                },
                 contentAlignment = BottomCenter
             ){
                 Image(

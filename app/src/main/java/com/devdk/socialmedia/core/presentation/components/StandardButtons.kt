@@ -34,11 +34,12 @@ fun StandardButtons(
     roundedCornerShape: Dp = 20.dp ,
     elevation: Dp = 10.dp,
     isLoading : Boolean = false,
-    trailingIcon : ImageVector? = null
-) {
+    trailingIcon : ImageVector? = null,
+    modifier: Modifier = Modifier,
+    ) {
     Card(
         onClick = onClick ,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(45.dp),
         shape = RoundedCornerShape(roundedCornerShape),

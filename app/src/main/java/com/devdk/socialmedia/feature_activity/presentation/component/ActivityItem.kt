@@ -39,13 +39,14 @@ fun ActivityItem(
     OnClick : () -> Unit = {},
     action : Action,
     onPostText : () -> Unit = {} ,
-    onCommentText : () -> Unit = {}
+    onCommentText : () -> Unit = {},
+    modifier: Modifier = Modifier
 ) {
     Card(
         onClick = OnClick ,
         elevation = elevation ,
         shape = RoundedCornerShape(roundedCornerShape),
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(5.dp),
         backgroundColor = container

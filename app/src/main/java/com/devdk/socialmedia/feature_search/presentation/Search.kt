@@ -20,6 +20,7 @@ import androidx.navigation.NavController
 import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.components.StandardTextField
 import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
+import com.devdk.socialmedia.core.presentation.util.Routes
 import com.devdk.socialmedia.feature_search.presentation.component.SearchViewModel
 import com.devdk.socialmedia.feature_search.presentation.component.SearchedItem
 
@@ -59,24 +60,18 @@ fun Search(
             .fillMaxWidth()
             .fillMaxHeight(0.92f)
             .padding(horizontal = 5.dp)){
-            items(100){
+            items(5){
                 SearchedItem(
                     profileURL = painterResource(id = R.drawable.profile_pic),
                     username = "Izuku Midoriya",
                     description = "used in various expressions indicating that a description or amount being stated is not exact",
-                    following = false
-                )
-                SearchedItem(
-                    profileURL = painterResource(id = R.drawable.post_pic),
-                    username = "Izuku Midoriya",
-                    description = "used in various expressions indicating that a description or amount being stated is not exact",
-                    following = true
-                )
-                SearchedItem(
-                    profileURL = painterResource(id = R.drawable.mhawallparer),
-                    username = "Izuku Midoriya",
-                    description = "used in various expressions indicating that a description or amount being stated is not exact",
-                    following = true
+                    following = true,
+                    OnClick = {
+                        navController.navigate(Routes.Profile.screen)
+                    },
+                    OnFollow = {
+
+                    }
                 )
             }
 

@@ -21,6 +21,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
+import com.devdk.socialmedia.core.presentation.util.Routes
 import com.devdk.socialmedia.feature_search.presentation.component.SearchedItem
 
 @ExperimentalMaterialApi
@@ -72,6 +73,9 @@ fun PersonList(
                     profileURL = painterResource(id = R.drawable.post_pic),
                     username = "Yuji Itadori",
                     following = true,
+                    OnClick = {
+                        navController.navigate(Routes.Profile.screen)
+                    },
                 )
                 SearchedItem(
                     profileURL = painterResource(id = R.drawable.post_pic),

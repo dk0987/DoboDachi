@@ -67,7 +67,7 @@ fun Feed(
        }
        Spacer(modifier = Modifier.height(5.dp))
        LazyColumn(Modifier.fillMaxHeight(0.94f)){
-           items(20){
+           items(2){
                Post(
                    username = "Izuku Midoriya",
                    profilePic = painterResource(id = R.drawable.profile_pic),
@@ -80,12 +80,14 @@ fun Feed(
                    onComment = {
                        navController.navigate(Routes.PostDetail.screen)
                    },
-                   dropDownExpanded = feedScreenStates.menuExpanded,
-                   onDropDown = {
-                        feedScreenViewModel.onEvent(FeedScreenEvents.Toggle)
-                   },
                    onLikedText = {
                         navController.navigate(Routes.PersonList.screen + "?personList=LikedBy")
+                   },
+                   onProfilePic = {
+                                  navController.navigate(Routes.Profile.screen)
+                   },
+                   onLike = {
+                        println("Double Tap works")
                    },
                    isUser = true,
                    description = "used in various expressions indicating that a description or amount being stated is not exact a wry look, something between amusement and regret"

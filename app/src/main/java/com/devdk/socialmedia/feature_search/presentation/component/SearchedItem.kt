@@ -17,7 +17,6 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -36,9 +35,9 @@ fun SearchedItem(
     following : Boolean,
     elevation : Dp = 10.dp,
     roundedCornerShape : Dp = 15.dp,
-    onProfilePic : () -> Unit = {},
     profile_pic_size : Dp = 45.dp,
-    OnClick : () -> Unit = {}
+    OnClick : () -> Unit = {},
+    OnFollow : () -> Unit = {}
 ) {
     Card(
         onClick = OnClick ,
@@ -56,7 +55,7 @@ fun SearchedItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 IconButton(
-                    onClick = onProfilePic,
+                    onClick = OnClick,
                     Modifier
                         .clip(CircleShape)
                         .size(profile_pic_size)
@@ -75,7 +74,7 @@ fun SearchedItem(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold,
                         modifier = Modifier.clickable(
-                            onClick = onProfilePic
+                            onClick = OnClick
                         ).fillMaxWidth(0.7f)
                     )
                     description?.let { description ->
@@ -92,9 +91,7 @@ fun SearchedItem(
 
                 }
             }
-            StandardFollowButton(isFollowing = following) {
-
-            }
+            StandardFollowButton(isFollowing = following , OnClick = OnFollow)
 
         }
     }

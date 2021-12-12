@@ -31,7 +31,7 @@ fun StandardFollowButton(
     isFollowing : Boolean ,
     modifier: Modifier = Modifier ,
     OnClick : () -> Unit,
-    ) {
+) {
     Card(
         onClick = OnClick ,
         elevation = 10.dp ,

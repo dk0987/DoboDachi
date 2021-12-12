@@ -26,7 +26,9 @@ import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.components.Post
 import com.devdk.socialmedia.core.presentation.components.StandardTextField
 import com.devdk.socialmedia.core.presentation.ui.theme.*
+import com.devdk.socialmedia.core.presentation.util.Routes
 import com.devdk.socialmedia.feature_post.presentation.post_detail_screen.component.Comment
+import okhttp3.Route
 
 @ExperimentalMaterialApi
 @Composable
@@ -66,6 +68,9 @@ fun PostDetail(
                     numberOfLike = 45,
                     numberOfComment = 7,
                     maxLines = 200,
+                    onProfilePic = {
+                        navController.navigate(Routes.Profile.screen)
+                    },
                     description = "used in various expressions indicating that a description or amount being stated is not exact a wry look, something between amusement and regret used in various expressions indicating that a description or amount being stated is not exact a wry look, something between amusement and regret used in various expressions indicating that a description or amount being stated is not exact a wry look, something between amusement and regret used in various expressions indicating that a description or amount being stated is not exact a wry look, something between amusement and regretused in various expressions indicating that a description or amount being stated is not exact a wry look, something between amusement and regret"
                 )
                 StandardTextField(
@@ -74,22 +79,16 @@ fun PostDetail(
                     trailingIcon = Icons.Outlined.Send
                 )
             }
-            items(20){
+            items(2){
                 Comment(
                     profileURL = painterResource(id = R.drawable.profile_pic),
                     username = "Izuku Midoriya",
                     timeStamp = 0,
                     isLiked = true,
                     liked = 20,
-                    comment = "used in various expressions indicating that a description or amount being stated is not exact a wry look, something between amusement and regret"
-                )
-                Comment(
-                    profileURL = painterResource(id = R.drawable.profile_pic),
-                    username = "Izuku Midoriya",
-                    timeStamp = 0,
-                    isUser = true,
-                    isLiked = true,
-                    liked = 200,
+                    onProfile = {
+                        navController.navigate(Routes.Profile.screen)
+                    },
                     comment = "used in various expressions indicating that a description or amount being stated is not exact a wry look, something between amusement and regret"
                 )
             }

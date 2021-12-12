@@ -1,8 +1,9 @@
 package com.devdk.socialmedia.core.presentation.components
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import android.view.GestureDetector
+import androidx.compose.foundation.*
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -10,13 +11,14 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Comment
 import androidx.compose.material.icons.filled.Share
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -27,11 +29,14 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.ui.theme.container
 import com.devdk.socialmedia.core.presentation.ui.theme.containerText
 import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
 import com.devdk.socialmedia.core.presentation.util.MenuItems
+import com.devdk.socialmedia.feature_post.presentation.feed_screen.FeedScreenEvents
+import com.devdk.socialmedia.feature_post.presentation.feed_screen.FeedScreenViewModel
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
@@ -43,8 +48,6 @@ fun Post(
     profilePic : Painter,
     profile_pic_size : Dp = 38.dp,
     postImage : Painter,
-    onDropDown : () -> Unit = {},
-    dropDownExpanded : Boolean = false,
     numberOfLike : Int,
     numberOfComment : Int,
     description : String,
@@ -61,8 +64,10 @@ fun Post(
     postTextColor : Color = primaryText,
     dropDownItem : List<String> = MenuItems.dropDown,
     maxLines : Int = 3,
-    isUser : Boolean = false
+    isUser : Boolean = false,
+    feedScreenViewModel: FeedScreenViewModel = hiltViewModel()
 ) {
+
     Box(
         modifier = Modifier.fillMaxSize(),
     ){
@@ -120,7 +125,9 @@ fun Post(
                     }
                     if (isUser){
                         Row{
-                            IconButton(onClick =  onDropDown ) {
+                            IconButton(onClick =  {
+                                feedScreenViewModel.onEvent(FeedScreenEvents.Toggle)
+                            } ) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.ic_menu),
                                     contentDescription = stringResource(
@@ -129,12 +136,14 @@ fun Post(
                                     tint = postTextColor
                                 )
                                 DropdownMenu(
-                                    expanded = dropDownExpanded,
-                                    onDismissRequest = onDropDown,
+                                    expanded = feedScreenViewModel.feedScreenStates.value.menuExpanded,
+                                    onDismissRequest = {
+                                        feedScreenViewModel.onEvent(FeedScreenEvents.Toggle)
+                                    },
                                     modifier = Modifier.background(container)
                                 ) {
                                     dropDownItem.forEach { DropDownItem ->
-                                        DropdownMenuItem(onClick = { /*TODO*/ }) {
+                                        DropdownMenuItem(onClick = { FeedScreenEvents.Menu(DropDownItem) }) {
                                             Text(
                                                 text = DropDownItem,
                                                 color = postTextColor,
@@ -145,21 +154,24 @@ fun Post(
                                 }
                             }
                         }
-
                     }
                 }
-                Spacer(modifier = Modifier.height(10.dp))
-                Image(
-                    painter = postImage,
+            Spacer(modifier = Modifier.height(10.dp))
+            Image(
+                painter = postImage,
                     contentDescription = stringResource(id = R.string.post_image),
                     contentScale = ContentScale.FillWidth ,
                     modifier = Modifier
                         .clip(RoundedCornerShape(roundedCornerShape))
                         .shadow(elevation)
-                        .clickable(
-                            onClick = onPost
-                        )
                         .fillMaxSize()
+                        .pointerInput(Unit){
+                            detectTapGestures (
+                               onDoubleTap = {
+                                    onLike
+                               }
+                            )
+                        }
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 Row(
@@ -242,8 +254,9 @@ fun Post(
             Spacer(modifier = Modifier.height(10.dp))
         }
     }
-    
+
 }
+
 
 
 

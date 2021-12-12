@@ -24,6 +24,7 @@ import com.devdk.socialmedia.feature_post.presentation.add_post_screen.AddPost
 import com.devdk.socialmedia.feature_post.presentation.feed_screen.Feed
 import com.devdk.socialmedia.feature_persons_list.person_list_screen.PersonList
 import com.devdk.socialmedia.feature_post.presentation.post_detail_screen.PostDetail
+import com.devdk.socialmedia.feature_profile.presentation.edit_profile_screen.EditProfile
 import com.devdk.socialmedia.feature_profile.presentation.profile_screen.Profile
 import com.devdk.socialmedia.feature_search.presentation.Search
 
@@ -114,6 +115,9 @@ fun Navigation() {
                 }
                 composable(Routes.Activity.screen){
                     Activity(navController = navController)
+                }
+                composable(Routes.EditProfile.screen){
+                    EditProfile(navController = navController)
                 }
             }
         }

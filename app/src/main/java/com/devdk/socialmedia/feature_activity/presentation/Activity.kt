@@ -1,5 +1,6 @@
 package com.devdk.socialmedia.feature_activity.presentation
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.ExperimentalMaterialApi
@@ -16,6 +17,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
+import com.devdk.socialmedia.core.presentation.util.Routes
 import com.devdk.socialmedia.feature_activity.presentation.component.ActivityItem
 import com.devdk.socialmedia.feature_activity.presentation.util.Action
 import com.devdk.socialmedia.feature_activity.presentation.util.COMMENT
@@ -47,21 +49,17 @@ fun Activity(
                 .fillMaxWidth()
                 .fillMaxHeight(0.92f)
         ){
-            items(100){
-                ActivityItem(
-                    profileURL = painterResource(id = R.drawable.profile_pic),
-                    username = "Yuji Itadori",
-                    action = Action.Liked(COMMENT)
-                )
+            items(5 , key = {it}){
                 ActivityItem(
                     profileURL = painterResource(id = R.drawable.post_pic),
                     username = "Itachi Ucchia",
-                    action = Action.Liked(POST)
-                )
-                ActivityItem(
-                    profileURL = painterResource(id = R.drawable.mhawallparer),
-                    username = "Itachi Ucchia",
-                    action = Action.Followed
+                    action = Action.Liked(POST),
+                    OnClick = {
+                        navController.navigate(Routes.Profile.screen)
+                    },
+                    modifier = Modifier.animateContentSize { initialValue, targetValue ->
+                        initialValue.height
+                    }
                 )
             }
         }

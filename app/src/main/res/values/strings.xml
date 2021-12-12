@@ -55,4 +55,7 @@
     <string name="followers">FOLLOWERS</string>
     <string name="following">FOLLOWING</string>
     <string name="posts">POSTS</string>
+    <string name="change_profile_pic">Change Profile Pic</string>
+    <string name="Bio">Bio</string>
+    <string name="save">SAVE</string>
 </resources>
