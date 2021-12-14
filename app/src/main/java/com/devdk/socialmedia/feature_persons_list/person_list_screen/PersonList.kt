@@ -69,19 +69,19 @@ fun PersonList(
         Spacer(modifier = Modifier.height(10.dp))
         LazyColumn{
             items(20){
-                SearchedItem(
-                    profileURL = painterResource(id = R.drawable.post_pic),
-                    username = "Yuji Itadori",
-                    following = true,
-                    OnClick = {
-                        navController.navigate(Routes.Profile.screen)
-                    },
-                )
-                SearchedItem(
-                    profileURL = painterResource(id = R.drawable.post_pic),
-                    username = "Yuji Itadori",
-                    following = false ,
-                )
+//                SearchedItem(
+//                    profileURL = painterResource(id = R.drawable.post_pic),
+//                    username = "Yuji Itadori",
+//                    following = true,
+//                    OnClick = {
+//                        navController.navigate(Routes.Profile.screen)
+//                    },
+//                )
+//                SearchedItem(
+//                    profileURL = painterResource(id = R.drawable.post_pic),
+//                    username = "Yuji Itadori",
+//                    following = false ,
+//                )
             }
         }
     }

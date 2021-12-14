@@ -65,8 +65,11 @@ fun Post(
     dropDownItem : List<String> = MenuItems.dropDown,
     maxLines : Int = 3,
     isUser : Boolean = false,
-    feedScreenViewModel: FeedScreenViewModel = hiltViewModel()
 ) {
+
+    var expanded by remember {
+        mutableStateOf(false)
+    }
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -126,7 +129,7 @@ fun Post(
                     if (isUser){
                         Row{
                             IconButton(onClick =  {
-                                feedScreenViewModel.onEvent(FeedScreenEvents.Toggle)
+                                expanded = !expanded
                             } ) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.ic_menu),
@@ -136,9 +139,9 @@ fun Post(
                                     tint = postTextColor
                                 )
                                 DropdownMenu(
-                                    expanded = feedScreenViewModel.feedScreenStates.value.menuExpanded,
+                                    expanded = expanded,
                                     onDismissRequest = {
-                                        feedScreenViewModel.onEvent(FeedScreenEvents.Toggle)
+                                        expanded = false
                                     },
                                     modifier = Modifier.background(container)
                                 ) {
@@ -165,11 +168,11 @@ fun Post(
                         .clip(RoundedCornerShape(roundedCornerShape))
                         .shadow(elevation)
                         .fillMaxSize()
-                        .pointerInput(Unit){
-                            detectTapGestures (
-                               onDoubleTap = {
-                                    onLike
-                               }
+                        .pointerInput(Unit) {
+                            detectTapGestures(
+                                onDoubleTap = {
+                                    print("Double Tap Works")
+                                }
                             )
                         }
                 )

@@ -2,12 +2,18 @@ package com.devdk.socialmedia.feature_search.presentation
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.Center
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -19,18 +25,32 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.components.StandardTextField
+import com.devdk.socialmedia.core.presentation.ui.theme.bottomNavigationItem
 import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
 import com.devdk.socialmedia.core.presentation.util.Routes
-import com.devdk.socialmedia.feature_search.presentation.component.SearchViewModel
+import com.devdk.socialmedia.feature_auth.presentation.util.UiEvent
 import com.devdk.socialmedia.feature_search.presentation.component.SearchedItem
+import kotlinx.coroutines.flow.collectLatest
 
 @ExperimentalMaterialApi
 @Composable
 fun Search(
     navController: NavController,
-    searchViewModel: SearchViewModel = hiltViewModel()
+    searchViewModel: SearchViewModel = hiltViewModel(),
+    scaffoldState: ScaffoldState
 ) {
-    val searchStates = searchViewModel.search.value
+    val searchTextFieldState = searchViewModel.searchTextFieldState.value
+    val searchStates = searchViewModel.searchState.value
+
+    LaunchedEffect(key1 = true ){
+        searchViewModel.eventFLow.collectLatest { event ->
+            when (event) {
+                is UiEvent.ShowSnackBar -> {
+                    scaffoldState.snackbarHostState.showSnackbar(event.message!!)
+                }
+            }
+        }
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -48,33 +68,44 @@ fun Search(
         )
         Spacer(modifier = Modifier.height(10.dp))
         StandardTextField(
-            value = searchStates.text,
-            isError = searchStates.isError,
+            value = searchTextFieldState.text,
+            isError = searchTextFieldState.isError,
             placeholder = stringResource(id = R.string.search_by),
-            error = searchStates.error,
-            onValueChange = {searchViewModel.onQueryTextChange(it)},
+            error = searchTextFieldState.error,
+            onValueChange = {
+                searchViewModel.onQueryTextChange(it)
+            },
             trailingIcon = Icons.Outlined.Search,
         )
         Spacer(modifier = Modifier.height(10.dp))
-        LazyColumn(modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight(0.92f)
-            .padding(horizontal = 5.dp)){
-            items(5){
-                SearchedItem(
-                    profileURL = painterResource(id = R.drawable.profile_pic),
-                    username = "Izuku Midoriya",
-                    description = "used in various expressions indicating that a description or amount being stated is not exact",
-                    following = true,
-                    OnClick = {
-                        navController.navigate(Routes.Profile.screen)
-                    },
-                    OnFollow = {
+        if (!searchStates.isLoading){
+            LazyColumn(modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.92f)
+                .padding(horizontal = 5.dp)
+            ){
+                items(searchStates.searchedResult){ searchedItem ->
+                    SearchedItem(
+                        searchedUser = searchedItem,
+                        OnClick = {
+                            navController.navigate(Routes.Profile.screen)
+                        },
+                        OnFollow = {
 
-                    }
+                        }
+                    )
+                }
+            }
+        }
+        else{
+            Box(modifier = Modifier.fillMaxSize()){
+                CircularProgressIndicator(
+                    color = bottomNavigationItem,
+                    modifier = Modifier
+                        .align(Center)
                 )
             }
-
         }
+
     }
 }

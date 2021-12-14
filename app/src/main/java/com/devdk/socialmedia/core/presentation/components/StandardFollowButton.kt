@@ -1,4 +1,4 @@
-package com.devdk.socialmedia.feature_search.presentation.component
+package com.devdk.socialmedia.core.presentation.components
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background

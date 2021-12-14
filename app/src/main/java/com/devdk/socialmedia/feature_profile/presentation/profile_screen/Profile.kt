@@ -30,7 +30,7 @@ import com.devdk.socialmedia.core.presentation.components.Post
 import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
 import com.devdk.socialmedia.core.presentation.util.Routes
 import com.devdk.socialmedia.feature_profile.presentation.profile_screen.component.ProfileInfo
-import com.devdk.socialmedia.feature_search.presentation.component.StandardFollowButton
+import com.devdk.socialmedia.core.presentation.components.StandardFollowButton
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState

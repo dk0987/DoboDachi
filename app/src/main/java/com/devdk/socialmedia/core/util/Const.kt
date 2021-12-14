@@ -4,4 +4,6 @@ object Const {
     const val SHARED_PREF = "Social media Share pref"
     const val PRIVATE = "Private"
     const val PUBLIC = "Public"
+
+    const val SOMETHING_WRONG = "Something went wrong"
 }

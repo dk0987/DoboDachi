@@ -49,16 +49,13 @@ fun Activity(
                 .fillMaxWidth()
                 .fillMaxHeight(0.92f)
         ){
-            items(5 , key = {it}){
+            items(5){
                 ActivityItem(
-                    profileURL = painterResource(id = R.drawable.post_pic),
+                    profileURL = painterResource(id = R.drawable.image),
                     username = "Itachi Ucchia",
-                    action = Action.Liked(POST),
+                    action = Action.Followed,
                     OnClick = {
                         navController.navigate(Routes.Profile.screen)
-                    },
-                    modifier = Modifier.animateContentSize { initialValue, targetValue ->
-                        initialValue.height
                     }
                 )
             }

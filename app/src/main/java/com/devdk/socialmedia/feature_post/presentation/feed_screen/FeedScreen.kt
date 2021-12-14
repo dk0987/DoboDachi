@@ -86,9 +86,6 @@ fun Feed(
                    onProfilePic = {
                                   navController.navigate(Routes.Profile.screen)
                    },
-                   onLike = {
-                        println("Double Tap works")
-                   },
                    isUser = true,
                    description = "used in various expressions indicating that a description or amount being stated is not exact a wry look, something between amusement and regret"
                )

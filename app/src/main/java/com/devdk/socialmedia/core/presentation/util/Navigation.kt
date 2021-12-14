@@ -76,7 +76,7 @@ fun Navigation() {
         bottomNavigationItems = bottomNavigation,
         content = {
             NavHost(navController,
-                startDestination = Routes.Feed.screen
+                startDestination = Routes.Splash.screen
             ) {
                 composable(Routes.Splash.screen){
                     Splash(navController = navController)
@@ -97,7 +97,7 @@ fun Navigation() {
                     PostDetail(navController = navController)
                 }
                 composable(Routes.Search.screen){
-                    Search(navController = navController)
+                    Search(navController = navController , scaffoldState = scaffoldState)
                 }
                 composable(
                     route = Routes.PersonList.screen + "?personList={personList}" ,
