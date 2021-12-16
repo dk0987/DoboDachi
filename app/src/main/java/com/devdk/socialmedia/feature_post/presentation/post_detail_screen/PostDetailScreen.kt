@@ -61,18 +61,18 @@ fun PostDetail(
             modifier = Modifier.fillMaxHeight()
         ) {
             item {
-                Post(
-                    username = "Izuku Midoriya",
-                    profilePic = painterResource(id = R.drawable.post_pic),
-                    postImage = painterResource(id = R.drawable.profile_pic),
-                    numberOfLike = 45,
-                    numberOfComment = 7,
-                    maxLines = 200,
-                    onProfilePic = {
-                        navController.navigate(Routes.Profile.screen)
-                    },
-                    description = "used in various expressions indicating that a description or amount being stated is not exact a wry look, something between amusement and regret used in various expressions indicating that a description or amount being stated is not exact a wry look, something between amusement and regret used in various expressions indicating that a description or amount being stated is not exact a wry look, something between amusement and regret used in various expressions indicating that a description or amount being stated is not exact a wry look, something between amusement and regretused in various expressions indicating that a description or amount being stated is not exact a wry look, something between amusement and regret"
-                )
+//                Post(
+//                    username = "Izuku Midoriya",
+//                    profilePic = painterResource(id = R.drawable.post_pic),
+//                    postImage = painterResource(id = R.drawable.profile_pic),
+//                    numberOfLike = 45,
+//                    numberOfComment = 7,
+//                    maxLines = 200,
+//                    onProfilePic = {
+//                        navController.navigate(Routes.Profile.screen)
+//                    },
+//                    description = "used in various expressions indicating that a description or amount being stated is not exact a wry look, something between amusement and regret used in various expressions indicating that a description or amount being stated is not exact a wry look, something between amusement and regret used in various expressions indicating that a description or amount being stated is not exact a wry look, something between amusement and regret used in various expressions indicating that a description or amount being stated is not exact a wry look, something between amusement and regretused in various expressions indicating that a description or amount being stated is not exact a wry look, something between amusement and regret"
+//                )
                 StandardTextField(
                     value = commentState.text,
                     onValueChange = {postDetailViewModel.onEvent(PostDetailEvents.Comment(it))},

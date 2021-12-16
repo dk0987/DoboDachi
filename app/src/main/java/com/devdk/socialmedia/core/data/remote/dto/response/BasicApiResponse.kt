@@ -1,4 +1,4 @@
-package com.devdk.socialmedia.core.data.dto.response
+package com.devdk.socialmedia.core.data.remote.dto.response
 
 data class BasicApiResponse<T>(
     val successful : Boolean ,

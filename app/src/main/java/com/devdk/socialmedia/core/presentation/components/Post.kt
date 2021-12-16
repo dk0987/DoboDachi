@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -30,11 +31,17 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.ImageLoader
+import coil.compose.ImagePainter
+import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
+import coil.request.ImageResult
 import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.ui.theme.container
 import com.devdk.socialmedia.core.presentation.ui.theme.containerText
 import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
 import com.devdk.socialmedia.core.presentation.util.MenuItems
+import com.devdk.socialmedia.feature_post.domain.modal.Post
 import com.devdk.socialmedia.feature_post.presentation.feed_screen.FeedScreenEvents
 import com.devdk.socialmedia.feature_post.presentation.feed_screen.FeedScreenViewModel
 import kotlin.time.ExperimentalTime
@@ -43,17 +50,10 @@ import kotlin.time.ExperimentalTime
 @ExperimentalMaterialApi
 @Composable
 fun Post(
-    username : String,
-    timeStamp : Long = System.currentTimeMillis(),
-    profilePic : Painter,
+    post : Post ,
     profile_pic_size : Dp = 38.dp,
-    postImage : Painter,
-    numberOfLike : Int,
-    numberOfComment : Int,
-    description : String,
     onPost : () -> Unit = {},
     onLike : () -> Unit = {},
-    isLiked : Boolean = false,
     onComment : () -> Unit = {},
     onLikedText : () -> Unit = {},
     onShare : () -> Unit = {},
@@ -64,7 +64,6 @@ fun Post(
     postTextColor : Color = primaryText,
     dropDownItem : List<String> = MenuItems.dropDown,
     maxLines : Int = 3,
-    isUser : Boolean = false,
 ) {
 
     var expanded by remember {
@@ -73,26 +72,29 @@ fun Post(
 
     Box(
         modifier = Modifier.fillMaxSize(),
-    ){
+    ) {
         Card(
             onClick = onPost,
-            elevation = 10.dp ,
+            elevation = elevation,
             shape = RoundedCornerShape(roundedCornerShape),
             backgroundColor = postCardColor,
             modifier = Modifier
                 .fillMaxSize()
                 .padding(vertical = 8.dp)
         ) {
-            Column(modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 15.dp, vertical = 7.dp)) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(horizontal = 15.dp, vertical = 7.dp)
+            ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Row(modifier = Modifier,
+                    Row(
+                        modifier = Modifier,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         IconButton(
@@ -102,15 +104,21 @@ fun Post(
                                 .size(profile_pic_size)
                         ) {
                             Image(
-                                painter = profilePic,
+                                painter = rememberImagePainter(
+                                   data = post.userProfileUrl ,
+                                    builder = {
+                                        crossfade(true)
+                                    }
+                                ),
                                 contentDescription = stringResource(id = R.string.profile_pic),
-                                contentScale = ContentScale.Crop
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.fillMaxSize()
                             )
                         }
                         Spacer(modifier = Modifier.width(10.dp))
                         Column {
                             Text(
-                                text = username,
+                                text = post.userName,
                                 color = postTextColor,
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.SemiBold,
@@ -126,11 +134,11 @@ fun Post(
                             )
                         }
                     }
-                    if (isUser){
-                        Row{
-                            IconButton(onClick =  {
+                    if (post.isUser) {
+                        Row {
+                            IconButton(onClick = {
                                 expanded = !expanded
-                            } ) {
+                            }) {
                                 Icon(
                                     painter = painterResource(id = R.drawable.ic_menu),
                                     contentDescription = stringResource(
@@ -146,11 +154,15 @@ fun Post(
                                     modifier = Modifier.background(container)
                                 ) {
                                     dropDownItem.forEach { DropDownItem ->
-                                        DropdownMenuItem(onClick = { FeedScreenEvents.Menu(DropDownItem) }) {
+                                        DropdownMenuItem(onClick = {
+                                            FeedScreenEvents.Menu(
+                                                DropDownItem
+                                            )
+                                        }) {
                                             Text(
                                                 text = DropDownItem,
                                                 color = postTextColor,
-                                                fontSize = 14.sp ,
+                                                fontSize = 14.sp,
                                             )
                                         }
                                     }
@@ -159,71 +171,40 @@ fun Post(
                         }
                     }
                 }
-            Spacer(modifier = Modifier.height(10.dp))
-            Image(
-                painter = postImage,
+                Spacer(modifier = Modifier.height(10.dp))
+                Image(
+                    painter = rememberImagePainter(data = post.postImageUrl , builder = {
+                        crossfade(true)
+                    }),
                     contentDescription = stringResource(id = R.string.post_image),
-                    contentScale = ContentScale.FillWidth ,
+                    contentScale = ContentScale.Crop,
                     modifier = Modifier
                         .clip(RoundedCornerShape(roundedCornerShape))
-                        .shadow(elevation)
-                        .fillMaxSize()
-                        .pointerInput(Unit) {
-                            detectTapGestures(
-                                onDoubleTap = {
-                                    print("Double Tap Works")
-                                }
-                            )
-                        }
+                        .fillMaxWidth()
+                        .aspectRatio(4f/5f)
                 )
+                Spacer(modifier = Modifier.height(8.dp))
+                post.description?.let {
+                    Text(
+                        text = it,
+                        color = containerText,
+                        fontSize = 16.sp,
+                        fontStyle = FontStyle.Italic,
+                        maxLines = maxLines,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+
                 Spacer(modifier = Modifier.height(10.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Row{
-                        IconButton(onClick = onLike,  modifier = Modifier.size(25.dp)) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_heart),
-                                contentDescription = stringResource(
-                                    id = R.string.heart
-                                ),
-                                tint = if (isLiked) Color.Red else containerText,
-                            )
-
-                        }
-                        Spacer(modifier = Modifier.width(10.dp))
-                        IconButton(onClick = onComment,  modifier = Modifier.size(25.dp)) {
-                            Icon(
-                               imageVector = Icons.Filled.Comment,
-                                contentDescription = stringResource(
-                                    id = R.string.comment
-                                ),
-                                tint = containerText
-                            )
-                        }
-                    }
-                    IconButton(onClick = onShare,  modifier = Modifier.size(25.dp)) {
-                        Icon(
-                            imageVector = Icons.Filled.Share,
-                            contentDescription = stringResource(
-                                id = R.string.share
-                            ),
-                            tint = containerText
-                        )
-
-                    }
-                }
-                Spacer(modifier = Modifier.height(5.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ){
                     Text(
                         text = stringResource(id = R.string.liked_by)
-                                + numberOfLike.toString() +" "
+                                + post.liked + " "
                                 + stringResource(id = R.string.people),
                         fontWeight = FontWeight.SemiBold,
                         color = primaryText,
@@ -234,7 +215,7 @@ fun Post(
                         )
                     )
                     Text(
-                        text =  numberOfComment.toString() + " " + stringResource(id = R.string.comment),
+                        text = post.comment.toString() + " " + stringResource(id = R.string.comment),
                         color = primaryText,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 16.sp,
@@ -244,21 +225,51 @@ fun Post(
                         )
                     )
                 }
-                Text(
-                    text = description,
-                    color = containerText,
-                    fontSize = 16.sp ,
-                    fontStyle = FontStyle.Italic,
-                    maxLines = maxLines ,
-                    overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.fillMaxWidth()
-                )
+                Spacer(modifier = Modifier.height(10.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Row {
+                        IconButton(onClick = onLike, modifier = Modifier.size(25.dp)) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_heart),
+                                contentDescription = stringResource(
+                                    id = R.string.heart
+                                ),
+                                tint = if (post.isLiked) Color.Red else containerText,
+                            )
+
+                        }
+                        Spacer(modifier = Modifier.width(10.dp))
+                        IconButton(onClick = onComment, modifier = Modifier.size(25.dp)) {
+                            Icon(
+                                imageVector = Icons.Filled.Comment,
+                                contentDescription = stringResource(
+                                    id = R.string.comment
+                                ),
+                                tint = containerText
+                            )
+                        }
+                    }
+                    IconButton(onClick = onShare, modifier = Modifier.size(25.dp)) {
+                        Icon(
+                            imageVector = Icons.Filled.Share,
+                            contentDescription = stringResource(
+                                id = R.string.share
+                            ),
+                            tint = containerText
+                        )
+
+                    }
+                }
+
             }
-            Spacer(modifier = Modifier.height(10.dp))
         }
     }
-
 }
+
 
 
 

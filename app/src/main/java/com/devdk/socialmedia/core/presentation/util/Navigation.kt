@@ -14,6 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import coil.ImageLoader
 import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.components.StandardScaffold
 import com.devdk.socialmedia.feature_activity.presentation.Activity
@@ -27,6 +28,7 @@ import com.devdk.socialmedia.feature_post.presentation.post_detail_screen.PostDe
 import com.devdk.socialmedia.feature_profile.presentation.edit_profile_screen.EditProfile
 import com.devdk.socialmedia.feature_profile.presentation.profile_screen.Profile
 import com.devdk.socialmedia.feature_search.presentation.Search
+import javax.inject.Inject
 
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
@@ -76,7 +78,7 @@ fun Navigation() {
         bottomNavigationItems = bottomNavigation,
         content = {
             NavHost(navController,
-                startDestination = Routes.Splash.screen
+                startDestination = Routes.Feed.screen
             ) {
                 composable(Routes.Splash.screen){
                     Splash(navController = navController)
@@ -88,7 +90,7 @@ fun Navigation() {
                     Register(navController = navController , scaffoldState = scaffoldState)
                 }
                 composable(Routes.Feed.screen){
-                    Feed(navController = navController)
+                    Feed(navController = navController , scaffoldState = scaffoldState )
                 }
                 composable(Routes.AddPost.screen){
                     AddPost(navController = navController)

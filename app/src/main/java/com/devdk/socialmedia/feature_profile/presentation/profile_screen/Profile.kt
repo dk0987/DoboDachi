@@ -185,25 +185,25 @@ fun Profile(
 
             }
             items (5){
-                Post(
-                    username = "Izuku Midoriya",
-                    profilePic = painterResource(id = R.drawable.profile_pic),
-                    postImage = painterResource(id = R.drawable.mhawallparer),
-                    numberOfLike = 45,
-                    numberOfComment = 7,
-                    isLiked = true,
-                    onPost = {
-                        navController.navigate(Routes.PostDetail.screen)
-                    },
-                    onComment = {
-                        navController.navigate(Routes.PostDetail.screen)
-                    },
-                    onLikedText = {
-                        navController.navigate(Routes.PersonList.screen)
-                    },
-                    isUser = true,
-                    description = "used in various expressions indicating that a description or amount being stated is not exact a wry look, something between amusement and regret"
-                )
+//                Post(
+//                    username = "Izuku Midoriya",
+//                    profilePic = painterResource(id = R.drawable.profile_pic),
+//                    postImage = painterResource(id = R.drawable.mhawallparer),
+//                    numberOfLike = 45,
+//                    numberOfComment = 7,
+//                    isLiked = true,
+//                    onPost = {
+//                        navController.navigate(Routes.PostDetail.screen)
+//                    },
+//                    onComment = {
+//                        navController.navigate(Routes.PostDetail.screen)
+//                    },
+//                    onLikedText = {
+//                        navController.navigate(Routes.PersonList.screen)
+//                    },
+//                    isUser = true,
+//                    description = "used in various expressions indicating that a description or amount being stated is not exact a wry look, something between amusement and regret"
+//                )
             }
         }
     }

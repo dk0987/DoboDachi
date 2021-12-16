@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -78,7 +79,6 @@ fun Search(
             trailingIcon = Icons.Outlined.Search,
         )
         Spacer(modifier = Modifier.height(10.dp))
-        if (!searchStates.isLoading){
             LazyColumn(modifier = Modifier
                 .fillMaxWidth()
                 .fillMaxHeight(0.92f)
@@ -91,21 +91,29 @@ fun Search(
                             navController.navigate(Routes.Profile.screen)
                         },
                         OnFollow = {
-
+                           searchViewModel.onEvent(SearchEvents.Follow(
+                               userId = searchedItem.userId,
+                               isFollowed = searchedItem.isFollowing
+                           ))
                         }
                     )
                 }
             }
         }
-        else{
-            Box(modifier = Modifier.fillMaxSize()){
-                CircularProgressIndicator(
-                    color = bottomNavigationItem,
-                    modifier = Modifier
-                        .align(Center)
-                )
-            }
-        }
+            Box(modifier = Modifier.fillMaxSize() , contentAlignment = Alignment.Center){
+                if (searchStates.searchedResult.isEmpty() && !searchStates.isLoading){
+                    Text(
+                        text = stringResource(id = R.string.nothing_to_show),
+                        color = primaryText ,
+                        fontWeight = FontWeight.Bold ,
+                        fontSize = 22.sp,
+                        fontStyle = FontStyle.Italic
+                    )
+                }
+                if (searchStates.isLoading){
+                    CircularProgressIndicator(color = bottomNavigationItem)
+                }
 
-    }
+            }
+
 }
