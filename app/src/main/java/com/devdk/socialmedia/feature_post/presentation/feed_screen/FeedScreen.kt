@@ -45,7 +45,6 @@ fun Feed(
 ) {
     val feedScreenStates = feedScreenViewModel.feedScreenStates.value
     val posts = feedScreenViewModel.paginatedPost.value
-    val scope = rememberCoroutineScope()
 
    Column(
        modifier = Modifier
@@ -96,7 +95,10 @@ fun Feed(
                   feedScreenViewModel.loadMorePost()
               }
               Post(
-                  post = post
+                  post = post,
+                  onLike = {
+                      feedScreenViewModel.onEvent(FeedScreenEvents.OnLike(parentId = post.postId , isLiked = post.isLiked))
+                  }
               )
           }
        }

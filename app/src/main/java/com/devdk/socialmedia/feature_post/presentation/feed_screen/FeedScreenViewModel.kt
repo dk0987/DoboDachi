@@ -5,7 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import com.devdk.socialmedia.core.domain.use_case.LikeUseCase
 import com.devdk.socialmedia.core.util.DefaultPagination
+import com.devdk.socialmedia.core.util.LikedOn
+import com.devdk.socialmedia.core.util.Resource
 import com.devdk.socialmedia.feature_auth.presentation.util.UiEvent
 import com.devdk.socialmedia.feature_post.domain.useCases.GetPostUseCase
 import com.devdk.socialmedia.feature_profile.presentation.profile_screen.PaginationPost
@@ -17,7 +20,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FeedScreenViewModel @Inject constructor(
-    private val getPostUseCase: GetPostUseCase
+    private val getPostUseCase: GetPostUseCase,
+    private val likeUseCase: LikeUseCase
 ): ViewModel() {
 
     private val _feedScreenStates = mutableStateOf(FeedScreenStates())
@@ -59,7 +63,7 @@ class FeedScreenViewModel @Inject constructor(
     fun onEvent(event : FeedScreenEvents) {
         when(event){
             is FeedScreenEvents.OnLike -> {
-
+                toggleLike(event.parentId , LikedOn.Post , event.isLiked)
             }
             is FeedScreenEvents.OnShare -> {
 
@@ -91,5 +95,27 @@ class FeedScreenViewModel @Inject constructor(
         viewModelScope.launch {
             pagination.loadItems()
         }
-   }
+     }
+
+    private fun toggleLike(parentId : String , likedOn: LikedOn , isLiked : Boolean)  {
+        viewModelScope.launch {
+             when(val liked = likeUseCase(parentId, likedOn, isLiked)) {
+                is Resource.Success -> {
+                    _paginatedPost.value = paginatedPost.value.copy(
+                        items = paginatedPost.value.items.map { post ->
+                            if (post.postId == parentId) {
+                                post.copy(
+                                    isLiked = !post.isLiked,
+                                    liked = if (post.isLiked) post.liked - 1 else post.liked + 1
+                                )
+                            } else post
+                        }
+                    )
+                }
+                is Resource.Error -> {
+                    _eventFlow.emit(UiEvent.ShowSnackBar(liked.message))
+                }
+            }
+        }
+    }
 }
