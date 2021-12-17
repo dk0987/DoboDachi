@@ -6,5 +6,5 @@ import kotlinx.coroutines.flow.Flow
 
 interface PostRepository {
 
-    suspend fun getPost(userId : String) : Resource<List<Post>>
+    suspend fun getPost(userId : String , page : Int) : Resource<List<Post>>
 }

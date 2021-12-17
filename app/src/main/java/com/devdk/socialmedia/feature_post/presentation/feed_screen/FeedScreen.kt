@@ -44,14 +44,14 @@ fun Feed(
     scaffoldState: ScaffoldState
 ) {
     val feedScreenStates = feedScreenViewModel.feedScreenStates.value
-    val posts = feedScreenViewModel.feedScreenStates.value.posts.collectAsLazyPagingItems()
+    val posts = feedScreenViewModel.paginatedPost.value
     val scope = rememberCoroutineScope()
 
    Column(
        modifier = Modifier
            .fillMaxSize()
            .padding(10.dp),
-       horizontalAlignment = Alignment.CenterHorizontally
+       horizontalAlignment = CenterHorizontally
    ) {
        Row(
            modifier = Modifier
@@ -87,46 +87,18 @@ fun Feed(
            Modifier
                .fillMaxHeight(0.94f)
                .fillMaxWidth(),
-           horizontalAlignment = Alignment.CenterHorizontally ,
+           horizontalAlignment = CenterHorizontally ,
            verticalArrangement = Arrangement.Center
        ) {
-           items(posts) { post ->
-               post?.let {
-                   Post(post = it)
-               }
-           }
-           posts.apply {
-               when {
-                   loadState.refresh is LoadState.Loading -> {
-                       item {
-                           CircularProgressIndicator(
-                               color = bottomNavigationItem,
-                               modifier = Modifier.align(CenterHorizontally)
-                           )
-                       }
-                   }
-                   loadState.append is LoadState.Loading -> {
-                       item {
-                           CircularProgressIndicator(
-                               color = bottomNavigationItem,
-                               modifier = Modifier.align(CenterHorizontally)
-                           )
-                       }
-                   }
-                   loadState.append is LoadState.NotLoading -> {
-                       item {
-                           Text(
-                               text = stringResource(id = R.string.nothing_to_show),
-                               color = primaryText ,
-                               fontWeight = FontWeight.Bold ,
-                               fontSize = 22.sp,
-                               fontStyle = FontStyle.Italic
-                           )
-                       }
-                   }
-               }
-           }
-
+          items(posts.items.size) { i ->
+              val post = posts.items[i]
+              if (i >= posts.items.size - 1 && !posts.endReached && !posts.isLoading) {
+                  feedScreenViewModel.loadMorePost()
+              }
+              Post(
+                  post = post
+              )
+          }
        }
    }
 }

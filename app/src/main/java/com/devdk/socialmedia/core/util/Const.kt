@@ -6,4 +6,5 @@ object Const {
     const val PUBLIC = "Public"
 
     const val SOMETHING_WRONG = "Something went wrong"
+    const val POST_PAGE_SIZE = 15
 }

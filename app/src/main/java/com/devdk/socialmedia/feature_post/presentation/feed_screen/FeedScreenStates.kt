@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.emptyFlow
 
 data class FeedScreenStates(
-    val posts : Flow<PagingData<Post>> = emptyFlow(),
     val menuExpanded : Boolean = false,
     val selectedOption : String = MenuItems.dropDown[0],
     val isLoading : Boolean = false

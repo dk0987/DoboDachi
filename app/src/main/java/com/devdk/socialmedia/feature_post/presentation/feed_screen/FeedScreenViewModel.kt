@@ -1,18 +1,17 @@
 package com.devdk.socialmedia.feature_post.presentation.feed_screen
 
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.cachedIn
-import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.paging.PagingData
+import com.devdk.socialmedia.core.util.DefaultPagination
 import com.devdk.socialmedia.feature_auth.presentation.util.UiEvent
 import com.devdk.socialmedia.feature_post.domain.useCases.GetPostUseCase
+import com.devdk.socialmedia.feature_profile.presentation.profile_screen.PaginationPost
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.count
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,8 +23,37 @@ class FeedScreenViewModel @Inject constructor(
     private val _feedScreenStates = mutableStateOf(FeedScreenStates())
     val feedScreenStates : State<FeedScreenStates> = _feedScreenStates
 
+    private val _paginatedPost = mutableStateOf(PaginationPost())
+    val paginatedPost : State<PaginationPost> = _paginatedPost
+
+    private val _eventFlow = MutableSharedFlow<UiEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
+
+    private val pagination = DefaultPagination(
+        onLoadUpdate = { isLoading ->
+            _paginatedPost.value = paginatedPost.value.copy(
+                isLoading = isLoading
+            )
+        } ,
+        onRequest = { page ->
+            getPostUseCase(userId = null , page = page)
+        } ,
+        onSuccess = { posts ->
+            _paginatedPost.value = paginatedPost.value.copy(
+                items = paginatedPost.value.items + posts ,
+                isLoading = false,
+                endReached = posts.isEmpty()
+            )
+        } ,
+        onError = { error ->
+            _eventFlow.emit(
+                UiEvent.ShowSnackBar(error)
+            )
+        }
+    )
+
     init {
-        getPost(null)
+        loadMorePost()
     }
 
     fun onEvent(event : FeedScreenEvents) {
@@ -59,14 +87,9 @@ class FeedScreenViewModel @Inject constructor(
     }
 
 
-    private fun getPost(userId : String?) {
-           _feedScreenStates.value = feedScreenStates.value.copy(
-               isLoading = true
-           )
-           val posts = getPostUseCase(userId).cachedIn(viewModelScope)
-           _feedScreenStates.value = feedScreenStates.value.copy(
-               posts = posts,
-               isLoading = false
-           )
+     fun loadMorePost() {
+        viewModelScope.launch {
+            pagination.loadItems()
+        }
    }
 }

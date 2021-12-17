@@ -14,10 +14,10 @@ class PostRepositoryImpl(
     private val postApi : PostApi
 ) : PostRepository {
 
-    override suspend fun getPost(userId: String): Resource<List<Post>> {
+    override suspend fun getPost(userId: String , page : Int): Resource<List<Post>> {
         val posts = arrayListOf<Post>()
         return try {
-            val response = postApi.getPosts(userId)
+            val response = postApi.getPosts(userId , page)
             if (response.successful) {
                 response.data?.forEach { post ->
                     posts.add(
