@@ -1,4 +1,4 @@
-package com.devdk.socialmedia.feature_search.presentation.component
+package com.devdk.socialmedia.feature_persons_list.person_list_screen.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -13,11 +13,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,19 +24,17 @@ import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.domain.modal.GetLikes
 import com.devdk.socialmedia.core.presentation.components.StandardFollowButton
 import com.devdk.socialmedia.core.presentation.ui.theme.container
-import com.devdk.socialmedia.core.presentation.ui.theme.containerText
 import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
-import com.devdk.socialmedia.feature_search.domain.modal.SearchedUser
 
 @ExperimentalMaterialApi
 @Composable
-fun SearchedItem(
-    searchedUser: SearchedUser,
+fun PersonItem(
+    person: GetLikes,
     elevation : Dp = 10.dp,
     roundedCornerShape : Dp = 15.dp,
     profile_pic_size : Dp = 45.dp,
     OnClick : () -> Unit = {},
-    OnFollow : () -> Unit = {},
+    OnFollow : () -> Unit = {}
 ) {
     Card(
         onClick = OnClick ,
@@ -53,11 +49,11 @@ fun SearchedItem(
             Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp, vertical = 8.dp) ,
-            horizontalArrangement = Arrangement.SpaceAround ,
+            horizontalArrangement = if (person.isUser) Arrangement.Start else Arrangement.SpaceAround ,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Row(
-                verticalAlignment = Alignment.CenterVertically
+                verticalAlignment = Alignment.CenterVertically,
             ) {
                 IconButton(
                     onClick = OnClick,
@@ -67,7 +63,7 @@ fun SearchedItem(
                 ) {
                     Image(
                         painter = rememberImagePainter(
-                            data = searchedUser.profilePicUrl ,
+                            data = person.userProfile,
                             builder = {
                                 crossfade(true)
                             }),
@@ -78,7 +74,7 @@ fun SearchedItem(
                 Spacer(modifier = Modifier.width(10.dp))
                 Column {
                     Text(
-                        text = searchedUser.username,
+                        text =  person.username ,
                         color = primaryText,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold,
@@ -88,21 +84,13 @@ fun SearchedItem(
                             )
                             .fillMaxWidth(0.7f)
                     )
-                    searchedUser.description?.let { description ->
-                        Text(
-                            text = description,
-                            color = containerText,
-                            fontSize = 16.sp,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis,
-                            fontWeight = FontWeight.Light,
-                            modifier = Modifier.fillMaxWidth(0.7f)
-                        )
-                    }
-
                 }
             }
-            StandardFollowButton(isFollowing = searchedUser.isFollowing , OnClick = OnFollow)
+            if (!person.isUser){
+                StandardFollowButton(isFollowing = person.isFollowing , OnClick = OnFollow)
+            }
+            println("IsUser ${person.isUser}")
+
         }
     }
 }

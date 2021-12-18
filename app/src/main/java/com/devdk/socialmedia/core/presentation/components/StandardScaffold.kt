@@ -27,6 +27,16 @@ fun StandardScaffold(
 ) {
         Scaffold(
             scaffoldState = scaffoldState,
+            snackbarHost = {
+                SnackbarHost(hostState = it){ snackBarData ->
+                    Snackbar(
+                        snackbarData = snackBarData,
+                        backgroundColor = container,
+                        contentColor = primaryText,
+                        shape = RoundedCornerShape(5.dp)
+                    )
+                }
+            },
             bottomBar = {
                 if(isVisible) {
                     BottomNavigation(

@@ -13,6 +13,6 @@ data class Post(
     val liked : Int = 0,
     val comment : Int = 0,
     val postId : String = "",
-    val isLiked : Boolean = false ,
+    var isLiked : Boolean = false,
     val isUser : Boolean = false
 )

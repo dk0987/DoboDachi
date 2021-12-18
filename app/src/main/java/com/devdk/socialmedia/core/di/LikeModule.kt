@@ -3,6 +3,7 @@ package com.devdk.socialmedia.core.di
 import com.devdk.socialmedia.core.data.remote.LikeApi
 import com.devdk.socialmedia.core.data.repository.LikeRepositoryImpl
 import com.devdk.socialmedia.core.domain.repository.LikeRepository
+import com.devdk.socialmedia.core.domain.use_case.GetLikesUseCase
 import com.devdk.socialmedia.core.domain.use_case.LikeUseCase
 import dagger.Module
 import dagger.Provides
@@ -37,5 +38,11 @@ object LikeModule {
     @Singleton
     fun provideLikeUserUseCase(likeRepository: LikeRepository) : LikeUseCase {
         return LikeUseCase(likeRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetLikesUseCase(likeRepository: LikeRepository) : GetLikesUseCase {
+        return GetLikesUseCase(likeRepository)
     }
 }

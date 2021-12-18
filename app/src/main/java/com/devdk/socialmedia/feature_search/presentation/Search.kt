@@ -49,6 +49,7 @@ fun Search(
                 is UiEvent.ShowSnackBar -> {
                     scaffoldState.snackbarHostState.showSnackbar(event.message!!)
                 }
+                else -> Unit
             }
         }
     }

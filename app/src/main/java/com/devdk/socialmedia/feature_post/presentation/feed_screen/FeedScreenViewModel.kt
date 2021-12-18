@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import com.devdk.socialmedia.core.domain.use_case.GetLikesUseCase
 import com.devdk.socialmedia.core.domain.use_case.LikeUseCase
 import com.devdk.socialmedia.core.util.DefaultPagination
 import com.devdk.socialmedia.core.util.LikedOn
@@ -21,7 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class FeedScreenViewModel @Inject constructor(
     private val getPostUseCase: GetPostUseCase,
-    private val likeUseCase: LikeUseCase
+    private val likeUseCase: LikeUseCase,
 ): ViewModel() {
 
     private val _feedScreenStates = mutableStateOf(FeedScreenStates())
@@ -63,6 +64,16 @@ class FeedScreenViewModel @Inject constructor(
     fun onEvent(event : FeedScreenEvents) {
         when(event){
             is FeedScreenEvents.OnLike -> {
+                _paginatedPost.value = paginatedPost.value.copy(
+                    items = paginatedPost.value.items.map { post ->
+                        if (post.postId == event.parentId) {
+                            post.copy(
+                                isLiked = !post.isLiked,
+                                liked = if (post.isLiked) post.liked - 1 else post.liked + 1
+                            )
+                        } else post
+                    }
+                )
                 toggleLike(event.parentId , LikedOn.Post , event.isLiked)
             }
             is FeedScreenEvents.OnShare -> {
@@ -100,7 +111,8 @@ class FeedScreenViewModel @Inject constructor(
     private fun toggleLike(parentId : String , likedOn: LikedOn , isLiked : Boolean)  {
         viewModelScope.launch {
              when(val liked = likeUseCase(parentId, likedOn, isLiked)) {
-                is Resource.Success -> {
+                is Resource.Success -> Unit
+                is Resource.Error -> {
                     _paginatedPost.value = paginatedPost.value.copy(
                         items = paginatedPost.value.items.map { post ->
                             if (post.postId == parentId) {
@@ -111,8 +123,6 @@ class FeedScreenViewModel @Inject constructor(
                             } else post
                         }
                     )
-                }
-                is Resource.Error -> {
                     _eventFlow.emit(UiEvent.ShowSnackBar(liked.message))
                 }
             }

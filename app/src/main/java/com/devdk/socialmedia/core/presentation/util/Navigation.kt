@@ -102,11 +102,15 @@ fun Navigation() {
                     Search(navController = navController , scaffoldState = scaffoldState)
                 }
                 composable(
-                    route = Routes.PersonList.screen + "?personList={personList}" ,
+                    route = Routes.PersonList.screen + "?personList={personList}&parentId={parentId}" ,
                     arguments = listOf(
                         navArgument("personList"){
                             type = NavType.StringType
                             defaultValue = "LikedBy"
+                        } ,
+                        navArgument("parentId"){
+                            type = NavType.StringType
+                            defaultValue = ""
                         }
                     )
                 ){

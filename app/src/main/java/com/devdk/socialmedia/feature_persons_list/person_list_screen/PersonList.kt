@@ -2,17 +2,15 @@ package com.devdk.socialmedia.feature_persons_list.person_list_screen
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.KeyboardArrowLeft
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -20,9 +18,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.devdk.socialmedia.R
+import com.devdk.socialmedia.core.presentation.ui.theme.bottomNavigationItem
 import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
-import com.devdk.socialmedia.core.presentation.util.Routes
-import com.devdk.socialmedia.feature_search.presentation.component.SearchedItem
+import com.devdk.socialmedia.feature_persons_list.person_list_screen.component.PersonItem
 
 @ExperimentalMaterialApi
 @Composable
@@ -68,20 +66,28 @@ fun PersonList(
         }
         Spacer(modifier = Modifier.height(10.dp))
         LazyColumn{
-            items(20){
-//                SearchedItem(
-//                    profileURL = painterResource(id = R.drawable.post_pic),
-//                    username = "Yuji Itadori",
-//                    following = true,
-//                    OnClick = {
-//                        navController.navigate(Routes.Profile.screen)
-//                    },
-//                )
-//                SearchedItem(
-//                    profileURL = painterResource(id = R.drawable.post_pic),
-//                    username = "Yuji Itadori",
-//                    following = false ,
-//                )
+            items(personListState.persons){ person ->
+                PersonItem(
+                    person = person,
+                    OnFollow = {
+                        personLIstViewModel.follow( person.userId , person.isFollowing)
+                    },
+                )
+            }
+            if (personListState.isLoading){
+                item { CircularProgressIndicator(color = bottomNavigationItem) }
+            }
+            else if (!personListState.isLoading && personListState.persons.isEmpty()){
+                item {
+                    Text(
+                        text = stringResource(id = R.string.nothing_to_show),
+                        color = primaryText ,
+                        fontWeight = FontWeight.Bold ,
+                        fontSize = 22.sp,
+                        fontStyle = FontStyle.Italic
+                    )
+                }
+
             }
         }
     }

@@ -1,6 +1,9 @@
 package com.devdk.socialmedia.core.presentation.components
 
 import android.view.GestureDetector
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -17,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
@@ -41,9 +45,11 @@ import com.devdk.socialmedia.core.presentation.ui.theme.container
 import com.devdk.socialmedia.core.presentation.ui.theme.containerText
 import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
 import com.devdk.socialmedia.core.presentation.util.MenuItems
+import com.devdk.socialmedia.core.presentation.util.TimeStampConverter
 import com.devdk.socialmedia.feature_post.domain.modal.Post
 import com.devdk.socialmedia.feature_post.presentation.feed_screen.FeedScreenEvents
 import com.devdk.socialmedia.feature_post.presentation.feed_screen.FeedScreenViewModel
+import kotlinx.coroutines.delay
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
@@ -69,6 +75,17 @@ fun Post(
     var expanded by remember {
         mutableStateOf(false)
     }
+
+    val size = 150.dp
+    val animatedSize by animateDpAsState(
+        targetValue = if (post.isLiked) size else 0.dp,
+        animationSpec = spring(
+            dampingRatio = Spring.DampingRatioMediumBouncy,
+            stiffness = 500f
+        )
+    )
+    val isVisible = animatedSize != size
+    val timeStampConverter  = TimeStampConverter()
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -126,12 +143,14 @@ fun Post(
                                     onClick = onProfilePic
                                 )
                             )
-                            Text(
-                                text = "4:00 P.M",
-                                color = containerText,
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Light,
-                            )
+                            timeStampConverter(post.timeStamp * 1000)?.let {
+                                Text(
+                                    text = it,
+                                    color = containerText,
+                                    fontSize = 16.sp,
+                                    fontWeight = FontWeight.Light,
+                                )
+                            }
                         }
                     }
                     if (post.isUser) {
@@ -172,17 +191,28 @@ fun Post(
                     }
                 }
                 Spacer(modifier = Modifier.height(10.dp))
-                Image(
-                    painter = rememberImagePainter(data = post.postImageUrl , builder = {
-                        crossfade(true)
-                    }),
-                    contentDescription = stringResource(id = R.string.post_image),
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(roundedCornerShape))
-                        .fillMaxWidth()
-                        .aspectRatio(4f/5f)
-                )
+                Box(modifier = Modifier.fillMaxSize() , contentAlignment = Alignment.Center){
+                    Image(
+                        painter = rememberImagePainter(data = post.postImageUrl , builder = {
+                            crossfade(true)
+                        }),
+                        contentDescription = stringResource(id = R.string.post_image),
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(5.dp))
+                            .fillMaxWidth()
+                            .aspectRatio(4f / 5f),
+                    )
+                    if (post.isLiked && isVisible){
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_heart),
+                            contentDescription = "",
+                            modifier = Modifier.size(animatedSize),
+                            colorFilter = ColorFilter.tint(color = Color.Red)
+                        )
+                    }
+                }
+
                 Spacer(modifier = Modifier.height(8.dp))
                 post.description?.let {
                     Text(

@@ -30,6 +30,8 @@ import com.devdk.socialmedia.core.presentation.components.Post
 import com.devdk.socialmedia.core.presentation.ui.theme.bottomNavigationItem
 import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
 import com.devdk.socialmedia.core.presentation.util.Routes
+import com.devdk.socialmedia.core.presentation.util.TimeStampConverter
+import com.devdk.socialmedia.core.util.Const
 import com.devdk.socialmedia.feature_auth.presentation.util.UiEvent
 import com.devdk.socialmedia.feature_post.domain.modal.Post
 import kotlinx.coroutines.flow.collectLatest
@@ -45,6 +47,18 @@ fun Feed(
 ) {
     val feedScreenStates = feedScreenViewModel.feedScreenStates.value
     val posts = feedScreenViewModel.paginatedPost.value
+
+
+    LaunchedEffect(key1 = true ){
+        feedScreenViewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                is UiEvent.ShowSnackBar -> {
+                    scaffoldState.snackbarHostState.showSnackbar(event.message!!)
+                }
+                else -> Unit
+            }
+        }
+    }
 
    Column(
        modifier = Modifier
@@ -89,18 +103,46 @@ fun Feed(
            horizontalAlignment = CenterHorizontally ,
            verticalArrangement = Arrangement.Center
        ) {
-          items(posts.items.size) { i ->
-              val post = posts.items[i]
-              if (i >= posts.items.size - 1 && !posts.endReached && !posts.isLoading) {
-                  feedScreenViewModel.loadMorePost()
-              }
-              Post(
-                  post = post,
-                  onLike = {
-                      feedScreenViewModel.onEvent(FeedScreenEvents.OnLike(parentId = post.postId , isLiked = post.isLiked))
-                  }
-              )
-          }
+             items(posts.items.size) { i ->
+                  val post = posts.items[i]
+                if (i >= posts.items.size - 1 && !posts.endReached && !posts.isLoading) {
+                      feedScreenViewModel.loadMorePost()
+                }
+                 Post(
+                     post = post,
+                     onLike = {
+                         feedScreenViewModel.onEvent(FeedScreenEvents.OnLike(
+                             parentId = post.postId,
+                             isLiked = post.isLiked
+                         ))
+                     },
+                     onLikedText = {
+                         if (post.liked > 0){
+                             navController.navigate(
+                                 Routes.PersonList.screen
+                                         + "?personList=${Const.LIKED_SCREEN}&parentId=${post.postId}"
+                             )
+                         }
+                     }
+                )
+                 println(TimeStampConverter().invoke(post.timeStamp * 1000))
+                 println(post.timeStamp)
+             }
+            if (posts.isLoading){
+                item { CircularProgressIndicator(color = bottomNavigationItem) }
+            }
+           else if (!posts.isLoading && posts.items.isEmpty()){
+               item {
+                   Text(
+                       text = stringResource(id = R.string.nothing_to_show),
+                       color = primaryText ,
+                       fontWeight = FontWeight.Bold ,
+                       fontSize = 22.sp,
+                       fontStyle = FontStyle.Italic
+                   )
+               }
+
+            }
        }
    }
 }

@@ -85,7 +85,6 @@ class SearchViewModel @Inject constructor(
     private fun follow(userId : String , isFollowed : Boolean)  {
         viewModelScope.launch {
             val error = followUseCase(userId , isFollowed)
-
             _searchState.value = searchState.value.copy(
                 searchedResult = searchState.value.searchedResult.map {
                     if(it.userId == userId) {
