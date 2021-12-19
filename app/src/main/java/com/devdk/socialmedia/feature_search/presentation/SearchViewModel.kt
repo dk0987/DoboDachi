@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.devdk.socialmedia.core.domain.use_case.FollowUseCase
 import com.devdk.socialmedia.core.presentation.states.TextFieldStates
 import com.devdk.socialmedia.core.util.Resource
-import com.devdk.socialmedia.feature_auth.presentation.util.UiEvent
+import com.devdk.socialmedia.core.util.UiEvent
 import com.devdk.socialmedia.feature_search.domain.use_case.SearchUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow

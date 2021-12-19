@@ -7,8 +7,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
@@ -22,9 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.paging.LoadState
-import androidx.paging.compose.collectAsLazyPagingItems
-import androidx.paging.compose.items
 import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.components.Post
 import com.devdk.socialmedia.core.presentation.ui.theme.bottomNavigationItem
@@ -32,11 +27,8 @@ import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
 import com.devdk.socialmedia.core.presentation.util.Routes
 import com.devdk.socialmedia.core.presentation.util.TimeStampConverter
 import com.devdk.socialmedia.core.util.Const
-import com.devdk.socialmedia.feature_auth.presentation.util.UiEvent
-import com.devdk.socialmedia.feature_post.domain.modal.Post
+import com.devdk.socialmedia.core.util.UiEvent
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.emptyFlow
-import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
 @Composable

@@ -65,7 +65,10 @@ fun PersonList(
             )
         }
         Spacer(modifier = Modifier.height(10.dp))
-        LazyColumn{
+        LazyColumn(
+            horizontalAlignment = Alignment.CenterHorizontally ,
+            verticalArrangement = Arrangement.Center
+        ){
             items(personListState.persons){ person ->
                 PersonItem(
                     person = person,

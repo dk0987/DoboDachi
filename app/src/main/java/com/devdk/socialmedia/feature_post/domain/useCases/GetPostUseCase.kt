@@ -1,10 +1,6 @@
 package com.devdk.socialmedia.feature_post.domain.useCases
 
 import android.content.SharedPreferences
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import androidx.paging.cachedIn
 import com.devdk.socialmedia.core.util.AuthConst
 import com.devdk.socialmedia.core.util.Resource
 import com.devdk.socialmedia.feature_post.domain.modal.Post

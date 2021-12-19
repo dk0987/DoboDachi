@@ -1,6 +1,4 @@
-package com.devdk.socialmedia.feature_auth.presentation.util
-
-import androidx.annotation.StringRes
+package com.devdk.socialmedia.core.util
 
 sealed class UiEvent{
         data class ShowSnackBar(val message : String?) : UiEvent()

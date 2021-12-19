@@ -12,10 +12,7 @@ import androidx.compose.material.icons.outlined.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.Alignment.Companion.Center
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -29,7 +26,7 @@ import com.devdk.socialmedia.core.presentation.components.StandardTextField
 import com.devdk.socialmedia.core.presentation.ui.theme.bottomNavigationItem
 import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
 import com.devdk.socialmedia.core.presentation.util.Routes
-import com.devdk.socialmedia.feature_auth.presentation.util.UiEvent
+import com.devdk.socialmedia.core.util.UiEvent
 import com.devdk.socialmedia.feature_search.presentation.component.SearchedItem
 import kotlinx.coroutines.flow.collectLatest
 

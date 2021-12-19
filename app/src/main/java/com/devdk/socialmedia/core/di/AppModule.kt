@@ -5,6 +5,7 @@ import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import com.devdk.socialmedia.core.util.AuthConst
 import com.devdk.socialmedia.core.util.Const
+import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,6 +24,12 @@ object AppModule {
             Const.SHARED_PREF,
             MODE_PRIVATE
         )
+    }
+
+    @Provides
+    @Singleton
+    fun provideGson() : Gson{
+        return Gson()
     }
 
     @Provides

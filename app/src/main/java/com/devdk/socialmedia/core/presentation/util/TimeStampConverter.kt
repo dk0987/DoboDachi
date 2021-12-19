@@ -1,34 +1,28 @@
 package com.devdk.socialmedia.core.presentation.util
 
 import android.text.format.DateUtils
+import com.devdk.socialmedia.core.presentation.util.TImeConst.A_HOUR_AGO
+import com.devdk.socialmedia.core.presentation.util.TImeConst.A_MINUTE_AGO
+import com.devdk.socialmedia.core.presentation.util.TImeConst.DAY_MILLIS
+import com.devdk.socialmedia.core.presentation.util.TImeConst.HOUR_MILLIS
+import com.devdk.socialmedia.core.presentation.util.TImeConst.JUST_NOW
+import com.devdk.socialmedia.core.presentation.util.TImeConst.MINUTE_MILLIS
+import com.devdk.socialmedia.core.presentation.util.TImeConst.YESTERDAY
 
 class TimeStampConverter {
-    private val SECOND_MILLIS = 1000;
-    private val MINUTE_MILLIS = 60 * SECOND_MILLIS;
-    private val HOUR_MILLIS = 60 * MINUTE_MILLIS;
-    private val DAY_MILLIS = 24 * HOUR_MILLIS;
-    operator fun invoke(timestamp : Long) : String? {
 
+    operator fun invoke(timestamp : Long) : String? {
         val now = System.currentTimeMillis()
         if (timestamp > now || timestamp <= 0) {
             return null;
         }
-        println(if (timestamp < 1000000000000L) " Correct" else "")
         val diff = now - timestamp;
-        return if (diff < MINUTE_MILLIS) {
-            "just now";
-        } else if (diff < 2 * MINUTE_MILLIS) {
-            "a minute ago";
-        } else if (diff < 50 * MINUTE_MILLIS) {
-            " ${ diff / MINUTE_MILLIS } minutes ago"
-        } else if (diff < 90 * MINUTE_MILLIS) {
-            "an hour ago";
-        } else if (diff < 24 * HOUR_MILLIS) {
-            "${diff / HOUR_MILLIS} hours ago"
-        } else if (diff < 48 * HOUR_MILLIS) {
-            "yesterday";
-        } else {
-            " ${diff / DAY_MILLIS} days ago"
-        }
+        return if (diff < MINUTE_MILLIS) JUST_NOW
+        else if (diff < 2 * MINUTE_MILLIS) A_MINUTE_AGO
+        else if (diff < 50 * MINUTE_MILLIS)"${ diff / MINUTE_MILLIS } minutes ago"
+        else if (diff < 90 * MINUTE_MILLIS) A_HOUR_AGO
+        else if (diff < 24 * HOUR_MILLIS)"${diff / HOUR_MILLIS} hours ago"
+        else if (diff < 48 * HOUR_MILLIS ) YESTERDAY
+        else "${diff / DAY_MILLIS} days ago"
     }
 }

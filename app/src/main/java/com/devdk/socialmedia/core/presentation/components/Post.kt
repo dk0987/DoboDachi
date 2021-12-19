@@ -1,12 +1,9 @@
 package com.devdk.socialmedia.core.presentation.components
 
-import android.view.GestureDetector
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -18,13 +15,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -34,12 +27,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import coil.ImageLoader
-import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
-import coil.request.ImageRequest
-import coil.request.ImageResult
+import coil.size.OriginalSize
 import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.ui.theme.container
 import com.devdk.socialmedia.core.presentation.ui.theme.containerText
@@ -48,8 +37,6 @@ import com.devdk.socialmedia.core.presentation.util.MenuItems
 import com.devdk.socialmedia.core.presentation.util.TimeStampConverter
 import com.devdk.socialmedia.feature_post.domain.modal.Post
 import com.devdk.socialmedia.feature_post.presentation.feed_screen.FeedScreenEvents
-import com.devdk.socialmedia.feature_post.presentation.feed_screen.FeedScreenViewModel
-import kotlinx.coroutines.delay
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
@@ -195,13 +182,13 @@ fun Post(
                     Image(
                         painter = rememberImagePainter(data = post.postImageUrl , builder = {
                             crossfade(true)
+                            size(OriginalSize)
                         }),
                         contentDescription = stringResource(id = R.string.post_image),
-                        contentScale = ContentScale.Crop,
+                        contentScale = ContentScale.FillWidth,
                         modifier = Modifier
                             .clip(RoundedCornerShape(5.dp))
-                            .fillMaxWidth()
-                            .aspectRatio(4f / 5f),
+                            .fillMaxWidth(),
                     )
                     if (post.isLiked && isVisible){
                         Image(

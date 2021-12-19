@@ -9,7 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.devdk.socialmedia.core.presentation.ui.theme.background
-import com.devdk.socialmedia.feature_auth.presentation.util.UiEvent
+import com.devdk.socialmedia.core.util.UiEvent
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable

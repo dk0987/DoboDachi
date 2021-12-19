@@ -4,13 +4,11 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.PagingData
-import com.devdk.socialmedia.core.domain.use_case.GetLikesUseCase
 import com.devdk.socialmedia.core.domain.use_case.LikeUseCase
 import com.devdk.socialmedia.core.util.DefaultPagination
 import com.devdk.socialmedia.core.util.LikedOn
 import com.devdk.socialmedia.core.util.Resource
-import com.devdk.socialmedia.feature_auth.presentation.util.UiEvent
+import com.devdk.socialmedia.core.util.UiEvent
 import com.devdk.socialmedia.feature_post.domain.useCases.GetPostUseCase
 import com.devdk.socialmedia.feature_profile.presentation.profile_screen.PaginationPost
 import dagger.hilt.android.lifecycle.HiltViewModel

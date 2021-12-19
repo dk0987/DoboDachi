@@ -26,7 +26,7 @@ import com.devdk.socialmedia.core.presentation.ui.theme.background
 import com.devdk.socialmedia.core.presentation.ui.theme.onBackground
 import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
 import com.devdk.socialmedia.core.presentation.util.Routes
-import com.devdk.socialmedia.feature_auth.presentation.util.UiEvent
+import com.devdk.socialmedia.core.util.UiEvent
 import kotlinx.coroutines.flow.collectLatest
 
 @SuppressLint("PrivateResource")

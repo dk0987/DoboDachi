@@ -8,7 +8,9 @@ import com.devdk.socialmedia.core.domain.use_case.FollowUseCase
 import com.devdk.socialmedia.feature_post.data.remote.PostApi
 import com.devdk.socialmedia.feature_post.data.repository.PostRepositoryImpl
 import com.devdk.socialmedia.feature_post.domain.repository.PostRepository
+import com.devdk.socialmedia.feature_post.domain.useCases.AddPostUseCase
 import com.devdk.socialmedia.feature_post.domain.useCases.GetPostUseCase
+import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,12 +37,19 @@ object PostModule {
 
     @Provides
     @Singleton
-    fun providePostRepository(api: PostApi) : PostRepository {
-        return PostRepositoryImpl(api)
+    fun providePostRepository(api: PostApi , gson: Gson) : PostRepository {
+        return PostRepositoryImpl(api , gson)
     }
     @Provides
     @Singleton
     fun provideGetPostUseCase(postRepository: PostRepository , sharedPreferences: SharedPreferences) : GetPostUseCase {
         return GetPostUseCase(postRepository , sharedPreferences)
     }
+
+    @Provides
+    @Singleton
+    fun provideAddPostUseCase(postRepository: PostRepository) : AddPostUseCase {
+        return AddPostUseCase(postRepository)
+    }
+
 }
