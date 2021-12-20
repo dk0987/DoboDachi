@@ -40,7 +40,6 @@ fun Feed(
     val feedScreenStates = feedScreenViewModel.feedScreenStates.value
     val posts = feedScreenViewModel.paginatedPost.value
 
-
     LaunchedEffect(key1 = true ){
         feedScreenViewModel.eventFlow.collectLatest { event ->
             when (event) {
@@ -116,7 +115,14 @@ fun Feed(
                              )
                          }
                      }
-                )
+                 ) { selectedItem ->
+                     feedScreenViewModel.onEvent(
+                         FeedScreenEvents.Menu(
+                             option = selectedItem,
+                             postId = post.postId
+                         )
+                     )
+                 }
                  println(TimeStampConverter().invoke(post.timeStamp * 1000))
                  println(post.timeStamp)
              }
@@ -133,7 +139,6 @@ fun Feed(
                        fontStyle = FontStyle.Italic
                    )
                }
-
             }
        }
    }

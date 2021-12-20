@@ -11,4 +11,6 @@ interface PostRepository {
     suspend fun getPost(userId : String , page : Int) : Resource<List<Post>>
 
     suspend fun addPost(description : String , mode : String , image : Uri) : Resource<Unit>
+
+    suspend fun deletePost(postId : String) : Resource<Unit>
 }

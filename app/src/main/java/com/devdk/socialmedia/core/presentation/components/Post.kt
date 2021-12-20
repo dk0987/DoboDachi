@@ -36,14 +36,13 @@ import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
 import com.devdk.socialmedia.core.presentation.util.MenuItems
 import com.devdk.socialmedia.core.presentation.util.TimeStampConverter
 import com.devdk.socialmedia.feature_post.domain.modal.Post
-import com.devdk.socialmedia.feature_post.presentation.feed_screen.FeedScreenEvents
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
 @ExperimentalMaterialApi
 @Composable
 fun Post(
-    post : Post ,
+    post : Post,
     profile_pic_size : Dp = 38.dp,
     onPost : () -> Unit = {},
     onLike : () -> Unit = {},
@@ -57,6 +56,7 @@ fun Post(
     postTextColor : Color = primaryText,
     dropDownItem : List<String> = MenuItems.dropDown,
     maxLines : Int = 3,
+    dropDownSelectedItem : (String) -> Unit
 ) {
 
     var expanded by remember {
@@ -130,14 +130,12 @@ fun Post(
                                     onClick = onProfilePic
                                 )
                             )
-                            timeStampConverter(post.timeStamp * 1000)?.let {
-                                Text(
-                                    text = it,
-                                    color = containerText,
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.Light,
-                                )
-                            }
+                            Text(
+                                text = timeStampConverter(post.timeStamp),
+                                color = containerText,
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Light,
+                            )
                         }
                     }
                     if (post.isUser) {
@@ -161,9 +159,7 @@ fun Post(
                                 ) {
                                     dropDownItem.forEach { DropDownItem ->
                                         DropdownMenuItem(onClick = {
-                                            FeedScreenEvents.Menu(
-                                                DropDownItem
-                                            )
+                                            dropDownSelectedItem(DropDownItem)
                                         }) {
                                             Text(
                                                 text = DropDownItem,
@@ -202,15 +198,18 @@ fun Post(
 
                 Spacer(modifier = Modifier.height(8.dp))
                 post.description?.let {
-                    Text(
-                        text = it,
-                        color = containerText,
-                        fontSize = 16.sp,
-                        fontStyle = FontStyle.Italic,
-                        maxLines = maxLines,
-                        overflow = TextOverflow.Ellipsis,
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                    if (it.isNotBlank()){
+                        Text(
+                            text = it,
+                            color = containerText,
+                            fontSize = 16.sp,
+                            fontStyle = FontStyle.Italic,
+                            maxLines = maxLines,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+
                 }
 
                 Spacer(modifier = Modifier.height(10.dp))

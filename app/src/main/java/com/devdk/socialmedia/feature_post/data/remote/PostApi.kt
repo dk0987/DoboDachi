@@ -23,6 +23,11 @@ interface PostApi {
         @Part postImage : MultipartBody.Part
     ) : BasicApiResponse<Unit>
 
+    @DELETE("api/post/deletePost")
+    suspend fun deletePost(
+        @Query("postId") parentId : String
+    ) : BasicApiResponse<Unit>
+
     companion object {
         const val BASE_URL = "http://192.168.7.141:8080/"
     }

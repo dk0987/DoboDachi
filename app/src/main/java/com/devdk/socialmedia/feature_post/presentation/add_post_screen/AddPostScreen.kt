@@ -19,7 +19,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -48,9 +47,7 @@ fun AddPost(
     scaffoldState: ScaffoldState
 ) {
     val descriptionState = addPostViewModel.descriptionTextFieldStates.value
-    val private = addPostViewModel.privateMode.value
-    val public = addPostViewModel.publicMode.value
-    val contentStates = addPostViewModel.contentUri
+    val addPostScreenStates = addPostViewModel.addPostScreenStates.value
 
     LaunchedEffect(key1 = true ){
         addPostViewModel.eventFlow.collectLatest { event ->
@@ -102,10 +99,10 @@ fun AddPost(
                 .fillMaxWidth()
                 .padding(horizontal = 10.dp)
             ) {
-                StandardRadioButton(title = PRIVATE , selected = private , onClick = {
+                StandardRadioButton(title = PRIVATE , selected = addPostScreenStates.private , onClick = {
                     addPostViewModel.onEvent(AddPostDetailEvents.ViewMode(PRIVATE))
                 })
-                StandardRadioButton(title = PUBLIC , selected = public, onClick = {
+                StandardRadioButton(title = PUBLIC , selected = addPostScreenStates.public, onClick = {
                     addPostViewModel.onEvent(AddPostDetailEvents.ViewMode(PUBLIC))
                 })
             }
@@ -114,13 +111,13 @@ fun AddPost(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(10.dp))
-                    .defaultMinSize(minHeight = if (contentStates.value.isBlank()) 180.dp else 0.dp)
+                    .defaultMinSize(minHeight = if (addPostScreenStates.contentUri.isBlank()) 180.dp else 0.dp)
                     .background(container)
                     .clickable {
                         navController.navigate(Routes.Images.screen)
                     }
             ){
-                if (contentStates.value.isBlank()){
+                if (addPostScreenStates.contentUri.isBlank()){
                     Icon(
                         imageVector = Icons.Outlined.AddAPhoto,
                         contentDescription = stringResource(id = R.string.upload_pic),
@@ -131,7 +128,7 @@ fun AddPost(
                 }
                 else {
                     Image(
-                        painter = rememberImagePainter(data = contentStates.value , builder = {
+                        painter = rememberImagePainter(data = addPostScreenStates.contentUri , builder = {
                             size(OriginalSize)
                         }),
                         contentDescription = "",
@@ -159,6 +156,7 @@ fun AddPost(
                 onClick = {
                     addPostViewModel.onEvent(AddPostDetailEvents.Post)
                 },
+                isLoading = addPostScreenStates.isLoading
             )
 
         }

@@ -5,11 +5,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devdk.socialmedia.core.domain.use_case.LikeUseCase
+import com.devdk.socialmedia.core.presentation.util.MenuItems
 import com.devdk.socialmedia.core.util.DefaultPagination
 import com.devdk.socialmedia.core.util.LikedOn
 import com.devdk.socialmedia.core.util.Resource
 import com.devdk.socialmedia.core.util.UiEvent
+import com.devdk.socialmedia.feature_post.domain.useCases.DeletePostUseCase
 import com.devdk.socialmedia.feature_post.domain.useCases.GetPostUseCase
+import com.devdk.socialmedia.feature_post.domain.useCases.PostUseCases
 import com.devdk.socialmedia.feature_profile.presentation.profile_screen.PaginationPost
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -19,8 +22,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class FeedScreenViewModel @Inject constructor(
-    private val getPostUseCase: GetPostUseCase,
     private val likeUseCase: LikeUseCase,
+    private val postUseCases: PostUseCases
 ): ViewModel() {
 
     private val _feedScreenStates = mutableStateOf(FeedScreenStates())
@@ -39,7 +42,7 @@ class FeedScreenViewModel @Inject constructor(
             )
         } ,
         onRequest = { page ->
-            getPostUseCase(userId = null , page = page)
+            postUseCases.getPostUseCase(userId = null , page = page)
         } ,
         onSuccess = { posts ->
             _paginatedPost.value = paginatedPost.value.copy(
@@ -84,9 +87,15 @@ class FeedScreenViewModel @Inject constructor(
 
             }
             is FeedScreenEvents.Menu -> {
-                _feedScreenStates.value = feedScreenStates.value.copy(
-                    selectedOption = event.option
-                )
+                println("Delete${event.option}")
+                when(event.option) {
+                    MenuItems.dropDown[0] -> {
+
+                    }
+                    MenuItems.dropDown[1] -> {
+                        deletePost(event.postId)
+                    }
+                }
             }
             is FeedScreenEvents.LikedBy-> {
 
@@ -126,4 +135,23 @@ class FeedScreenViewModel @Inject constructor(
             }
         }
     }
+
+    private fun deletePost(postId : String) {
+        viewModelScope.launch {
+            when (val result = postUseCases.deletePostUseCase(postId)) {
+                is Resource.Success -> {
+                    paginatedPost.value.items.find { it.postId == postId }?.let { post ->
+                        _paginatedPost.value = paginatedPost.value.copy(
+                            items = paginatedPost.value.items.minus(post)
+                        )
+                    }
+
+                }
+                is Resource.Error -> {
+                    _eventFlow.emit(UiEvent.ShowSnackBar(result.message))
+                }
+            }
+        }
+    }
+
 }

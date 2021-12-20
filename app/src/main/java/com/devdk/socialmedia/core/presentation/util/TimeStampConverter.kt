@@ -11,10 +11,10 @@ import com.devdk.socialmedia.core.presentation.util.TImeConst.YESTERDAY
 
 class TimeStampConverter {
 
-    operator fun invoke(timestamp : Long) : String? {
+    operator fun invoke(timestamp : Long) : String {
         val now = System.currentTimeMillis()
         if (timestamp > now || timestamp <= 0) {
-            return null;
+            return "";
         }
         val diff = now - timestamp;
         return if (diff < MINUTE_MILLIS) JUST_NOW

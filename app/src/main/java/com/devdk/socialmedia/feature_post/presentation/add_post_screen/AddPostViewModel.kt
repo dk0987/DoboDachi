@@ -13,6 +13,7 @@ import com.devdk.socialmedia.core.util.Const.PUBLIC
 import com.devdk.socialmedia.core.util.Resource
 import com.devdk.socialmedia.core.util.UiEvent
 import com.devdk.socialmedia.feature_post.domain.useCases.AddPostUseCase
+import com.devdk.socialmedia.feature_post.domain.useCases.PostUseCases
 import com.devdk.socialmedia.feature_post.util.Mode
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -23,21 +24,14 @@ import javax.inject.Inject
 @HiltViewModel
 class AddPostViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val addPostUseCase: AddPostUseCase
+    private val postUseCases: PostUseCases
 ) : ViewModel(){
-
 
     private val _descriptionTextField = mutableStateOf(TextFieldStates())
     val descriptionTextFieldStates : State<TextFieldStates> = _descriptionTextField
 
-    private val _privateMode = mutableStateOf(false)
-    val privateMode : State<Boolean> = _privateMode
-
-    private val _publicMode = mutableStateOf(true)
-    val publicMode : State<Boolean> = _publicMode
-
-    private val _contentUri = mutableStateOf("")
-    val contentUri : State<String> = _contentUri
+    private val _addPostScreenStates = mutableStateOf(AddPostScreenStates())
+    val addPostScreenStates : State<AddPostScreenStates> = _addPostScreenStates
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -45,7 +39,9 @@ class AddPostViewModel @Inject constructor(
 
     init {
          savedStateHandle.get<String>("croppedImageUri")?.let { uri ->
-            _contentUri.value = uri
+           _addPostScreenStates.value = addPostScreenStates.value.copy(
+               contentUri = uri
+           )
          }
     }
 
@@ -59,20 +55,30 @@ class AddPostViewModel @Inject constructor(
             is AddPostDetailEvents.ViewMode -> {
                 when(event.mode){
                     PRIVATE -> {
-                        _privateMode.value = true
-                        _publicMode.value = false
+                        _addPostScreenStates.value = addPostScreenStates.value.copy(
+                            private = true ,
+                            public = false
+                        )
                     }
                     PUBLIC -> {
-                        _privateMode.value = false
-                        _publicMode.value = true
+                        _addPostScreenStates.value = addPostScreenStates.value.copy(
+                            private = false ,
+                            public = true
+                        )
+                    }
+                    else -> {
+                        _addPostScreenStates.value = addPostScreenStates.value.copy(
+                            private = false ,
+                            public = true
+                        )
                     }
                 }
             }
             is AddPostDetailEvents.Post -> {
-                if (privateMode.value){
+                if (addPostScreenStates.value.private){
                     addPost(Mode.Private)
                 }
-                else if (publicMode.value){
+                else if (addPostScreenStates.value.public){
                     addPost(Mode.Public)
                 }
                 else Unit
@@ -82,17 +88,26 @@ class AddPostViewModel @Inject constructor(
 
     private fun addPost(mode : Mode){
         val description = descriptionTextFieldStates.value.text
-        val image = contentUri.value.toUri()
+        val image = addPostScreenStates.value.contentUri.toUri()
         viewModelScope.launch {
-            when (val result = addPostUseCase(description ,mode , image)){
+            _addPostScreenStates.value = addPostScreenStates.value.copy(
+                isLoading = true
+            )
+            when (val result = postUseCases.addPostUseCase(description ,mode , image)){
                 is Resource.Error -> {
                     _eventFlow.emit(
                         UiEvent.ShowSnackBar(result.message)
+                    )
+                    _addPostScreenStates.value = addPostScreenStates.value.copy(
+                        isLoading = false
                     )
                 }
                 is Resource.Success -> {
                     _eventFlow.emit(
                         UiEvent.Navigate(Routes.Feed.screen , null)
+                    )
+                    _addPostScreenStates.value = addPostScreenStates.value.copy(
+                        isLoading = false
                     )
                 }
             }

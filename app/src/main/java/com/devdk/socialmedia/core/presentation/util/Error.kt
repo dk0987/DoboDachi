@@ -2,6 +2,7 @@ package com.devdk.socialmedia.core.presentation.util
 
 object Error {
 
+    const val POST_ID_NOT_FOUND = "Post not found"
     const val  FIELD_EMPTY = "is Empty"
     const val  SHORT_LENGTH = "is too short"
     const val  INVALID_EMAIL = "Please enter valid email"
