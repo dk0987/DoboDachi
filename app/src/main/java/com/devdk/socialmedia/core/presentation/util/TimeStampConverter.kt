@@ -1,6 +1,5 @@
 package com.devdk.socialmedia.core.presentation.util
 
-import android.text.format.DateUtils
 import com.devdk.socialmedia.core.presentation.util.TImeConst.A_HOUR_AGO
 import com.devdk.socialmedia.core.presentation.util.TImeConst.A_MINUTE_AGO
 import com.devdk.socialmedia.core.presentation.util.TImeConst.DAY_MILLIS
@@ -11,12 +10,12 @@ import com.devdk.socialmedia.core.presentation.util.TImeConst.YESTERDAY
 
 class TimeStampConverter {
 
-    operator fun invoke(timestamp : Long) : String {
+    operator fun invoke(timeStamp : Long): String {
         val now = System.currentTimeMillis()
-        if (timestamp > now || timestamp <= 0) {
-            return "";
+        if (timeStamp > now || timeStamp <= 0) {
+            return ""
         }
-        val diff = now - timestamp;
+        val diff = now - timeStamp
         return if (diff < MINUTE_MILLIS) JUST_NOW
         else if (diff < 2 * MINUTE_MILLIS) A_MINUTE_AGO
         else if (diff < 50 * MINUTE_MILLIS)"${ diff / MINUTE_MILLIS } minutes ago"

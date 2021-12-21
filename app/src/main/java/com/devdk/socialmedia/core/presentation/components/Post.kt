@@ -27,6 +27,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.annotation.ExperimentalCoilApi
+import coil.compose.ImagePainter
 import coil.compose.rememberImagePainter
 import coil.size.OriginalSize
 import com.devdk.socialmedia.R
@@ -38,6 +40,7 @@ import com.devdk.socialmedia.core.presentation.util.TimeStampConverter
 import com.devdk.socialmedia.feature_post.domain.modal.Post
 import kotlin.time.ExperimentalTime
 
+@ExperimentalCoilApi
 @OptIn(ExperimentalTime::class)
 @ExperimentalMaterialApi
 @Composable
@@ -56,7 +59,7 @@ fun Post(
     postTextColor : Color = primaryText,
     dropDownItem : List<String> = MenuItems.dropDown,
     maxLines : Int = 3,
-    dropDownSelectedItem : (String) -> Unit
+    dropDownSelectedItem : (String) -> Unit = {}
 ) {
 
     var expanded by remember {
@@ -116,7 +119,8 @@ fun Post(
                                 ),
                                 contentDescription = stringResource(id = R.string.profile_pic),
                                 contentScale = ContentScale.Crop,
-                                modifier = Modifier.fillMaxSize()
+                                modifier = Modifier
+                                    .fillMaxSize()
                             )
                         }
                         Spacer(modifier = Modifier.width(10.dp))
@@ -184,7 +188,8 @@ fun Post(
                         contentScale = ContentScale.FillWidth,
                         modifier = Modifier
                             .clip(RoundedCornerShape(5.dp))
-                            .fillMaxWidth(),
+                            .fillMaxWidth()
+                            .defaultMinSize(minHeight = 250.dp),
                     )
                     if (post.isLiked && isVisible){
                         Image(

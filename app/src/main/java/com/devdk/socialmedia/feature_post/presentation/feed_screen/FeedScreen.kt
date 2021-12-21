@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.annotation.ExperimentalCoilApi
 import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.components.Post
 import com.devdk.socialmedia.core.presentation.ui.theme.bottomNavigationItem
@@ -30,6 +31,7 @@ import com.devdk.socialmedia.core.util.Const
 import com.devdk.socialmedia.core.util.UiEvent
 import kotlinx.coroutines.flow.collectLatest
 
+@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @Composable
 fun Feed(
@@ -95,10 +97,10 @@ fun Feed(
            verticalArrangement = Arrangement.Center
        ) {
              items(posts.items.size) { i ->
-                  val post = posts.items[i]
-                if (i >= posts.items.size - 1 && !posts.endReached && !posts.isLoading) {
+                 val post = posts.items[i]
+                 if (i >= posts.items.size - 1 && !posts.endReached && !posts.isLoading) {
                       feedScreenViewModel.loadMorePost()
-                }
+                 }
                  Post(
                      post = post,
                      onLike = {
@@ -114,6 +116,12 @@ fun Feed(
                                          + "?personList=${Const.LIKED_SCREEN}&parentId=${post.postId}"
                              )
                          }
+                     },
+                     onPost = {
+                         navController.navigate(Routes.PostDetail.screen + "?postId=${post.postId}")
+                     },
+                     onComment = {
+                         navController.navigate(Routes.PostDetail.screen + "?postId=${post.postId}")
                      }
                  ) { selectedItem ->
                      feedScreenViewModel.onEvent(

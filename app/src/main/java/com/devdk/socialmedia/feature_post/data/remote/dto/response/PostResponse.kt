@@ -13,5 +13,5 @@ data class PostResponse(
     val liked : Int = 0,
     val comment : Int = 0,
     val isPostLiked : Boolean = false,
-    val postId : String = ""
+    val postId : String = "",
 )

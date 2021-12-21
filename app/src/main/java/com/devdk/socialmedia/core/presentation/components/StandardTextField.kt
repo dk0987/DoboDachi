@@ -33,7 +33,8 @@ fun StandardTextField(
     roundedCornerShape : Dp = 10.dp,
     placeholder : String = stringResource(id = R.string.comment_on_post),
     isError : Boolean = false,
-    error : String? = null
+    error : String? = null,
+    onTrailingIcon : () -> Unit = {}
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally
@@ -58,15 +59,16 @@ fun StandardTextField(
                 .fillMaxWidth()
                 .background(Color.Transparent)
                 .clip(RoundedCornerShape(roundedCornerShape)),
-            trailingIcon = {
-                (trailingIcon)?.let {
-                IconButton(onClick = { /*TODO*/ }) {
-                        Icon(
-                            imageVector = it,
-                            contentDescription = stringResource(id = R.string.comment),
-                            tint = bottomNavigationItem
-                        )
-                    }
+            trailingIcon = { (trailingIcon)?.let {
+                IconButton(onClick =
+                    onTrailingIcon
+                ) {
+                    Icon(
+                        imageVector = it,
+                        contentDescription = stringResource(id = R.string.comment),
+                        tint = bottomNavigationItem
+                    )
+                }
                 }
             }
         )

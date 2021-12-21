@@ -107,7 +107,15 @@ fun Navigation() {
                 ){
                     AddPost(navController = navController , scaffoldState = scaffoldState)
                 }
-                composable(Routes.PostDetail.screen){
+                composable(
+                    route = Routes.PostDetail.screen + "?postId={postId}",
+                    arguments = listOf(
+                        navArgument("postId"){
+                            type = NavType.StringType
+                            defaultValue = ""
+                        }
+                    )
+                ){
                     PostDetail(navController = navController)
                 }
                 composable(Routes.Search.screen){

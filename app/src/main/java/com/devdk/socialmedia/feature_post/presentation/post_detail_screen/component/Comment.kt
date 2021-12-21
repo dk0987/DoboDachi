@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -21,33 +21,35 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberImagePainter
 import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.ui.theme.container
 import com.devdk.socialmedia.core.presentation.ui.theme.containerText
 import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
 import com.devdk.socialmedia.core.presentation.util.MenuItems
+import com.devdk.socialmedia.core.presentation.util.TimeStampConverter
+import com.devdk.socialmedia.feature_post.domain.modal.Comment
 
 @ExperimentalMaterialApi
 @Composable
 fun Comment(
-    profileURL : Painter,
-    username : String,
-    timeStamp : Long,
-    liked : Int =0,
-    comment : String,
+    comment : Comment ,
     onLike : () -> Unit = {},
     onProfile : () -> Unit = {},
-    onDropDown : () -> Unit = {},
-    isExpanded : Boolean = false,
+    dropDownSelectedItem : (String) -> Unit = {},
     backgroundColor : Color = container,
     commentTextColor : Color = primaryText,
     elevation : Dp = 10.dp,
     roundedCornerShape : Dp = 15.dp,
     profile_pic_size : Dp = 38.dp,
-    isLiked : Boolean = false,
     dropDownItem : List<String> = MenuItems.dropDown,
-    isUser : Boolean = false
 ) {
+    val timeStampConverter = TimeStampConverter()
+
+    var expanded by remember {
+        mutableStateOf(false)
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -75,7 +77,7 @@ fun Comment(
                             .size(profile_pic_size)
                     ) {
                         Image(
-                            painter = profileURL,
+                            painter = rememberImagePainter(data = comment.userProfileUrl),
                             contentDescription = stringResource(id = R.string.profile_pic),
                             contentScale = ContentScale.FillBounds
                         )
@@ -83,7 +85,7 @@ fun Comment(
                     Spacer(modifier = Modifier.width(10.dp))
                     Column {
                         Text(
-                            text = username,
+                            text = comment.username,
                             color = commentTextColor,
                             fontSize = 18.sp,
                             fontWeight = FontWeight.SemiBold,
@@ -92,7 +94,7 @@ fun Comment(
                             )
                         )
                         Text(
-                            text = "4:00 P.M",
+                            text = timeStampConverter(comment.timeStamp),
                             color = containerText,
                             fontSize = 16.sp,
                             fontWeight = FontWeight.Light,
@@ -110,29 +112,35 @@ fun Comment(
                         Icon(
                             painter = painterResource(id = R.drawable.ic_heart),
                             contentDescription = stringResource(id = R.string.profile_pic),
-                            tint = if (isLiked) Color.Red else containerText,
+                            tint = if (comment.isLiked) Color.Red else containerText,
                         )
                     }
                     Text(
-                        text = liked.toString(),
+                        text = comment.likes.toString(),
                         color = commentTextColor,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Light
                     )
-                    if (isUser){
-                        IconButton(onClick = onDropDown) {
+                    if (comment.isUser){
+                        IconButton(onClick = {
+                            expanded = !expanded
+                        }) {
                             Icon(painter = painterResource(id = R.drawable.ic_menu),
                                 contentDescription = stringResource(
                                     id = R.string.drop_down_menu
                                 ),
                                 tint = commentTextColor)
                             DropdownMenu(
-                                expanded = isExpanded,
-                                onDismissRequest = onDropDown,
+                                expanded = expanded,
+                                onDismissRequest = {
+                                     expanded = false
+                                },
                                 modifier = Modifier.background(container)
                             ) {
                                 dropDownItem.forEach { DropDownItem ->
-                                    DropdownMenuItem(onClick = { /*TODO*/ }) {
+                                    DropdownMenuItem(onClick = {
+                                        dropDownSelectedItem(DropDownItem)
+                                    }) {
                                         Text(
                                             text = DropDownItem,
                                             color = commentTextColor,
@@ -149,7 +157,7 @@ fun Comment(
 
             Spacer(modifier = Modifier.height(10.dp))
             Text(
-                text = comment,
+                text = comment.comment,
                 color = commentTextColor,
                 fontSize = 16.sp ,
                 fontWeight = FontWeight.Normal ,

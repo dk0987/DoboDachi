@@ -8,10 +8,7 @@ import com.devdk.socialmedia.core.domain.use_case.FollowUseCase
 import com.devdk.socialmedia.feature_post.data.remote.PostApi
 import com.devdk.socialmedia.feature_post.data.repository.PostRepositoryImpl
 import com.devdk.socialmedia.feature_post.domain.repository.PostRepository
-import com.devdk.socialmedia.feature_post.domain.useCases.AddPostUseCase
-import com.devdk.socialmedia.feature_post.domain.useCases.DeletePostUseCase
-import com.devdk.socialmedia.feature_post.domain.useCases.GetPostUseCase
-import com.devdk.socialmedia.feature_post.domain.useCases.PostUseCases
+import com.devdk.socialmedia.feature_post.domain.useCases.*
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
@@ -48,7 +45,8 @@ object PostModule {
         return PostUseCases(
             getPostUseCase = GetPostUseCase(postRepository, sharedPreferences) ,
             addPostUseCase = AddPostUseCase(postRepository),
-            deletePostUseCase = DeletePostUseCase(postRepository)
+            deletePostUseCase = DeletePostUseCase(postRepository),
+            getPostByIdUseCase = GetPostByIdUseCase(postRepository , sharedPreferences)
         )
     }
 

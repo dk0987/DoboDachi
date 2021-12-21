@@ -28,7 +28,12 @@ interface PostApi {
         @Query("postId") parentId : String
     ) : BasicApiResponse<Unit>
 
+    @GET("api/post/getPostById")
+    suspend fun getPostById(
+        @Query("postId") postId : String
+    ) : BasicApiResponse<PostResponse>
+
     companion object {
-        const val BASE_URL = "http://192.168.7.141:8080/"
+        const val BASE_URL = "http://192.168.67.141:8080/"
     }
 }
