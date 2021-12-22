@@ -7,8 +7,8 @@ import com.devdk.socialmedia.feature_post.domain.repository.CommentRepository
 class GetCommentsUseCase(
     private val commentRepository: CommentRepository
 ) {
-    suspend operator fun invoke(postId : String , page : Int) : Resource<List<Comment>> {
-        return when(val result = commentRepository.getComments(postId , page)){
+    suspend operator fun invoke(postId : String) : Resource<List<Comment>> {
+        return when(val result = commentRepository.getComments(postId)){
             is Resource.Success -> {
                 Resource.Success(result.data)
             }

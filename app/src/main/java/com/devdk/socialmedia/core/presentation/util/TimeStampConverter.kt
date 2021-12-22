@@ -13,7 +13,7 @@ class TimeStampConverter {
     operator fun invoke(timeStamp : Long): String {
         val now = System.currentTimeMillis()
         if (timeStamp > now || timeStamp <= 0) {
-            return ""
+            return "jnk"
         }
         val diff = now - timeStamp
         return if (diff < MINUTE_MILLIS) JUST_NOW

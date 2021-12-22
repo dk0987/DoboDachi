@@ -189,7 +189,7 @@ fun Post(
                         modifier = Modifier
                             .clip(RoundedCornerShape(5.dp))
                             .fillMaxWidth()
-                            .defaultMinSize(minHeight = 250.dp),
+                            .defaultMinSize(minHeight = 100.dp),
                     )
                     if (post.isLiked && isVisible){
                         Image(

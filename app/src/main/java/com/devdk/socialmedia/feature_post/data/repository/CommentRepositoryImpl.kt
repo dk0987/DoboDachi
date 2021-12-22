@@ -37,12 +37,10 @@ class CommentRepositoryImpl(
 
     override suspend fun getComments(
         postID: String,
-        page: Int,
-        pageSize: Int
     ): Resource<List<Comment>> {
         val comments = arrayListOf<Comment>()
         return try {
-            val response = commentApi.getComments(postID , page)
+            val response = commentApi.getComments(postID)
             if (response.successful) {
                 response.data?.forEach { comment ->
                     comments.add(

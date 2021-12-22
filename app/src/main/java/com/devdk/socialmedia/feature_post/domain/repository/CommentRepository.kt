@@ -8,6 +8,6 @@ interface CommentRepository {
 
     suspend fun comment(postID : String , comment : String) : Resource<Unit>
 
-    suspend fun getComments(postID: String , page : Int , pageSize : Int = Const.POST_PAGE_SIZE) : Resource<List<Comment>>
+    suspend fun getComments(postID: String ) : Resource<List<Comment>>
 
 }

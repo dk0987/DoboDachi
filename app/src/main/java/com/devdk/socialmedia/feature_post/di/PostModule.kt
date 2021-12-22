@@ -1,10 +1,6 @@
 package com.devdk.socialmedia.feature_post.di
 
 import android.content.SharedPreferences
-import com.devdk.socialmedia.core.data.remote.FollowApi
-import com.devdk.socialmedia.core.data.repository.FollowRepositoryImpl
-import com.devdk.socialmedia.core.domain.repository.FollowRepository
-import com.devdk.socialmedia.core.domain.use_case.FollowUseCase
 import com.devdk.socialmedia.feature_post.data.remote.PostApi
 import com.devdk.socialmedia.feature_post.data.repository.PostRepositoryImpl
 import com.devdk.socialmedia.feature_post.domain.repository.PostRepository

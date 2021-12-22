@@ -3,6 +3,7 @@ package com.devdk.socialmedia.feature_post.presentation.post_detail_screen
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.KeyboardArrowLeft
@@ -20,6 +21,9 @@ import com.devdk.socialmedia.core.presentation.components.Post
 import com.devdk.socialmedia.core.presentation.components.StandardTextField
 import com.devdk.socialmedia.core.presentation.ui.theme.*
 import com.devdk.socialmedia.core.presentation.util.Routes
+import com.devdk.socialmedia.core.util.Const
+import com.devdk.socialmedia.core.util.LikedOn
+import com.devdk.socialmedia.feature_post.presentation.feed_screen.FeedScreenEvents
 import com.devdk.socialmedia.feature_post.presentation.post_detail_screen.component.Comment
 
 @OptIn(ExperimentalCoilApi::class)
@@ -29,7 +33,7 @@ fun PostDetail(
     navController: NavController,
     postDetailViewModel: PostDetailViewModel = hiltViewModel()
 ) {
-    val commentState = postDetailViewModel.commentTextFieldStates.value
+    val commentTextFieldState = postDetailViewModel.commentTextFieldStates.value
     val postDetailStates = postDetailViewModel.postDetailStates.value
     val commentStates = postDetailViewModel.commentStates.value
 
@@ -57,18 +61,39 @@ fun PostDetail(
             modifier = Modifier.fillMaxHeight(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            if (postDetailStates.isPostLoading) {
+                item {
+                    CircularProgressIndicator(color = bottomNavigationItem)
+                }
+            }
             item {
                 postDetailStates.post?.let { post ->
                     Post(
                         post = post,
-                        maxLines = 200,
+                        maxLines = Int.MAX_VALUE,
                         onProfilePic = {
                             navController.navigate(Routes.Profile.screen)
+                        },
+                        onLike = {
+                            postDetailViewModel.onEvent(
+                                PostDetailEvents.OnLike(
+                                parentId = post.postId,
+                                isLiked = post.isLiked ,
+                                parentType = LikedOn.Post
+                            ))
+                        },
+                        onLikedText = {
+                            if (post.liked > 0){
+                                navController.navigate(
+                                    Routes.PersonList.screen
+                                            + "?personList=${Const.LIKED_SCREEN}&parentId=${post.postId}"
+                                )
+                            }
                         },
                     )
                 }
                 StandardTextField(
-                    value = commentState.text,
+                    value = commentTextFieldState.text,
                     onValueChange = {
                         postDetailViewModel.onEvent(
                             PostDetailEvents.CommentTextField(
@@ -81,12 +106,9 @@ fun PostDetail(
                         postDetailViewModel.onEvent(PostDetailEvents.Comment)
                     }
                 )
+                Spacer(modifier = Modifier.height(8.dp))
             }
-            items(commentStates.comments.size) { i ->
-                val comment = commentStates.comments[i]
-                if (i >= commentStates.comments.size - 1 && !commentStates.endReached && !commentStates.isCommentLoading) {
-                    postDetailViewModel.loadComments()
-                }
+            items(commentStates.comments){ comment ->
                 Comment(
                     comment = comment,
                     dropDownSelectedItem = { menuItem ->
@@ -94,6 +116,15 @@ fun PostDetail(
                             PostDetailEvents.Menu(
                                 menuItem,
                                 comment.commentId
+                            )
+                        )
+                    },
+                    onLike = {
+                        postDetailViewModel.onEvent(
+                            PostDetailEvents.OnLike(
+                                parentId = comment.commentId ,
+                                isLiked = comment.isLiked ,
+                                parentType = LikedOn.Comment
                             )
                         )
                     }

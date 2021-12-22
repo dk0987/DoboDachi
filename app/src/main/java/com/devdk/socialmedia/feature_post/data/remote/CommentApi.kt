@@ -19,8 +19,6 @@ interface CommentApi {
     @GET("api/comment/getComment")
     suspend fun getComments(
         @Query("postId") postId : String ,
-        @Query("page") page : Int = 0 ,
-        @Query("pageSize") pageSize : Int = Const.POST_PAGE_SIZE
     ) : BasicApiResponse<List<CommentResponse>>
 
 
