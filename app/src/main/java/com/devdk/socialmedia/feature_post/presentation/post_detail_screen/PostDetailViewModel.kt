@@ -8,11 +8,12 @@ import androidx.lifecycle.viewModelScope
 import com.devdk.socialmedia.core.domain.use_case.LikeUseCase
 import com.devdk.socialmedia.core.presentation.states.TextFieldStates
 import com.devdk.socialmedia.core.presentation.util.MenuItems
-import com.devdk.socialmedia.core.util.DefaultPagination
+import com.devdk.socialmedia.core.presentation.util.Routes
 import com.devdk.socialmedia.core.util.LikedOn
 import com.devdk.socialmedia.core.util.Resource
 import com.devdk.socialmedia.core.util.UiEvent
 import com.devdk.socialmedia.feature_post.domain.useCases.CommentUseCase
+import com.devdk.socialmedia.feature_post.domain.useCases.DeleteCommentUseCase
 import com.devdk.socialmedia.feature_post.domain.useCases.GetCommentsUseCase
 import com.devdk.socialmedia.feature_post.domain.useCases.PostUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -27,6 +28,7 @@ class PostDetailViewModel @Inject constructor(
     private val getCommentsUseCase: GetCommentsUseCase ,
     private val commentUseCase: CommentUseCase,
     private val likeUseCase: LikeUseCase,
+    private val deleteCommentUseCase : DeleteCommentUseCase,
     stateHandle: SavedStateHandle
 ) : ViewModel(){
 
@@ -61,15 +63,26 @@ class PostDetailViewModel @Inject constructor(
                 comment(postId)
                 loadComments()
             }
-            is PostDetailEvents.Menu -> {
+            is PostDetailEvents.CommentMenu -> {
             when(events.option) {
                 MenuItems.dropDown[0] -> {
 
                 }
                 MenuItems.dropDown[1] -> {
+                    deleteComment(events.commentId)
                 }
             }
         }
+            is PostDetailEvents.PostMenu -> {
+                when(events.option){
+                    MenuItems.dropDown[0] -> {
+
+                    }
+                    MenuItems.dropDown[1] -> {
+                        deletePost(events.postId)
+                    }
+                }
+            }
             is PostDetailEvents.OnLike -> {
                 when(events.parentType) {
                     is LikedOn.Post -> {
@@ -203,6 +216,47 @@ class PostDetailViewModel @Inject constructor(
                         }
                     }
                     _eventFlow.emit(UiEvent.ShowSnackBar(liked.message))
+                }
+            }
+        }
+    }
+
+
+    private fun deletePost(postId : String) {
+        viewModelScope.launch {
+            when (val result = postUseCases.deletePostUseCase(postId)) {
+                is Resource.Success -> {
+                    _eventFlow.emit(UiEvent.Navigate(Routes.Feed.screen , null))
+                }
+                is Resource.Error -> {
+                    _eventFlow.emit(UiEvent.ShowSnackBar(result.message))
+                }
+            }
+        }
+    }
+
+    private fun deleteComment(commentId : String) {
+        viewModelScope.launch {
+            when (val result = deleteCommentUseCase(commentId)) {
+                is Resource.Success -> {
+                    commentStates.value.comments.find { it.commentId == commentId }?.let { comment ->
+                        _commentStates.value = commentStates.value.copy(
+                            comments = commentStates.value.comments.minus(comment)
+                        )
+                    }
+                    _postDetailStates.value = postDetailStates.value.copy(
+                        post = postDetailStates.value.post?.copy(
+                            comment = postDetailStates.value.post?.comment?.minus(1) ?: 0
+                        )
+                    )
+                }
+                is Resource.Error -> {
+                    _postDetailStates.value = postDetailStates.value.copy(
+                        post = postDetailStates.value.post?.copy(
+                            comment = postDetailStates.value.post?.comment?.plus(1) ?: 0
+                        )
+                    )
+                    _eventFlow.emit(UiEvent.ShowSnackBar(result.message))
                 }
             }
         }

@@ -36,7 +36,7 @@ fun Comment(
     comment : Comment ,
     onLike : () -> Unit = {},
     onProfile : () -> Unit = {},
-    dropDownSelectedItem : (String) -> Unit = {},
+    dropDownSelectedItem : (String) -> Unit,
     backgroundColor : Color = container,
     commentTextColor : Color = primaryText,
     elevation : Dp = 10.dp,

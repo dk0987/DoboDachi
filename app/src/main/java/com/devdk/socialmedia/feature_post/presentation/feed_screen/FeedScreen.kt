@@ -21,6 +21,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.annotation.ExperimentalCoilApi
+import coil.compose.rememberImagePainter
+import coil.size.OriginalSize
 import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.components.Post
 import com.devdk.socialmedia.core.presentation.ui.theme.bottomNavigationItem
@@ -37,9 +39,8 @@ import kotlinx.coroutines.flow.collectLatest
 fun Feed(
     navController: NavController,
     feedScreenViewModel: FeedScreenViewModel = hiltViewModel(),
-    scaffoldState: ScaffoldState
+    scaffoldState: ScaffoldState,
 ) {
-    val feedScreenStates = feedScreenViewModel.feedScreenStates.value
     val posts = feedScreenViewModel.paginatedPost.value
 
     LaunchedEffect(key1 = true ){
@@ -74,16 +75,23 @@ fun Feed(
            )
            IconButton(
                onClick = {
-                   navController.navigate(Routes.Profile.screen)
+                   navController.navigate(Routes.Profile.screen + "?userId=${feedScreenViewModel.userId}")
                },
                Modifier
                    .clip(CircleShape)
                    .size(38.dp)
            ) {
                Image(
-                   painter = painterResource(id = R.drawable.profile_pic),
+                   painter = rememberImagePainter(
+                       data = feedScreenViewModel.profilePicUrl.value ,
+                       builder = {
+                           crossfade(true)
+                       }
+                   ),
                    contentDescription = stringResource(id = R.string.profile_pic),
-                   contentScale = ContentScale.Crop
+                   contentScale = ContentScale.Crop,
+                   modifier = Modifier
+                       .fillMaxSize()
                )
            }
        }
@@ -94,7 +102,7 @@ fun Feed(
                .fillMaxHeight(0.94f)
                .fillMaxWidth(),
            horizontalAlignment = CenterHorizontally ,
-           verticalArrangement = Arrangement.Center
+           verticalArrangement = if (posts.items.size > 2 || posts.items.isEmpty())Arrangement.Center else Arrangement.Top
        ) {
              items(posts.items.size) { i ->
                  val post = posts.items[i]
@@ -118,6 +126,7 @@ fun Feed(
                          }
                      },
                      onPost = {
+                         navController.popBackStack()
                          navController.navigate(Routes.PostDetail.screen + "?postId=${post.postId}")
                      },
                      onComment = {

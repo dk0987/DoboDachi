@@ -10,4 +10,5 @@ interface CommentRepository {
 
     suspend fun getComments(postID: String ) : Resource<List<Comment>>
 
+    suspend fun deleteComment(commentId : String) : Resource<Unit>
 }

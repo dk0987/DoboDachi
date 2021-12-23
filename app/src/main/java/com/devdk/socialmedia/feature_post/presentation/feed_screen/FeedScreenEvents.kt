@@ -8,7 +8,6 @@ sealed class FeedScreenEvents {
         val isLiked: Boolean
     ) : FeedScreenEvents()
     object OnShare : FeedScreenEvents()
-    object Toggle : FeedScreenEvents()
     data class Menu(val option : String , val postId : String) : FeedScreenEvents()
     data class LikedBy(val postId : String) : FeedScreenEvents()
     data class Profile(val userId : String) : FeedScreenEvents()

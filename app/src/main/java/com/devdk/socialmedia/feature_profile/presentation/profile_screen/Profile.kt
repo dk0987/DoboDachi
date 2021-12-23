@@ -25,6 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.compose.rememberImagePainter
+import coil.size.OriginalSize
 import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.components.Post
 import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
@@ -73,7 +75,7 @@ fun Profile(
                     )
                 }
 
-                if (profileState.isUser){
+                if (profileState.user?.isUser == true){
                     IconButton(onClick = {
                         navController.navigate(Routes.EditProfile.screen)
                     },
@@ -90,8 +92,11 @@ fun Profile(
 
             }
             Image(
-                painter = painterResource(id = R.drawable.mhawallparer),
-                contentDescription = "",
+                painter = rememberImagePainter(data = profileState.user?.bannerUrl, builder = {
+                    crossfade(true)
+                    size(OriginalSize)
+                }),
+                contentDescription = stringResource(id = R.string.banner),
                 modifier = Modifier
                     .parallax(0.1f)
                     .fillMaxWidth()
@@ -113,8 +118,13 @@ fun Profile(
                 contentAlignment = BottomCenter
             ){
                 Image(
-                    painter = painterResource(id = R.drawable.profile_pic),
-                    contentDescription = "",
+                    painter = rememberImagePainter(
+                        data = profileState.user?.profileUrl,
+                        builder = {
+                            crossfade(true)
+                            size(OriginalSize)
+                        }),
+                    contentDescription = stringResource(id = R.string.profile_pic),
                     modifier = Modifier
                         .size(profilePic * progress + 35.dp)
                         .clip(CircleShape),
@@ -135,37 +145,47 @@ fun Profile(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = "Izuku Midoriya",
-                        fontSize = 23.sp,
-                        fontWeight = FontWeight.Bold,
-                        textDecoration = TextDecoration.Underline,
-                        color = primaryText,
-                    )
+                    profileState.user?.username?.let {
+                        Text(
+                            text = it,
+                            fontSize = 23.sp,
+                            fontWeight = FontWeight.Bold,
+                            textDecoration = TextDecoration.Underline,
+                            color = primaryText,
+                        )
+                    }
                     Spacer(modifier = Modifier.width(10.dp))
-                    StandardFollowButton(isFollowing = false) {
+                    profileState.user?.isUser?.let {
+                        if (!it){
+                            StandardFollowButton(isFollowing = profileState.user.isFollowing) {
+
+                            }
+                        }
 
                     }
+
                 }
 
             }
 
             item {
                 Spacer(modifier = Modifier.height(5.dp))
-                Text(
-                    text = "used in various expressions indicating that a description or amount being stated is not exact a wry look, something between amusement and regret",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Light,
-                    fontStyle = FontStyle.Italic,
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    color = primaryText
-                )
+                profileState.user?.bio?.let {
+                    Text(
+                        text = it,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Light,
+                        fontStyle = FontStyle.Italic,
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        color = primaryText
+                    )
+                }
                 Spacer(modifier = Modifier.height(5.dp))
                 ProfileInfo(
-                    following = 400,
-                    followers = 800,
-                    post = 100,
+                    following = profileState.user?.following ?: 0 ,
+                    followers = profileState.user?.followers ?: 0,
+                    post = profileState.user?.posts ?: 0,
                     onFollowers = {
                         navController.navigate(Routes.PersonList.screen + "?personList=Followers")
                     },

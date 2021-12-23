@@ -144,4 +144,23 @@ class PostRepositoryImpl(
             Resource.Error(Const.SOMETHING_WRONG)
         }
     }
+
+    override suspend fun getProfilePic(): Resource<String> {
+        val response = postApi.getProfilePic()
+        return try {
+            if (response.successful) {
+                Resource.Success(response.data?.profileUrl)
+            }
+            else {
+                Resource.Error(response.message)
+            }
+        }
+        catch (e : IOException) {
+            Resource.Error(Const.SOMETHING_WRONG)
+
+        }
+        catch (e : HttpException) {
+            Resource.Error(Const.SOMETHING_WRONG)
+        }
+    }
 }

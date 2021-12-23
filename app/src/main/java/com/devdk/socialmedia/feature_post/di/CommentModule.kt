@@ -45,4 +45,10 @@ object CommentModule {
     fun provideCommentUseCase(commentRepository: CommentRepository) : CommentUseCase {
         return CommentUseCase(commentRepository)
     }
+
+    @Provides
+    @Singleton
+    fun provideDeleteCommentUseCase(commentRepository: CommentRepository) : DeleteCommentUseCase {
+        return DeleteCommentUseCase(commentRepository)
+    }
 }

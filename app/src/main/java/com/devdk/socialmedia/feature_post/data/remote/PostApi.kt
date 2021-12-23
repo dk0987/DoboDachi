@@ -3,6 +3,7 @@ package com.devdk.socialmedia.feature_post.data.remote
 import com.devdk.socialmedia.core.data.remote.dto.response.BasicApiResponse
 import com.devdk.socialmedia.core.util.Const.POST_PAGE_SIZE
 import com.devdk.socialmedia.feature_post.data.remote.dto.request.AddPostRequest
+import com.devdk.socialmedia.feature_post.data.remote.dto.response.FeedScreenProfile
 import com.devdk.socialmedia.feature_post.data.remote.dto.response.PostResponse
 import okhttp3.MultipartBody
 import retrofit2.http.*
@@ -32,6 +33,9 @@ interface PostApi {
     suspend fun getPostById(
         @Query("postId") postId : String
     ) : BasicApiResponse<PostResponse>
+
+    @GET("api/user/getUserProfilePic")
+    suspend fun getProfilePic() : BasicApiResponse<FeedScreenProfile>
 
     companion object {
         const val BASE_URL = "http://192.168.67.141:8080/"

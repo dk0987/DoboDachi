@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.KeyboardArrowLeft
 import androidx.compose.material.icons.outlined.Send
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -23,19 +24,35 @@ import com.devdk.socialmedia.core.presentation.ui.theme.*
 import com.devdk.socialmedia.core.presentation.util.Routes
 import com.devdk.socialmedia.core.util.Const
 import com.devdk.socialmedia.core.util.LikedOn
-import com.devdk.socialmedia.feature_post.presentation.feed_screen.FeedScreenEvents
+import com.devdk.socialmedia.core.util.UiEvent
 import com.devdk.socialmedia.feature_post.presentation.post_detail_screen.component.Comment
+import kotlinx.coroutines.flow.collectLatest
 
 @OptIn(ExperimentalCoilApi::class)
 @ExperimentalMaterialApi
 @Composable
 fun PostDetail(
     navController: NavController,
-    postDetailViewModel: PostDetailViewModel = hiltViewModel()
+    postDetailViewModel: PostDetailViewModel = hiltViewModel() ,
+    scaffoldState: ScaffoldState
 ) {
     val commentTextFieldState = postDetailViewModel.commentTextFieldStates.value
     val postDetailStates = postDetailViewModel.postDetailStates.value
     val commentStates = postDetailViewModel.commentStates.value
+
+    LaunchedEffect(key1 = true ){
+        postDetailViewModel.eventFlow.collectLatest { event ->
+            when(event) {
+                is UiEvent.Navigate -> {
+                    navController.popBackStack()
+                    navController.navigate(event.route)
+                }
+                is UiEvent.ShowSnackBar -> {
+                    scaffoldState.snackbarHostState.showSnackbar(event.message ?: "")
+                }
+            }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -45,7 +62,8 @@ fun PostDetail(
         verticalArrangement = Arrangement.SpaceEvenly,
     ) {
         IconButton(onClick = {
-            navController.navigateUp()
+           navController.popBackStack()
+            navController.navigate(Routes.Feed.screen)
         },
             modifier = Modifier
                 .size(30.dp)
@@ -90,6 +108,9 @@ fun PostDetail(
                                 )
                             }
                         },
+                        dropDownSelectedItem = { option ->
+                            postDetailViewModel.onEvent(PostDetailEvents.PostMenu(option , post.postId))
+                        }
                     )
                 }
                 StandardTextField(
@@ -113,7 +134,7 @@ fun PostDetail(
                     comment = comment,
                     dropDownSelectedItem = { menuItem ->
                         postDetailViewModel.onEvent(
-                            PostDetailEvents.Menu(
+                            PostDetailEvents.CommentMenu(
                                 menuItem,
                                 comment.commentId
                             )
@@ -127,7 +148,7 @@ fun PostDetail(
                                 parentType = LikedOn.Comment
                             )
                         )
-                    }
+                    },
                 )
             }
 

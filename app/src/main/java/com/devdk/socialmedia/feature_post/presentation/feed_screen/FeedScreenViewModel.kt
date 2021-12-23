@@ -1,17 +1,14 @@
 package com.devdk.socialmedia.feature_post.presentation.feed_screen
 
+import android.content.SharedPreferences
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devdk.socialmedia.core.domain.use_case.LikeUseCase
 import com.devdk.socialmedia.core.presentation.util.MenuItems
-import com.devdk.socialmedia.core.util.DefaultPagination
-import com.devdk.socialmedia.core.util.LikedOn
-import com.devdk.socialmedia.core.util.Resource
-import com.devdk.socialmedia.core.util.UiEvent
+import com.devdk.socialmedia.core.util.*
 import com.devdk.socialmedia.feature_post.domain.useCases.PostUseCases
-import com.devdk.socialmedia.feature_profile.presentation.profile_screen.PaginationPost
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -21,17 +18,20 @@ import javax.inject.Inject
 @HiltViewModel
 class FeedScreenViewModel @Inject constructor(
     private val likeUseCase: LikeUseCase,
-    private val postUseCases: PostUseCases
+    private val postUseCases: PostUseCases,
+    sharedPreferences: SharedPreferences
 ): ViewModel() {
-
-    private val _feedScreenStates = mutableStateOf(FeedScreenStates())
-    val feedScreenStates : State<FeedScreenStates> = _feedScreenStates
 
     private val _paginatedPost = mutableStateOf(PaginationPost())
     val paginatedPost : State<PaginationPost> = _paginatedPost
 
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
+
+    private val _profilePicUrl = mutableStateOf("")
+    val profilePicUrl : State<String> = _profilePicUrl
+
+    val userId = sharedPreferences.getString(AuthConst.userId, "")
 
     private val pagination = DefaultPagination(
         onLoadUpdate = { isLoading ->
@@ -57,6 +57,7 @@ class FeedScreenViewModel @Inject constructor(
     )
 
     init {
+        getProfilePic()
         loadMorePost()
     }
 
@@ -98,11 +99,6 @@ class FeedScreenViewModel @Inject constructor(
             is FeedScreenEvents.LikedBy-> {
 
             }
-            is FeedScreenEvents.Toggle -> {
-                _feedScreenStates.value = feedScreenStates.value.copy(
-                    menuExpanded = !feedScreenStates.value.menuExpanded
-                )
-            }
         }
     }
 
@@ -130,6 +126,15 @@ class FeedScreenViewModel @Inject constructor(
                     )
                     _eventFlow.emit(UiEvent.ShowSnackBar(liked.message))
                 }
+            }
+        }
+    }
+
+    private fun getProfilePic() {
+        viewModelScope.launch {
+            val profilePic = postUseCases.getProfilePic.invoke()
+            if (profilePic != null) {
+                _profilePicUrl.value = profilePic
             }
         }
     }

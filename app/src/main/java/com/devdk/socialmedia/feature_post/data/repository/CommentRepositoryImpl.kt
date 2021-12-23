@@ -67,4 +67,26 @@ class CommentRepositoryImpl(
             Resource.Error(Const.SOMETHING_WRONG)
         }
     }
+
+
+    override suspend fun deleteComment(commentId: String): Resource<Unit> {
+        val response = commentApi.deleteComment(commentId)
+        return try {
+            if (response.successful) {
+                Resource.Success(Unit)
+            }
+            else {
+                Resource.Error(response.message)
+            }
+        }
+        catch (e : IOException) {
+            Resource.Error(Const.SOMETHING_WRONG)
+
+        }
+        catch (e : HttpException) {
+            Resource.Error(Const.SOMETHING_WRONG)
+        }
+    }
+
+
 }

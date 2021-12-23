@@ -3,6 +3,7 @@ package com.devdk.socialmedia.feature_auth.data.repository
 import android.annotation.SuppressLint
 import android.content.SharedPreferences
 import com.devdk.socialmedia.core.util.AuthConst
+import com.devdk.socialmedia.core.util.Const
 import com.devdk.socialmedia.core.util.Resource
 import com.devdk.socialmedia.feature_auth.data.remote.AuthApi
 import com.devdk.socialmedia.feature_auth.data.remote.dto.request.LoginUserRequest
@@ -37,10 +38,10 @@ class AuthRepositoryImpl(
             }
         }
         catch (e : HttpException){
-            Resource.Error("Oops Something Went Wrong", Unit)
+            Resource.Error(Const.SOMETHING_WRONG, Unit)
         }
         catch (e : IOException){
-            Resource.Error("Oops Something Went Wrong" , Unit)
+            Resource.Error(Const.SOMETHING_WRONG, Unit)
         }
 
     }

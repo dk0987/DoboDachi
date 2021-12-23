@@ -4,5 +4,6 @@ data class PostUseCases(
     val getPostUseCase: GetPostUseCase ,
     val addPostUseCase: AddPostUseCase ,
     val deletePostUseCase: DeletePostUseCase ,
-    val getPostByIdUseCase: GetPostByIdUseCase
+    val getPostByIdUseCase: GetPostByIdUseCase,
+    val getProfilePic: GetProfilePic
 )

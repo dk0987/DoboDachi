@@ -1,4 +1,4 @@
-package com.devdk.socialmedia.feature_profile.presentation.profile_screen
+package com.devdk.socialmedia.feature_post.presentation.feed_screen
 
 import com.devdk.socialmedia.feature_post.domain.modal.Post
 

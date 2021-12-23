@@ -15,4 +15,6 @@ interface PostRepository {
     suspend fun deletePost(postId : String) : Resource<Unit>
 
     suspend fun getPostById(postId: String , userId: String) : Resource<Post>
+
+    suspend fun getProfilePic() : Resource<String>
 }

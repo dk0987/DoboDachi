@@ -1,10 +1,14 @@
-package com.devdk.socialmedia.feature_post.di
+package com.devdk.socialmedia.feature_profile.di
 
 import android.content.SharedPreferences
 import com.devdk.socialmedia.feature_post.data.remote.PostApi
 import com.devdk.socialmedia.feature_post.data.repository.PostRepositoryImpl
 import com.devdk.socialmedia.feature_post.domain.repository.PostRepository
 import com.devdk.socialmedia.feature_post.domain.useCases.*
+import com.devdk.socialmedia.feature_profile.data.remote.ProfileApi
+import com.devdk.socialmedia.feature_profile.data.repository.ProfileRepositoryImpl
+import com.devdk.socialmedia.feature_profile.domain.repository.ProfileRepository
+import com.devdk.socialmedia.feature_profile.domain.useCases.GetProfileUseCase
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
@@ -17,34 +21,29 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object PostModule {
+object ProfileModule {
 
     @Provides
     @Singleton
-    fun providePostApi(okHttpClient: OkHttpClient) : PostApi {
+    fun provideProfileApi(okHttpClient: OkHttpClient) : ProfileApi {
         return Retrofit.Builder()
-            .baseUrl(PostApi.BASE_URL)
+            .baseUrl(ProfileApi.BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(PostApi::class.java)
+            .create(ProfileApi::class.java)
     }
 
     @Provides
     @Singleton
-    fun providePostRepository(api: PostApi , gson: Gson) : PostRepository {
-        return PostRepositoryImpl(api , gson)
+    fun provideProfileRepository(api: ProfileApi ) : ProfileRepository {
+        return ProfileRepositoryImpl(api)
     }
+
     @Provides
     @Singleton
-    fun provideGetPostUseCase(postRepository: PostRepository , sharedPreferences: SharedPreferences) : PostUseCases {
-        return PostUseCases(
-            getPostUseCase = GetPostUseCase(postRepository, sharedPreferences) ,
-            addPostUseCase = AddPostUseCase(postRepository),
-            deletePostUseCase = DeletePostUseCase(postRepository),
-            getPostByIdUseCase = GetPostByIdUseCase(postRepository , sharedPreferences),
-            getProfilePic = GetProfilePic(postRepository)
-        )
+    fun provideGetPostUseCase(profileRepository: ProfileRepository) : GetProfileUseCase {
+        return GetProfileUseCase(profileRepository)
     }
 
 }

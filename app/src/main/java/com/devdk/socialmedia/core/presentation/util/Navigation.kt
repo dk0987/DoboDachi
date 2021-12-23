@@ -116,7 +116,7 @@ fun Navigation() {
                         }
                     )
                 ){
-                    PostDetail(navController = navController)
+                    PostDetail(navController = navController , scaffoldState = scaffoldState)
                 }
                 composable(Routes.Search.screen){
                     Search(navController = navController , scaffoldState = scaffoldState)
@@ -136,7 +136,15 @@ fun Navigation() {
                 ){
                     PersonList(navController = navController)
                 }
-                composable(Routes.Profile.screen){
+                composable(
+                    route = Routes.Profile.screen + "?userId={userId}",
+                    arguments = listOf(
+                        navArgument("userId") {
+                            type = NavType.StringType
+                            defaultValue = ""
+                        }
+                    )
+                ){
                     Profile(navController = navController)
                 }
                 composable(Routes.Activity.screen){
