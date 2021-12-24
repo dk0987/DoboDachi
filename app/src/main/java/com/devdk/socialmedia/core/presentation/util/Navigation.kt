@@ -16,6 +16,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import coil.ImageLoader
+import coil.annotation.ExperimentalCoilApi
 import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.components.StandardScaffold
 import com.devdk.socialmedia.core.presentation.images_screen.Images
@@ -32,6 +33,7 @@ import com.devdk.socialmedia.feature_profile.presentation.profile_screen.Profile
 import com.devdk.socialmedia.feature_search.presentation.Search
 import javax.inject.Inject
 
+@ExperimentalCoilApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
 @ExperimentalAnimationApi
@@ -153,7 +155,19 @@ fun Navigation() {
                 composable(Routes.EditProfile.screen){
                     EditProfile(navController = navController)
                 }
-                composable(Routes.Images.screen) {
+                composable(
+                    route = Routes.Images.screen + "?&route={route}&imageType={imageType}",
+                    arguments = listOf(
+                        navArgument("route") {
+                            type = NavType.StringType
+                            defaultValue = ""
+                        },
+                        navArgument("imageType") {
+                            type = NavType.StringType
+                            defaultValue = ""
+                        }
+                    )
+                ) {
                     Images(navController = navController )
                 }
             }

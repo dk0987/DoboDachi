@@ -114,7 +114,7 @@ fun AddPost(
                     .defaultMinSize(minHeight = if (addPostScreenStates.contentUri.isBlank()) 180.dp else 0.dp)
                     .background(container)
                     .clickable {
-                        navController.navigate(Routes.Images.screen)
+                        navController.navigate(Routes.Images.screen + "?route=${Routes.AddPost.screen}")
                     }
             ){
                 if (addPostScreenStates.contentUri.isBlank()){

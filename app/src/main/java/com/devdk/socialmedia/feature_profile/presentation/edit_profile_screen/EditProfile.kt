@@ -1,46 +1,38 @@
 package com.devdk.socialmedia.feature_profile.presentation.edit_profile_screen
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Text
-import androidx.compose.material.contentColorFor
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AddCircle
-import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.KeyboardArrowLeft
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.compose.rememberImagePainter
+import coil.size.OriginalSize
 import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.components.StandardButtons
-import com.devdk.socialmedia.core.presentation.components.StandardTextField
-import com.devdk.socialmedia.core.presentation.ui.theme.bottomNavigationItem
-import com.devdk.socialmedia.core.presentation.ui.theme.containerText
 import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
-import kotlin.math.sin
+import com.devdk.socialmedia.core.presentation.util.Routes
 
 @Composable
 fun EditProfile(
@@ -49,12 +41,16 @@ fun EditProfile(
 ) {
     val userNameState = editProfileViewModel.userNameTextFieldState.value
     val bioState = editProfileViewModel.bioTextFieldState.value
+    val editProfileStates = editProfileViewModel.editProfileStates.value
 
     Box(modifier = Modifier.fillMaxSize()){
         Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
             Box(modifier = Modifier.fillMaxWidth()){
                 Image(
-                    painter = painterResource(id = R.drawable.mhawallparer),
+                    painter = rememberImagePainter(data = editProfileStates.bannerUrl , builder = {
+                        crossfade(true)
+                        size(OriginalSize)
+                    }),
                     contentDescription = stringResource(id = R.string.banner),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -82,7 +78,7 @@ fun EditProfile(
                         )
                     }
                     IconButton(onClick = {
-
+                        navController.navigate(Routes.Images.screen + "?route=${Routes.EditProfile.screen}&imageType={Banner}")
                     },
                         modifier = Modifier
                             .size(30.dp)
@@ -103,23 +99,19 @@ fun EditProfile(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(
-                    painter = painterResource(id = R.drawable.profile_pic),
+                    painter = rememberImagePainter(data = editProfileStates.profileUrl , builder = {
+                        crossfade(true)
+                        size(OriginalSize)
+                    }),
                     contentDescription = stringResource(id = R.string.profile_pic),
                     modifier = Modifier
                         .size(80.dp)
                         .clip(CircleShape)
+                        .clickable {
+                            navController.navigate(Routes.Images.screen + "?route=${Routes.EditProfile.screen}&imageType={Profile}")
+                        }
                     ,
                     contentScale = ContentScale.Crop ,
-                )
-                Text(
-                    text = stringResource(id = R.string.change_profile_pic),
-                    color = containerText,
-                    fontSize = 16.sp,
-                    fontStyle = FontStyle.Italic,
-                    textAlign = TextAlign.Center ,
-                    modifier = Modifier.clickable {
-
-                    }
                 )
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
@@ -144,7 +136,7 @@ fun EditProfile(
                 )
                 Spacer(modifier = Modifier
                     .fillMaxWidth()
-                    .background(primaryText)
+                    .background(if (editProfileStates.isError) Color.Red else primaryText)
                     .height(0.5.dp))
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
@@ -169,7 +161,7 @@ fun EditProfile(
                 )
                 Spacer(modifier = Modifier
                     .fillMaxWidth()
-                    .background(primaryText)
+                    .background(if (editProfileStates.isError) Color.Red else primaryText)
                     .height(0.5.dp))
 
             }
@@ -177,7 +169,9 @@ fun EditProfile(
         }
         StandardButtons(
             text = stringResource(id = R.string.save),
-            onClick = { /*TODO*/ },
+            onClick = {
+                 editProfileViewModel.onEvent(EditProfileEvents.Save)
+            },
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
@@ -185,7 +179,8 @@ fun EditProfile(
                     start = 15.dp,
                     end = 15.dp,
                     bottom = 15.dp
-                )
+                ),
+            isLoading = editProfileStates.isUpdating
         )
     }
 

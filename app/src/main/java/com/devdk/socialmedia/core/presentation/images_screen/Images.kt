@@ -46,7 +46,7 @@ fun Images(
                    modifier = Modifier.clickable(
                        onClick = {
                            image.contentURI?.let { uri ->
-                               navController.navigate(Routes.AddPost.screen + "?croppedImageUri=file:///${uri}")
+                               navController.navigate(imagesState.route + "?croppedImageUri=file:///${uri}")
                            }
                        }
                    ).size(width = 150.dp , height = 100.dp),

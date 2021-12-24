@@ -20,7 +20,7 @@ interface FollowApi {
     ) : BasicApiResponse<Unit>
 
     companion object {
-        const val BASE_URL = "http://192.168.129.141:8080/"
+        const val BASE_URL = "http://169.254.193.130:8080/"
     }
 
 }

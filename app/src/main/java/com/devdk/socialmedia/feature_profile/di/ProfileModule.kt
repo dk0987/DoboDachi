@@ -9,6 +9,7 @@ import com.devdk.socialmedia.feature_profile.data.remote.ProfileApi
 import com.devdk.socialmedia.feature_profile.data.repository.ProfileRepositoryImpl
 import com.devdk.socialmedia.feature_profile.domain.repository.ProfileRepository
 import com.devdk.socialmedia.feature_profile.domain.useCases.GetProfileUseCase
+import com.devdk.socialmedia.feature_profile.domain.useCases.UpdateProfileUseCase
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
@@ -36,14 +37,20 @@ object ProfileModule {
 
     @Provides
     @Singleton
-    fun provideProfileRepository(api: ProfileApi ) : ProfileRepository {
-        return ProfileRepositoryImpl(api)
+    fun provideProfileRepository(api: ProfileApi , gson: Gson ) : ProfileRepository {
+        return ProfileRepositoryImpl(api , gson)
     }
 
     @Provides
     @Singleton
-    fun provideGetPostUseCase(profileRepository: ProfileRepository) : GetProfileUseCase {
+    fun provideGetProfileUseCase(profileRepository: ProfileRepository) : GetProfileUseCase {
         return GetProfileUseCase(profileRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideUpdateProfileUseCase(profileRepository: ProfileRepository) : UpdateProfileUseCase {
+        return UpdateProfileUseCase(profileRepository)
     }
 
 }

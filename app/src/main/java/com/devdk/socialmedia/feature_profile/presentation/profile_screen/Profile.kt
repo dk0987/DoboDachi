@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -37,7 +36,6 @@ import com.devdk.socialmedia.core.presentation.components.StandardFollowButton
 import com.devdk.socialmedia.core.presentation.ui.theme.bottomNavigationItem
 import com.devdk.socialmedia.core.presentation.util.TimeStampConverter
 import com.devdk.socialmedia.core.util.Const
-import com.devdk.socialmedia.feature_post.presentation.feed_screen.FeedScreenEvents
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState

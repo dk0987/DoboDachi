@@ -1,15 +1,23 @@
 package com.devdk.socialmedia.feature_profile.data.repository
 
+import android.net.Uri
+import androidx.core.net.toFile
 import com.devdk.socialmedia.core.util.Const
 import com.devdk.socialmedia.core.util.Resource
 import com.devdk.socialmedia.feature_profile.data.remote.ProfileApi
+import com.devdk.socialmedia.feature_profile.data.remote.dto.request.UpdateUserRequest
+import com.devdk.socialmedia.feature_profile.domain.modal.UpdateUser
 import com.devdk.socialmedia.feature_profile.domain.modal.User
 import com.devdk.socialmedia.feature_profile.domain.repository.ProfileRepository
+import com.google.gson.Gson
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import retrofit2.HttpException
 import java.io.IOException
 
 class ProfileRepositoryImpl(
-    private val profileApi: ProfileApi
+    private val profileApi: ProfileApi ,
+    private val gson: Gson
 ) : ProfileRepository {
 
     override suspend fun getProfile(userId: String): Resource<User> {
@@ -32,6 +40,50 @@ class ProfileRepositoryImpl(
                     )
                 }
                 Resource.Success(user)
+            }
+            else {
+                Resource.Error(response.message)
+            }
+        }
+        catch (e : IOException) {
+            Resource.Error(Const.SOMETHING_WRONG)
+
+        }
+        catch (e : HttpException) {
+            Resource.Error(Const.SOMETHING_WRONG)
+        }
+    }
+
+    override suspend fun updateUser(
+        updateUser: UpdateUser,
+        profileUrl: Uri,
+        bannerUrl: Uri
+    ): Resource<Unit> {
+        val updateProfileRequest = UpdateUserRequest(
+            username = updateUser.username,
+            bio = updateUser.bio,
+        )
+        val profile = profileUrl.toFile()
+        val banner = bannerUrl.toFile()
+        return try {
+            val response = profileApi.editProfile(
+                updateProfileRequest = MultipartBody.Part.createFormData(
+                    name = "update_Profile",
+                    value = gson.toJson(updateProfileRequest)
+                ),
+                updateProfileUrl = MultipartBody.Part.createFormData(
+                    name = "update_profile_pic",
+                    filename = profile.name,
+                    body = profile.asRequestBody()
+                ),
+                updateBannerUrl = MultipartBody.Part.createFormData(
+                    name = "update_banner",
+                    filename = banner.name,
+                    body = banner.asRequestBody()
+                )
+            )
+            if (response.successful){
+                Resource.Success(Unit)
             }
             else {
                 Resource.Error(response.message)
