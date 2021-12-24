@@ -80,6 +80,9 @@ class PostDetailViewModel @Inject constructor(
                     }
                     MenuItems.dropDown[1] -> {
                         deletePost(events.postId)
+                        commentStates.value.comments.forEach { comment ->
+                            deleteComment(comment.commentId)
+                        }
                     }
                 }
             }
