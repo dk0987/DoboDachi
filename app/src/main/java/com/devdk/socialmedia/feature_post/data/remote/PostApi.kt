@@ -34,6 +34,14 @@ interface PostApi {
         @Query("postId") postId : String
     ) : BasicApiResponse<PostResponse>
 
+    @GET("api/post/getPostsForUser")
+    suspend fun getPostsForUser(
+        @Query("userId") userId : String,
+        @Query("page") page : Int = 0 ,
+        @Query("pageSize") pageSize : Int = POST_PAGE_SIZE
+    ) : BasicApiResponse<List<PostResponse>>
+
+
     @GET("api/user/getUserProfilePic")
     suspend fun getProfilePic() : BasicApiResponse<FeedScreenProfile>
 

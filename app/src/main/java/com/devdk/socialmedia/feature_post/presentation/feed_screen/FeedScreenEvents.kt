@@ -1,7 +1,5 @@
 package com.devdk.socialmedia.feature_post.presentation.feed_screen
 
-import com.devdk.socialmedia.core.util.LikedOn
-
 sealed class FeedScreenEvents {
     data class OnLike(
         val parentId: String,
@@ -9,7 +7,4 @@ sealed class FeedScreenEvents {
     ) : FeedScreenEvents()
     object OnShare : FeedScreenEvents()
     data class Menu(val option : String , val postId : String) : FeedScreenEvents()
-    data class LikedBy(val postId : String) : FeedScreenEvents()
-    data class Profile(val userId : String) : FeedScreenEvents()
-    data class OnPost(val postId : String) : FeedScreenEvents()
 }

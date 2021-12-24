@@ -17,4 +17,7 @@ interface PostRepository {
     suspend fun getPostById(postId: String , userId: String) : Resource<Post>
 
     suspend fun getProfilePic() : Resource<String>
+
+    suspend fun getPostForUser(userId : String , page : Int) : Resource<List<Post>>
+
 }

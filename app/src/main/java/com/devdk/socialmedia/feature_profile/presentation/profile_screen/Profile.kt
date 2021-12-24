@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.annotation.ExperimentalCoilApi
 import coil.compose.rememberImagePainter
 import coil.size.OriginalSize
 import com.devdk.socialmedia.R
@@ -33,10 +34,15 @@ import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
 import com.devdk.socialmedia.core.presentation.util.Routes
 import com.devdk.socialmedia.feature_profile.presentation.profile_screen.component.ProfileInfo
 import com.devdk.socialmedia.core.presentation.components.StandardFollowButton
+import com.devdk.socialmedia.core.presentation.ui.theme.bottomNavigationItem
+import com.devdk.socialmedia.core.presentation.util.TimeStampConverter
+import com.devdk.socialmedia.core.util.Const
+import com.devdk.socialmedia.feature_post.presentation.feed_screen.FeedScreenEvents
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 
+@ExperimentalCoilApi
 @ExperimentalMaterialApi
 @Composable
 fun Profile(
@@ -63,7 +69,8 @@ fun Profile(
                 horizontalArrangement = Arrangement.SpaceBetween
             ){
                 IconButton(onClick = {
-                    navController.navigateUp()
+                    navController.popBackStack()
+                    navController.navigate(Routes.Feed.screen)
                 },
                     modifier = Modifier
                         .size(30.dp)
@@ -104,7 +111,7 @@ fun Profile(
                     .graphicsLayer {
                         alpha = progress
                     },
-                contentScale = ContentScale.FillWidth ,
+                contentScale = ContentScale.Crop ,
                 alpha = 0.7f
             )
             Box(modifier = Modifier
@@ -136,7 +143,9 @@ fun Profile(
     ) {
         LazyColumn(
             modifier = Modifier
-                .padding(horizontal = 15.dp)
+                .padding(horizontal = 15.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = if (profileState.posts.size > 2 || profileState.posts.isEmpty())Arrangement.Center else Arrangement.Top
         ) {
             item {
                 Spacer(modifier = Modifier.height(10.dp))
@@ -178,7 +187,8 @@ fun Profile(
                         fontStyle = FontStyle.Italic,
                         modifier = Modifier
                             .fillMaxWidth(),
-                        color = primaryText
+                        color = primaryText,
+                        maxLines = Int.MAX_VALUE
                     )
                 }
                 Spacer(modifier = Modifier.height(5.dp))
@@ -200,32 +210,64 @@ fun Profile(
                     fontSize = 20.sp,
                     textAlign = TextAlign.Start,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(start = 10.dp)
+                    modifier = Modifier.padding(start = 10.dp).fillMaxWidth()
                 )
 
             }
-            items (5){
-//                Post(
-//                    username = "Izuku Midoriya",
-//                    profilePic = painterResource(id = R.drawable.profile_pic),
-//                    postImage = painterResource(id = R.drawable.mhawallparer),
-//                    numberOfLike = 45,
-//                    numberOfComment = 7,
-//                    isLiked = true,
-//                    onPost = {
-//                        navController.navigate(Routes.PostDetail.screen)
-//                    },
-//                    onComment = {
-//                        navController.navigate(Routes.PostDetail.screen)
-//                    },
-//                    onLikedText = {
-//                        navController.navigate(Routes.PersonList.screen)
-//                    },
-//                    isUser = true,
-//                    description = "used in various expressions indicating that a description or amount being stated is not exact a wry look, something between amusement and regret"
-//                )
+            items(profileState.posts.size) { i ->
+                val post = profileState.posts[i]
+                if (i >= profileState.posts.size - 1 && !profileState.endReached && !profileState.isLoading) {
+                    profileViewModel.loadPosts()
+                }
+                Post(
+                    post = post,
+                    onLike = {
+                        profileViewModel.onEvent(ProfileScreenEvents.OnLike(
+                            parentId = post.postId,
+                            isLiked = post.isLiked
+                        ))
+                    },
+                    onLikedText = {
+                        if (post.liked > 0){
+                            navController.navigate(
+                                Routes.PersonList.screen
+                                        + "?personList=${Const.LIKED_SCREEN}&parentId=${post.postId}"
+                            )
+                        }
+                    },
+                    onPost = {
+                        navController.popBackStack()
+                        navController.navigate(Routes.PostDetail.screen + "?postId=${post.postId}")
+                    },
+                    onComment = {
+                        navController.popBackStack()
+                        navController.navigate(Routes.PostDetail.screen + "?postId=${post.postId}")
+                    }
+                ) { selectedItem ->
+                    profileViewModel.onEvent(
+                        ProfileScreenEvents.Menu(
+                            option = selectedItem,
+                            postId = post.postId
+                        )
+                    )
+                }
+                println(TimeStampConverter().invoke(post.timeStamp * 1000))
+                println(post.timeStamp)
+            }
+            if (profileState.isLoading){
+                item { CircularProgressIndicator(color = bottomNavigationItem) }
+            }
+            else if (!profileState.isLoading && profileState.posts.isEmpty()){
+                item {
+                    Text(
+                        text = stringResource(id = R.string.nothing_to_show),
+                        color = primaryText ,
+                        fontWeight = FontWeight.Bold ,
+                        fontSize = 22.sp,
+                        fontStyle = FontStyle.Italic
+                    )
+                }
+            }
             }
         }
     }
-
-}

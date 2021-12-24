@@ -163,4 +163,36 @@ class PostRepositoryImpl(
             Resource.Error(Const.SOMETHING_WRONG)
         }
     }
+
+
+    override suspend fun getPostForUser(userId: String, page: Int): Resource<List<Post>> {
+        return try {
+            val response = postApi.getPostsForUser(userId , page)
+            if (response.successful) {
+                val posts = response.data?.map { post ->
+                    Post(
+                        userId = post.userId,
+                        timeStamp = post.timeStamp,
+                        userName = post.userName,
+                        userProfileUrl = post.userProfileUrl,
+                        postImageUrl = post.postImageUrl,
+                        description = post.description,
+                        mode = post.mode,
+                        postId = post.postId,
+                        isUser = userId == post.userId,
+                        liked = post.liked,
+                        comment = post.comment,
+                        isLiked = post.isPostLiked
+                    )
+                }
+                Resource.Success(posts)
+            } else {
+                Resource.Error(response.message)
+            }
+        } catch (e: IOException) {
+            Resource.Error(Const.SOMETHING_WRONG)
+        } catch (e: HttpException) {
+            Resource.Error(Const.SOMETHING_WRONG)
+        }
+    }
 }

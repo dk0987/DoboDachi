@@ -43,7 +43,8 @@ object PostModule {
             addPostUseCase = AddPostUseCase(postRepository),
             deletePostUseCase = DeletePostUseCase(postRepository),
             getPostByIdUseCase = GetPostByIdUseCase(postRepository , sharedPreferences),
-            getProfilePic = GetProfilePic(postRepository)
+            getProfilePic = GetProfilePic(postRepository),
+            getPostForUserUseCase = GetPostForUserUseCase(postRepository)
         )
     }
 

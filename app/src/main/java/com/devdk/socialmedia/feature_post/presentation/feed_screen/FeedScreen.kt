@@ -75,6 +75,7 @@ fun Feed(
            )
            IconButton(
                onClick = {
+                   navController.popBackStack()
                    navController.navigate(Routes.Profile.screen + "?userId=${feedScreenViewModel.userId}")
                },
                Modifier
@@ -130,6 +131,7 @@ fun Feed(
                          navController.navigate(Routes.PostDetail.screen + "?postId=${post.postId}")
                      },
                      onComment = {
+                         navController.popBackStack()
                          navController.navigate(Routes.PostDetail.screen + "?postId=${post.postId}")
                      }
                  ) { selectedItem ->

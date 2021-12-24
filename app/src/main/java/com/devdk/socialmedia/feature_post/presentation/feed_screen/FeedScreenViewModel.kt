@@ -79,12 +79,6 @@ class FeedScreenViewModel @Inject constructor(
             is FeedScreenEvents.OnShare -> {
 
             }
-            is FeedScreenEvents.OnPost -> {
-
-            }
-            is FeedScreenEvents.Profile -> {
-
-            }
             is FeedScreenEvents.Menu -> {
                 println("Delete${event.option}")
                 when(event.option) {
@@ -95,9 +89,6 @@ class FeedScreenViewModel @Inject constructor(
                         deletePost(event.postId)
                     }
                 }
-            }
-            is FeedScreenEvents.LikedBy-> {
-
             }
         }
     }
