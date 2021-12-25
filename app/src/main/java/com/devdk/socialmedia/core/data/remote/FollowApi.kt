@@ -2,6 +2,7 @@ package com.devdk.socialmedia.core.data.remote
 
 import com.devdk.socialmedia.core.data.remote.dto.request.FollowRequest
 import com.devdk.socialmedia.core.data.remote.dto.response.BasicApiResponse
+import com.devdk.socialmedia.core.util.BaseUrl.FOLLOW_BASE_URL
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.POST
@@ -20,7 +21,7 @@ interface FollowApi {
     ) : BasicApiResponse<Unit>
 
     companion object {
-        const val BASE_URL = "http://169.254.193.130:8080/"
+        const val BASE_URL = FOLLOW_BASE_URL
     }
 
 }

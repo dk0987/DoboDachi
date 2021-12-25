@@ -5,5 +5,7 @@ import com.devdk.socialmedia.core.domain.modal.Images
 data class ImagesStates (
     val images : List<Images> = emptyList(),
     val isLoading : Boolean = false,
-    val route : String? = null
+    val route : String? = null,
+    val imageType : String = "",
+    val userId : String = ""
 )

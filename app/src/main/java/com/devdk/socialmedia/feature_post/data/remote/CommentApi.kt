@@ -1,6 +1,7 @@
 package com.devdk.socialmedia.feature_post.data.remote
 
 import com.devdk.socialmedia.core.data.remote.dto.response.BasicApiResponse
+import com.devdk.socialmedia.core.util.BaseUrl
 import com.devdk.socialmedia.feature_post.data.remote.dto.request.CommentRequest
 import com.devdk.socialmedia.feature_post.data.remote.dto.response.CommentResponse
 import retrofit2.http.*
@@ -23,6 +24,6 @@ interface CommentApi {
     ) : BasicApiResponse<Unit>
 
     companion object {
-        const val BASE_URL = "http://169.254.193.130:8080/"
+        const val BASE_URL = BaseUrl.COMMENT_BASE_URL
     }
 }

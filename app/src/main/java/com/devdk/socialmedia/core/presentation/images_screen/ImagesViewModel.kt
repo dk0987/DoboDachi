@@ -26,6 +26,17 @@ class ImagesViewModel @Inject constructor(
                 route = route
             )
         }
+        savedStateHandle.get<String>("imageType")?.let { imageType ->
+            _images.value = images.value.copy(
+                imageType = imageType
+            )
+        }
+        savedStateHandle.get<String>("userId")?.let { userID ->
+            _images.value = images.value.copy(
+                userId = userID
+            )
+            println("Image UserId : $userID")
+        }
     }
 
     fun getImages(context: Context) {

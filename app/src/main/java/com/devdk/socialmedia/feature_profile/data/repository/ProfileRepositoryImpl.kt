@@ -56,31 +56,35 @@ class ProfileRepositoryImpl(
 
     override suspend fun updateUser(
         updateUser: UpdateUser,
-        profileUrl: Uri,
-        bannerUrl: Uri
+        profileUrl: Uri?,
+        bannerUrl: Uri?
     ): Resource<Unit> {
         val updateProfileRequest = UpdateUserRequest(
             username = updateUser.username,
             bio = updateUser.bio,
         )
-        val profile = profileUrl.toFile()
-        val banner = bannerUrl.toFile()
+        val profile = profileUrl?.toFile()
+        val banner = bannerUrl?.toFile()
         return try {
             val response = profileApi.editProfile(
                 updateProfileRequest = MultipartBody.Part.createFormData(
                     name = "update_Profile",
                     value = gson.toJson(updateProfileRequest)
                 ),
-                updateProfileUrl = MultipartBody.Part.createFormData(
-                    name = "update_profile_pic",
-                    filename = profile.name,
-                    body = profile.asRequestBody()
-                ),
-                updateBannerUrl = MultipartBody.Part.createFormData(
-                    name = "update_banner",
-                    filename = banner.name,
-                    body = banner.asRequestBody()
-                )
+                updateProfileUrl = profile?.let {
+                  MultipartBody.Part.createFormData(
+                        name = "update_profile_pic",
+                        filename = it.name,
+                        body = it.asRequestBody()
+                    )
+                },
+                updateBannerUrl = banner?.let {
+                    MultipartBody.Part.createFormData(
+                        name = "update_banner",
+                        filename = it.name,
+                        body = it.asRequestBody()
+                    )
+                }
             )
             if (response.successful){
                 Resource.Success(Unit)

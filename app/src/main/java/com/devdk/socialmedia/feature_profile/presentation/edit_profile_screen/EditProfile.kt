@@ -8,11 +8,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AddCircle
 import androidx.compose.material.icons.outlined.KeyboardArrowLeft
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -33,21 +35,37 @@ import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.components.StandardButtons
 import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
 import com.devdk.socialmedia.core.presentation.util.Routes
+import com.devdk.socialmedia.core.util.UiEvent
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun EditProfile(
     navController: NavController,
-    editProfileViewModel: EditProfileViewModel = hiltViewModel()
+    editProfileViewModel: EditProfileViewModel = hiltViewModel(),
+    scaffoldState: ScaffoldState
 ) {
     val userNameState = editProfileViewModel.userNameTextFieldState.value
     val bioState = editProfileViewModel.bioTextFieldState.value
     val editProfileStates = editProfileViewModel.editProfileStates.value
 
+    LaunchedEffect(key1 = true ){
+        editProfileViewModel.eventFlow.collectLatest { event ->
+            when(event) {
+                is UiEvent.Navigate ->{
+                    navController.navigate(event.route + "?userId=${editProfileViewModel.userId}")
+                }
+                is UiEvent.ShowSnackBar ->{
+                    scaffoldState.snackbarHostState.showSnackbar(event.message ?: "")
+                }
+            }
+        }
+    }
+
     Box(modifier = Modifier.fillMaxSize()){
         Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
             Box(modifier = Modifier.fillMaxWidth()){
                 Image(
-                    painter = rememberImagePainter(data = editProfileStates.bannerUrl , builder = {
+                    painter = rememberImagePainter(data = editProfileStates.updateBannerUrl , builder = {
                         crossfade(true)
                         size(OriginalSize)
                     }),
@@ -78,7 +96,9 @@ fun EditProfile(
                         )
                     }
                     IconButton(onClick = {
-                        navController.navigate(Routes.Images.screen + "?route=${Routes.EditProfile.screen}&imageType={Banner}")
+                        navController.popBackStack()
+                        navController.navigate(Routes.Images.screen + "?route=${Routes.EditProfile.screen}&imageType=Banner&userId=${editProfileViewModel.userId}")
+                        println("EditView ${editProfileViewModel.userId}")
                     },
                         modifier = Modifier
                             .size(30.dp)
@@ -99,7 +119,7 @@ fun EditProfile(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(
-                    painter = rememberImagePainter(data = editProfileStates.profileUrl , builder = {
+                    painter = rememberImagePainter(data = editProfileStates.updateProfileUrl , builder = {
                         crossfade(true)
                         size(OriginalSize)
                     }),
@@ -108,7 +128,7 @@ fun EditProfile(
                         .size(80.dp)
                         .clip(CircleShape)
                         .clickable {
-                            navController.navigate(Routes.Images.screen + "?route=${Routes.EditProfile.screen}&imageType={Profile}")
+                            navController.navigate(Routes.Images.screen + "?route=${Routes.EditProfile.screen}&imageType=Profile&userId=${editProfileViewModel.userId}")
                         }
                     ,
                     contentScale = ContentScale.Crop ,

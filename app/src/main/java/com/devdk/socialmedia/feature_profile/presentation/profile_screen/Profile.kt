@@ -82,7 +82,7 @@ fun Profile(
 
                 if (profileState.user?.isUser == true){
                     IconButton(onClick = {
-                        navController.navigate(Routes.EditProfile.screen)
+                        navController.navigate(Routes.EditProfile.screen + "?userId=${profileViewModel.userId}")
                     },
                         modifier = Modifier
                             .size(30.dp)
@@ -157,7 +157,6 @@ fun Profile(
                             text = it,
                             fontSize = 23.sp,
                             fontWeight = FontWeight.Bold,
-                            textDecoration = TextDecoration.Underline,
                             color = primaryText,
                         )
                     }

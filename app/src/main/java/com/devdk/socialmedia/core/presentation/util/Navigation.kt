@@ -152,17 +152,37 @@ fun Navigation() {
                 composable(Routes.Activity.screen){
                     Activity(navController = navController)
                 }
-                composable(Routes.EditProfile.screen){
-                    EditProfile(navController = navController)
+                composable(
+                    route = Routes.EditProfile.screen + "?userId={userId}&imageType={imageType}&croppedImageUri={croppedImageUri}",
+                    arguments = listOf(
+                        navArgument("userId") {
+                            type = NavType.StringType
+                            defaultValue = ""
+                        },
+                        navArgument("imageType") {
+                            type = NavType.StringType
+                            defaultValue = ""
+                        },
+                        navArgument("croppedImageUri") {
+                            type = NavType.StringType
+                            defaultValue = ""
+                        }
+                    )
+                ){
+                    EditProfile(navController = navController , scaffoldState = scaffoldState)
                 }
                 composable(
-                    route = Routes.Images.screen + "?&route={route}&imageType={imageType}",
+                    route = Routes.Images.screen + "?&route={route}&imageType={imageType}&userId={userId}",
                     arguments = listOf(
                         navArgument("route") {
                             type = NavType.StringType
                             defaultValue = ""
                         },
                         navArgument("imageType") {
+                            type = NavType.StringType
+                            defaultValue = ""
+                        },
+                        navArgument("userId") {
                             type = NavType.StringType
                             defaultValue = ""
                         }

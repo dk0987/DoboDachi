@@ -1,5 +1,6 @@
 package com.devdk.socialmedia.feature_auth.data.remote
 
+import com.devdk.socialmedia.core.util.BaseUrl
 import com.devdk.socialmedia.feature_auth.data.remote.dto.request.LoginUserRequest
 import com.devdk.socialmedia.feature_auth.data.remote.dto.request.RegisterUserRequest
 import com.devdk.socialmedia.feature_auth.data.remote.dto.response.AuthResponse
@@ -23,7 +24,7 @@ interface AuthApi {
     suspend fun authenticate()
 
     companion object {
-        const val BASE_URL = "http://169.254.193.130:8080/"
+        const val BASE_URL = BaseUrl.AUTH_BASE_URL
     }
 
 }

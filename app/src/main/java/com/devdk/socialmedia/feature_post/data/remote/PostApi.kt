@@ -1,6 +1,7 @@
 package com.devdk.socialmedia.feature_post.data.remote
 
 import com.devdk.socialmedia.core.data.remote.dto.response.BasicApiResponse
+import com.devdk.socialmedia.core.util.BaseUrl
 import com.devdk.socialmedia.core.util.Const.POST_PAGE_SIZE
 import com.devdk.socialmedia.feature_post.data.remote.dto.request.AddPostRequest
 import com.devdk.socialmedia.feature_post.data.remote.dto.response.FeedScreenProfile
@@ -46,6 +47,6 @@ interface PostApi {
     suspend fun getProfilePic() : BasicApiResponse<FeedScreenProfile>
 
     companion object {
-        const val BASE_URL = "http://169.254.193.130:8080/"
+        const val BASE_URL = BaseUrl.POST_BASE_URL
     }
 }

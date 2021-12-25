@@ -1,8 +1,10 @@
 package com.devdk.socialmedia.feature_profile.presentation.edit_profile_screen
 
+import android.content.SharedPreferences
 import android.net.Uri
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.core.net.toFile
 import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -25,7 +27,8 @@ import javax.inject.Inject
 class EditProfileViewModel @Inject constructor(
     private val updateProfileUseCase: UpdateProfileUseCase,
     private val getProfileUseCase: GetProfileUseCase,
-    stateHandle: SavedStateHandle
+    stateHandle: SavedStateHandle,
+    private val sharedPreferences: SharedPreferences
 ) : ViewModel(){
 
     private val _userNameTextFieldState = mutableStateOf(TextFieldStates())
@@ -40,28 +43,17 @@ class EditProfileViewModel @Inject constructor(
     private val _eventFlow = MutableSharedFlow<UiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
 
+    val bannerSharedPref = sharedPreferences.getString("Banner" , "")
+    val profileSharedPref = sharedPreferences.getString("Profile" , "")
+
     var userId : String = stateHandle.get<String>("userId").toString()
+    val uri = stateHandle.get<String>("croppedImageUri")
+    private val imageType = stateHandle.get<String>("imageType")
+
 
     init {
-        stateHandle.get<String>("croppedImageUri")?.let { uri ->
-           stateHandle.get<String>("imageType")?.let { imageType ->
-               when (imageType) {
-                   "Profile" -> {
-                       _editProfileStates.value = editProfileStates.value.copy(
-                           updateProfileUrl = uri.toUri(),
-                           profileUrl = uri
-                       )
-                   }
-                   "Banner" -> {
-                       _editProfileStates.value = editProfileStates.value.copy(
-                           updateProfileUrl = uri.toUri(),
-                           bannerUrl = uri
-                       )
-                   }
-               }
-           }
-        }
         getProfile(userId)
+        println("Edit UserId : $userId")
     }
 
     fun onEvent(event : EditProfileEvents) {
@@ -85,8 +77,8 @@ class EditProfileViewModel @Inject constructor(
                         username = userNameTextFieldState.value.text,
                         bio = bioTextFieldState.value.text
                     ),
-                    profileUrl = editProfileStates.value.updateProfileUrl ?: Uri.EMPTY ,
-                    bannerUrl = editProfileStates.value.updateBannerUrl ?: Uri.EMPTY
+                    profileUrl = if (profileSharedPref?.isBlank() == true) null else editProfileStates.value.updateProfileUrl,
+                    bannerUrl =  if (bannerSharedPref?.isBlank() == true) null else editProfileStates.value.updateBannerUrl,
                 )
             }
         }
@@ -105,9 +97,32 @@ class EditProfileViewModel @Inject constructor(
                         )
                         _editProfileStates.value = editProfileStates.value.copy(
                             isError = false ,
-                            profileUrl = it.profileUrl,
-                            bannerUrl = it.bannerUrl
+                            updateProfileUrl = it.profileUrl.toUri(),
+                            updateBannerUrl = it.bannerUrl.toUri()
                         )
+                        if (uri != null){
+
+                            when(imageType){
+                                "Profile" -> {
+                                    sharedPreferences.edit()
+                                        .putString("Profile" , uri)
+                                        .apply()
+                                    _editProfileStates.value = editProfileStates.value.copy(
+                                        updateProfileUrl = uri.toUri(),
+                                        updateBannerUrl = if (bannerSharedPref.isNullOrBlank()) it.bannerUrl.toUri() else bannerSharedPref.toUri()
+                                    )
+                                }
+                                "Banner" -> {
+                                    sharedPreferences.edit()
+                                        .putString("Banner" , uri)
+                                        .apply()
+                                    _editProfileStates.value = editProfileStates.value.copy(
+                                        updateBannerUrl = uri.toUri(),
+                                        updateProfileUrl = if (profileSharedPref.isNullOrBlank()) it.profileUrl.toUri() else profileSharedPref.toUri()
+                                   )
+                                }
+                            }
+                        }
                     }
 
                 }
@@ -124,14 +139,18 @@ class EditProfileViewModel @Inject constructor(
     }
 
 
-    private fun updateUser(updateUser: UpdateUser , profileUrl : Uri ,bannerUrl : Uri) {
+    private fun updateUser(updateUser: UpdateUser , profileUrl : Uri? ,bannerUrl : Uri?) {
         viewModelScope.launch {
             when(val result = updateProfileUseCase(updateUser , profileUrl, bannerUrl)) {
                 is Resource.Success -> {
-                    _eventFlow.emit(UiEvent.Navigate(Routes.Profile.screen , null))
                     _editProfileStates.value = editProfileStates.value.copy(
                         isUpdating = false
                     )
+                    _eventFlow.emit(UiEvent.Navigate(Routes.Profile.screen , null))
+                    sharedPreferences.edit()
+                        .putString("Profile" , null)
+                        .putString("Banner" , null)
+                        .apply()
                 }
                 is Resource.Error -> {
                     _eventFlow.emit(UiEvent.ShowSnackBar(result.message))
