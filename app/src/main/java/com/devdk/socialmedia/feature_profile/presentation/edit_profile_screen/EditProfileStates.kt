@@ -7,8 +7,8 @@ data class EditProfileStates(
     val isLoading : Boolean = false,
     val isUpdating : Boolean = false,
     val isError : Boolean = false,
+    val profileUrl : String = "",
+    val bannerUrl : String = "" ,
     val updateProfileUrl : Uri? = null,
     val updateBannerUrl : Uri? = null,
-    val unchangedProfile : Boolean = true ,
-    val unchangedBanner : Boolean = true
 )

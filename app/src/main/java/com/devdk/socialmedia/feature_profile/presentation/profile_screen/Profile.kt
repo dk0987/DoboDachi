@@ -239,7 +239,8 @@ fun Profile(
                     onComment = {
                         navController.popBackStack()
                         navController.navigate(Routes.PostDetail.screen + "?postId=${post.postId}")
-                    }
+                    },
+
                 ) { selectedItem ->
                     profileViewModel.onEvent(
                         ProfileScreenEvents.Menu(

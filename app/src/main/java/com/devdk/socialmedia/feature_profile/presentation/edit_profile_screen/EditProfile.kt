@@ -49,6 +49,7 @@ fun EditProfile(
     val editProfileStates = editProfileViewModel.editProfileStates.value
 
     LaunchedEffect(key1 = true ){
+        editProfileViewModel.getProfile(editProfileViewModel.userId)
         editProfileViewModel.eventFlow.collectLatest { event ->
             when(event) {
                 is UiEvent.Navigate ->{
@@ -65,10 +66,13 @@ fun EditProfile(
         Column(modifier = Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally) {
             Box(modifier = Modifier.fillMaxWidth()){
                 Image(
-                    painter = rememberImagePainter(data = editProfileStates.updateBannerUrl , builder = {
-                        crossfade(true)
-                        size(OriginalSize)
-                    }),
+                    painter = rememberImagePainter(
+                        data = editProfileStates.bannerUrl,
+                        builder = {
+                            crossfade(true)
+                            size(OriginalSize)
+                        }
+                    ),
                     contentDescription = stringResource(id = R.string.banner),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -98,7 +102,6 @@ fun EditProfile(
                     IconButton(onClick = {
                         navController.popBackStack()
                         navController.navigate(Routes.Images.screen + "?route=${Routes.EditProfile.screen}&imageType=Banner&userId=${editProfileViewModel.userId}")
-                        println("EditView ${editProfileViewModel.userId}")
                     },
                         modifier = Modifier
                             .size(30.dp)
@@ -119,15 +122,19 @@ fun EditProfile(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Image(
-                    painter = rememberImagePainter(data = editProfileStates.updateProfileUrl , builder = {
-                        crossfade(true)
-                        size(OriginalSize)
-                    }),
+                    painter = rememberImagePainter(
+                        data = editProfileStates.profileUrl,
+                        builder = {
+                            crossfade(true)
+                            size(OriginalSize)
+                        }
+                    ),
                     contentDescription = stringResource(id = R.string.profile_pic),
                     modifier = Modifier
                         .size(80.dp)
                         .clip(CircleShape)
                         .clickable {
+                            navController.popBackStack()
                             navController.navigate(Routes.Images.screen + "?route=${Routes.EditProfile.screen}&imageType=Profile&userId=${editProfileViewModel.userId}")
                         }
                     ,

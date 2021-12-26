@@ -46,6 +46,7 @@ fun Images(
                    modifier = Modifier.clickable(
                        onClick = {
                            image.contentURI?.let { uri ->
+                               navController.popBackStack()
                                navController.navigate(imagesState.route + "?croppedImageUri=file:///${uri}&imageType=${imagesState.imageType}&userId=${imagesState.userId}")
                            }
                        }

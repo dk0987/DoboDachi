@@ -164,6 +164,7 @@ fun Post(
                                     dropDownItem.forEach { DropDownItem ->
                                         DropdownMenuItem(onClick = {
                                             dropDownSelectedItem(DropDownItem)
+                                            expanded = false
                                         }) {
                                             Text(
                                                 text = DropDownItem,

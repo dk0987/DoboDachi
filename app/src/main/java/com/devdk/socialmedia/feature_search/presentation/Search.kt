@@ -86,7 +86,7 @@ fun Search(
                     SearchedItem(
                         searchedUser = searchedItem,
                         OnClick = {
-                            navController.navigate(Routes.Profile.screen)
+                            navController.navigate(Routes.Profile.screen + "?userId=${searchedItem.userId}")
                         },
                         OnFollow = {
                            searchViewModel.onEvent(SearchEvents.Follow(
