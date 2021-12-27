@@ -2,8 +2,7 @@ package com.devdk.socialmedia.core.data.repository
 
 import com.devdk.socialmedia.core.data.remote.LikeApi
 import com.devdk.socialmedia.core.data.remote.dto.request.LikeRequest
-import com.devdk.socialmedia.core.data.remote.dto.response.GetLikeResponse
-import com.devdk.socialmedia.core.domain.modal.GetLikes
+import com.devdk.socialmedia.core.domain.modal.PersonList
 import com.devdk.socialmedia.core.domain.repository.LikeRepository
 import com.devdk.socialmedia.core.util.Const
 import com.devdk.socialmedia.core.util.LikedOn
@@ -61,14 +60,14 @@ class LikeRepositoryImpl(
         }
     }
 
-    override suspend fun getLikes(parentId: String): Resource<List<GetLikes>> {
+    override suspend fun getLikes(parentId: String): Resource<List<PersonList>> {
         return try {
-            val getLikes = arrayListOf<GetLikes>()
+            val getLikes = arrayListOf<PersonList>()
             val response = likeApi.getLikes(parentId)
             if (response.successful){
                 response.data?.forEach { likes ->
                     getLikes.add(
-                        GetLikes(
+                        PersonList(
                             userId = likes.userID ,
                             userProfile = likes.userProfilePicUrl ,
                             isFollowing = likes.isFollowing,

@@ -124,13 +124,17 @@ fun Navigation() {
                     Search(navController = navController , scaffoldState = scaffoldState)
                 }
                 composable(
-                    route = Routes.PersonList.screen + "?personList={personList}&parentId={parentId}" ,
+                    route = Routes.PersonList.screen + "?personList={personList}&parentId={parentId}&userId={userId}" ,
                     arguments = listOf(
                         navArgument("personList"){
                             type = NavType.StringType
                             defaultValue = "LikedBy"
                         } ,
                         navArgument("parentId"){
+                            type = NavType.StringType
+                            defaultValue = ""
+                        },
+                        navArgument("userId"){
                             type = NavType.StringType
                             defaultValue = ""
                         }
@@ -147,7 +151,7 @@ fun Navigation() {
                         }
                     )
                 ){
-                    Profile(navController = navController)
+                    Profile(navController = navController , scaffoldState = scaffoldState)
                 }
                 composable(Routes.Activity.screen){
                     Activity(navController = navController)

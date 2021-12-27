@@ -6,6 +6,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.devdk.socialmedia.core.domain.use_case.FollowUseCase
+import com.devdk.socialmedia.core.domain.use_case.GetFollowersUseCase
+import com.devdk.socialmedia.core.domain.use_case.GetFollowingUseCase
 import com.devdk.socialmedia.core.domain.use_case.GetLikesUseCase
 import com.devdk.socialmedia.core.util.Const.FOLLOWERS_SCREEN
 import com.devdk.socialmedia.core.util.Const.FOLLOWING_SCREEN
@@ -22,7 +24,9 @@ import javax.inject.Inject
 class PersonLIstViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getLikesUseCase: GetLikesUseCase,
-    private val followUseCase: FollowUseCase
+    private val followUseCase: FollowUseCase,
+    private val getFollowersUseCase: GetFollowersUseCase,
+    private val getFollowingUseCase: GetFollowingUseCase,
 ) : ViewModel(){
 
     private val _personListScreenStates = mutableStateOf(PersonListState())
@@ -34,28 +38,39 @@ class PersonLIstViewModel @Inject constructor(
     init {
         val screen = savedStateHandle.get<String>("personList")
         val parentId = savedStateHandle.get<String>("parentId")
+        val userId = savedStateHandle.get<String>("userId")
 
         if (screen != null) {
-            if (parentId != null) {
+            if (parentId?.isBlank() == false) {
                 loadLists(screen , parentId)
+            }
+            if (userId ?.isBlank() == false){
+                loadLists(screen , userId)
             }
         }
     }
 
    private fun loadLists(screen : String , listFor : String) {
        viewModelScope.launch {
+           println("List for :$listFor")
            when(screen) {
                LIKED_SCREEN -> {
                    _personListScreenStates.value = personListScreenStates.value.copy(
-                       screenName = LIKED_SCREEN ,
+                       screenName = screen ,
                    )
                    getLikes(listFor)
                }
                FOLLOWERS_SCREEN -> {
-
+                   _personListScreenStates.value = personListScreenStates.value.copy(
+                       screenName = screen ,
+                   )
+                   getFollowers(listFor)
                }
                FOLLOWING_SCREEN -> {
-
+                   _personListScreenStates.value = personListScreenStates.value.copy(
+                       screenName = screen ,
+                   )
+                   getFollowings(listFor)
                }
                else -> Unit
            }
@@ -69,7 +84,7 @@ class PersonLIstViewModel @Inject constructor(
         when(val result = getLikesUseCase(listFor)) {
             is Resource.Success -> {
                 _personListScreenStates.value = personListScreenStates.value.copy(
-                    persons = result.data!!,
+                    people = result.data!!,
                     isLoading = false
                 )
             }
@@ -88,7 +103,7 @@ class PersonLIstViewModel @Inject constructor(
         viewModelScope.launch {
             val error = followUseCase(userId , isFollowed)
             _personListScreenStates.value = personListScreenStates.value.copy(
-                persons = personListScreenStates.value.persons.map {
+                people = personListScreenStates.value.people.map {
                     if(it.userId == userId) {
                         it.copy(isFollowing = !it.isFollowing)
                     } else it
@@ -102,5 +117,51 @@ class PersonLIstViewModel @Inject constructor(
         }
     }
 
+
+    private suspend fun getFollowers(listFor : String) {
+        _personListScreenStates.value = personListScreenStates.value.copy(
+            isLoading = true,
+        )
+        when(val result = getFollowersUseCase(listFor)) {
+            is Resource.Success -> {
+                _personListScreenStates.value = personListScreenStates.value.copy(
+                    people = result.data!!,
+                    isLoading = false
+                )
+            }
+            is Resource.Error -> {
+                _eventFlow.emit(
+                    UiEvent.ShowSnackBar(result.message)
+                )
+                _personListScreenStates.value = personListScreenStates.value.copy(
+                    isLoading = false,
+                )
+            }
+        }
+    }
+
+
+
+    private suspend fun getFollowings(listFor : String) {
+        _personListScreenStates.value = personListScreenStates.value.copy(
+            isLoading = true,
+        )
+        when(val result = getFollowingUseCase(listFor)) {
+            is Resource.Success -> {
+                _personListScreenStates.value = personListScreenStates.value.copy(
+                    people = result.data!!,
+                    isLoading = false
+                )
+            }
+            is Resource.Error -> {
+                _eventFlow.emit(
+                    UiEvent.ShowSnackBar(result.message)
+                )
+                _personListScreenStates.value = personListScreenStates.value.copy(
+                    isLoading = false,
+                )
+            }
+        }
+    }
 
 }

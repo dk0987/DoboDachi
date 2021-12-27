@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.devdk.socialmedia.core.domain.use_case.FollowUseCase
 import com.devdk.socialmedia.core.domain.use_case.LikeUseCase
 import com.devdk.socialmedia.core.presentation.util.MenuItems
 import com.devdk.socialmedia.core.util.DefaultPagination
@@ -27,6 +28,7 @@ class ProfileViewModel @Inject constructor(
     private val getProfileUseCase: GetProfileUseCase ,
     private val postUseCases: PostUseCases,
     private val likeUseCases: LikeUseCase,
+    private val followUseCase: FollowUseCase,
     stateHandle: SavedStateHandle
 ) :ViewModel() {
     private val _profileStates = mutableStateOf(ProfileStates())
@@ -60,7 +62,7 @@ class ProfileViewModel @Inject constructor(
     )
 
     init {
-        getProfile(userId)
+//        getProfile(userId)
         loadPosts()
     }
 
@@ -83,7 +85,6 @@ class ProfileViewModel @Inject constructor(
 
             }
             is ProfileScreenEvents.Menu -> {
-                println("Delete${event.option}")
                 when(event.option) {
                     MenuItems.dropDown[0] -> {
 
@@ -93,10 +94,13 @@ class ProfileViewModel @Inject constructor(
                     }
                 }
             }
+            is ProfileScreenEvents.Follow -> {
+                follow(event.userId , event.isFollowed)
+            }
         }
     }
 
-    private fun getProfile(userId : String) {
+     fun getProfile(userId : String) {
         viewModelScope.launch {
             when(val result = getProfileUseCase(userId)) {
                 is Resource.Success -> {
@@ -160,6 +164,23 @@ class ProfileViewModel @Inject constructor(
             }
         }
     }
+
+    private fun follow(userId : String , isFollowed : Boolean)  {
+        viewModelScope.launch {
+            val error = followUseCase(userId , isFollowed)
+            _profileStates.value = profileStates.value.copy(
+                user = profileStates.value.user?.copy(
+                    isFollowing = !profileStates.value.user?.isFollowing!!
+                )
+            )
+            error?.let {
+                _eventFlow.emit(
+                    UiEvent.ShowSnackBar(error),
+                )
+            }
+        }
+    }
+
 
 
 }

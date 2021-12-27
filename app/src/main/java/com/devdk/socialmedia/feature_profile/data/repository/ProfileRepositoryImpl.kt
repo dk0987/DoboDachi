@@ -20,7 +20,7 @@ class ProfileRepositoryImpl(
     private val gson: Gson
 ) : ProfileRepository {
 
-    override suspend fun getProfile(userId: String , ownerId : String): Resource<User> {
+    override suspend fun getProfile(userId: String): Resource<User> {
         val response = profileApi.getProfile(userId)
         var user : User? = null
         return try {
@@ -31,13 +31,14 @@ class ProfileRepositoryImpl(
                         username = userResponse.username,
                         bannerUrl = userResponse.bannerUrl,
                         profileUrl = userResponse.profileUrl,
-                        isUser = ownerId == userResponse.userId,
+                        isUser = userResponse.isUser,
                         isFollowing = userResponse.isFollowing,
                         bio = userResponse.bio,
                         followers = userResponse.followers,
                         following = userResponse.following,
                         posts = userResponse.posts
                     )
+                    println("Is User :${userResponse.isUser}")
                 }
                 Resource.Success(user)
             }

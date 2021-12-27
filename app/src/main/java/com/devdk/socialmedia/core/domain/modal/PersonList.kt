@@ -1,6 +1,6 @@
 package com.devdk.socialmedia.core.domain.modal
 
-data class GetLikes(
+data class PersonList(
     val userId : String = "" ,
     val userProfile : String? = null ,
     val username : String = "" ,

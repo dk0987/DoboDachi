@@ -1,14 +1,14 @@
 package com.devdk.socialmedia.core.domain.use_case
 
 import com.devdk.socialmedia.core.domain.modal.PersonList
-import com.devdk.socialmedia.core.domain.repository.LikeRepository
+import com.devdk.socialmedia.core.domain.repository.FollowRepository
 import com.devdk.socialmedia.core.util.Resource
 
-class GetLikesUseCase (
-    private val likeRepository: LikeRepository
+class GetFollowingUseCase(
+    private val followRepository: FollowRepository
 ) {
-    suspend operator fun invoke(parentId : String) : Resource<List<PersonList>> {
-        return when (val result = likeRepository.getLikes(parentId)) {
+    suspend operator fun invoke(userId : String) : Resource<List<PersonList>> {
+        return when (val result = followRepository.getFollowings(userId)) {
             is Resource.Success -> {
                 Resource.Success(result.data)
             }

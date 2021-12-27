@@ -1,9 +1,9 @@
 package com.devdk.socialmedia.feature_persons_list.person_list_screen
 
-import com.devdk.socialmedia.core.domain.modal.GetLikes
+import com.devdk.socialmedia.core.domain.modal.PersonList
 
 data class PersonListState(
     val isLoading : Boolean = false,
     val screenName : String = "",
-    val persons : List<GetLikes> = emptyList()
+    val people : List<PersonList> = emptyList()
 )

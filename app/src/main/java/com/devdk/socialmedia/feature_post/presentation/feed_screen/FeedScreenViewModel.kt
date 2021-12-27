@@ -80,7 +80,6 @@ class FeedScreenViewModel @Inject constructor(
 
             }
             is FeedScreenEvents.Menu -> {
-                println("Delete${event.option}")
                 when(event.option) {
                     MenuItems.dropDown[0] -> {
 

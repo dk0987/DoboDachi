@@ -165,7 +165,7 @@ class PostRepositoryImpl(
     }
 
 
-    override suspend fun getPostForUser(userId: String, page: Int): Resource<List<Post>> {
+    override suspend fun getPostForUser(userId: String, page: Int , ownerId : String): Resource<List<Post>> {
         return try {
             val response = postApi.getPostsForUser(userId , page)
             if (response.successful) {
@@ -179,7 +179,7 @@ class PostRepositoryImpl(
                         description = post.description,
                         mode = post.mode,
                         postId = post.postId,
-                        isUser = userId == post.userId,
+                        isUser = userId == ownerId,
                         liked = post.liked,
                         comment = post.comment,
                         isLiked = post.isPostLiked

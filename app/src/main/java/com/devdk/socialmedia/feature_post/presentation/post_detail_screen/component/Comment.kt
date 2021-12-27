@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
+import coil.size.OriginalSize
 import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.ui.theme.container
 import com.devdk.socialmedia.core.presentation.ui.theme.containerText
@@ -77,9 +78,12 @@ fun Comment(
                             .size(profile_pic_size)
                     ) {
                         Image(
-                            painter = rememberImagePainter(data = comment.userProfileUrl),
+                            painter = rememberImagePainter(data = comment.userProfileUrl , builder = {
+                                crossfade(true)
+                                size(OriginalSize)
+                            }),
                             contentDescription = stringResource(id = R.string.profile_pic),
-                            contentScale = ContentScale.FillBounds
+                            contentScale = ContentScale.Crop
                         )
                     }
                     Spacer(modifier = Modifier.width(10.dp))

@@ -8,9 +8,12 @@ import com.devdk.socialmedia.feature_post.domain.repository.PostRepository
 
 class GetPostForUserUseCase(
     private val postRepository: PostRepository ,
+    private val sharedPreferences: SharedPreferences
 ) {
      suspend operator fun invoke(userId : String , page : Int) : Resource<List<Post>> {
-         return when(val result = postRepository.getPostForUser(userId , page)){
+         val ownerId = sharedPreferences.getString(AuthConst.userId , "") ?: ""
+
+         return when(val result = postRepository.getPostForUser(userId , page , ownerId)){
              is Resource.Success -> {
                  Resource.Success(result.data)
              }

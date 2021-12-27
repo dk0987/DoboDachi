@@ -4,6 +4,8 @@ import com.devdk.socialmedia.core.data.remote.FollowApi
 import com.devdk.socialmedia.core.data.repository.FollowRepositoryImpl
 import com.devdk.socialmedia.core.domain.repository.FollowRepository
 import com.devdk.socialmedia.core.domain.use_case.FollowUseCase
+import com.devdk.socialmedia.core.domain.use_case.GetFollowersUseCase
+import com.devdk.socialmedia.core.domain.use_case.GetFollowingUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,10 +35,23 @@ object FollowModule {
     fun provideFollowRepository(api: FollowApi) : FollowRepository {
         return FollowRepositoryImpl(api)
     }
+
     @Provides
     @Singleton
     fun provideFollowUserUseCase(followRepository: FollowRepository) : FollowUseCase {
         return FollowUseCase(followRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetFollowerUseCase(followRepository: FollowRepository) : GetFollowersUseCase {
+        return GetFollowersUseCase(followRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetFollowingUseCase(followRepository: FollowRepository) : GetFollowingUseCase {
+        return GetFollowingUseCase(followRepository)
     }
 
 }

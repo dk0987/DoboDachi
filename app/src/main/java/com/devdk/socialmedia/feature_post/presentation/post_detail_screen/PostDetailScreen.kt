@@ -62,8 +62,7 @@ fun PostDetail(
         verticalArrangement = Arrangement.SpaceEvenly,
     ) {
         IconButton(onClick = {
-           navController.popBackStack()
-            navController.navigate(Routes.Feed.screen)
+           navController.navigateUp()
         },
             modifier = Modifier
                 .size(30.dp)
@@ -92,14 +91,6 @@ fun PostDetail(
                         onProfilePic = {
                             navController.navigate(Routes.Profile.screen)
                         },
-                        onLike = {
-                            postDetailViewModel.onEvent(
-                                PostDetailEvents.OnLike(
-                                parentId = post.postId,
-                                isLiked = post.isLiked ,
-                                parentType = LikedOn.Post
-                            ))
-                        },
                         onLikedText = {
                             if (post.liked > 0){
                                 navController.navigate(
@@ -110,7 +101,8 @@ fun PostDetail(
                         },
                         dropDownSelectedItem = { option ->
                             postDetailViewModel.onEvent(PostDetailEvents.PostMenu(option , post.postId))
-                        }
+                        },
+                        shouldShowActionRow = false
                     )
                 }
                 StandardTextField(

@@ -59,7 +59,8 @@ fun Post(
     postTextColor : Color = primaryText,
     dropDownItem : List<String> = MenuItems.dropDown,
     maxLines : Int = 3,
-    dropDownSelectedItem : (String) -> Unit = {}
+    dropDownSelectedItem : (String) -> Unit = {},
+    shouldShowActionRow : Boolean = true
 ) {
 
     var expanded by remember {
@@ -247,45 +248,48 @@ fun Post(
                         )
                     )
                 }
-                Spacer(modifier = Modifier.height(10.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Row {
-                        IconButton(onClick = onLike, modifier = Modifier.size(25.dp)) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_heart),
-                                contentDescription = stringResource(
-                                    id = R.string.heart
-                                ),
-                                tint = if (post.isLiked) Color.Red else containerText,
-                            )
+                if (shouldShowActionRow){
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Row {
+                            IconButton(onClick = onLike, modifier = Modifier.size(25.dp)) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_heart),
+                                    contentDescription = stringResource(
+                                        id = R.string.heart
+                                    ),
+                                    tint = if (post.isLiked) Color.Red else containerText,
+                                )
 
+                            }
+                            Spacer(modifier = Modifier.width(10.dp))
+                            IconButton(onClick = onComment, modifier = Modifier.size(25.dp)) {
+                                Icon(
+                                    imageVector = Icons.Filled.Comment,
+                                    contentDescription = stringResource(
+                                        id = R.string.comment
+                                    ),
+                                    tint = containerText
+                                )
+                            }
                         }
-                        Spacer(modifier = Modifier.width(10.dp))
-                        IconButton(onClick = onComment, modifier = Modifier.size(25.dp)) {
+                        IconButton(onClick = onShare, modifier = Modifier.size(25.dp)) {
                             Icon(
-                                imageVector = Icons.Filled.Comment,
+                                imageVector = Icons.Filled.Share,
                                 contentDescription = stringResource(
-                                    id = R.string.comment
+                                    id = R.string.share
                                 ),
                                 tint = containerText
                             )
+
                         }
                     }
-                    IconButton(onClick = onShare, modifier = Modifier.size(25.dp)) {
-                        Icon(
-                            imageVector = Icons.Filled.Share,
-                            contentDescription = stringResource(
-                                id = R.string.share
-                            ),
-                            tint = containerText
-                        )
-
-                    }
                 }
+
 
             }
         }

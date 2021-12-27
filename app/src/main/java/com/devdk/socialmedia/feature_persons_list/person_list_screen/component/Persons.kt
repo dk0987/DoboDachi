@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import com.devdk.socialmedia.R
-import com.devdk.socialmedia.core.domain.modal.GetLikes
+import com.devdk.socialmedia.core.domain.modal.PersonList
 import com.devdk.socialmedia.core.presentation.components.StandardFollowButton
 import com.devdk.socialmedia.core.presentation.ui.theme.container
 import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
@@ -29,7 +29,7 @@ import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
 @ExperimentalMaterialApi
 @Composable
 fun PersonItem(
-    person: GetLikes,
+    person: PersonList,
     elevation : Dp = 10.dp,
     roundedCornerShape : Dp = 15.dp,
     profile_pic_size : Dp = 45.dp,

@@ -19,7 +19,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -34,8 +33,9 @@ import com.devdk.socialmedia.core.presentation.util.Routes
 import com.devdk.socialmedia.feature_profile.presentation.profile_screen.component.ProfileInfo
 import com.devdk.socialmedia.core.presentation.components.StandardFollowButton
 import com.devdk.socialmedia.core.presentation.ui.theme.bottomNavigationItem
-import com.devdk.socialmedia.core.presentation.util.TimeStampConverter
 import com.devdk.socialmedia.core.util.Const
+import com.devdk.socialmedia.core.util.UiEvent
+import kotlinx.coroutines.flow.collectLatest
 import me.onebone.toolbar.CollapsingToolbarScaffold
 import me.onebone.toolbar.ScrollStrategy
 import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
@@ -45,12 +45,27 @@ import me.onebone.toolbar.rememberCollapsingToolbarScaffoldState
 @Composable
 fun Profile(
     navController: NavController,
-    profileViewModel: ProfileViewModel = hiltViewModel()
+    profileViewModel: ProfileViewModel = hiltViewModel(),
+    scaffoldState: ScaffoldState
 ) {
     val profileState = profileViewModel.profileStates.value
     val state = rememberCollapsingToolbarScaffoldState()
     val profilePic = 45.dp
     val progress = state.toolbarState.progress
+
+    LaunchedEffect(key1 = true ){
+        profileViewModel.getProfile(profileViewModel.userId)
+        profileViewModel.eventFlow.collectLatest { event ->
+            when(event){
+                is UiEvent.Navigate -> {
+                    navController.navigate(event.route)
+                }
+                is UiEvent.ShowSnackBar -> {
+                    scaffoldState.snackbarHostState.showSnackbar(event.message ?: "")
+                }
+            }
+        }
+    }
 
     CollapsingToolbarScaffold(
         modifier = Modifier.fillMaxSize(),
@@ -164,7 +179,11 @@ fun Profile(
                     profileState.user?.isUser?.let {
                         if (!it){
                             StandardFollowButton(isFollowing = profileState.user.isFollowing) {
-
+                                profileViewModel.onEvent(
+                                    ProfileScreenEvents.Follow(
+                                        profileState.user.userId ,
+                                        profileState.user.isFollowing
+                                )   )
                             }
                         }
 
@@ -173,7 +192,6 @@ fun Profile(
                 }
 
             }
-
             item {
                 Spacer(modifier = Modifier.height(5.dp))
                 profileState.user?.bio?.let {
@@ -194,10 +212,10 @@ fun Profile(
                     followers = profileState.user?.followers ?: 0,
                     post = profileState.user?.posts ?: 0,
                     onFollowers = {
-                        navController.navigate(Routes.PersonList.screen + "?personList=Followers")
+                        navController.navigate(Routes.PersonList.screen + "?personList=${Const.FOLLOWERS_SCREEN}&userId=${profileViewModel.userId}")
                     },
                     onFollowing = {
-                        navController.navigate(Routes.PersonList.screen + "?personList=Following")
+                        navController.navigate(Routes.PersonList.screen + "?personList=${Const.FOLLOWING_SCREEN}&userId=${profileViewModel.userId}")
                     }
                 )
                 Spacer(modifier = Modifier.height(5.dp))
@@ -207,7 +225,9 @@ fun Profile(
                     fontSize = 20.sp,
                     textAlign = TextAlign.Start,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(start = 10.dp).fillMaxWidth()
+                    modifier = Modifier
+                        .padding(start = 10.dp)
+                        .fillMaxWidth()
                 )
 
             }
@@ -240,17 +260,14 @@ fun Profile(
                         navController.popBackStack()
                         navController.navigate(Routes.PostDetail.screen + "?postId=${post.postId}")
                     },
-
-                ) { selectedItem ->
-                    profileViewModel.onEvent(
-                        ProfileScreenEvents.Menu(
-                            option = selectedItem,
-                            postId = post.postId
-                        )
-                    )
-                }
-                println(TimeStampConverter().invoke(post.timeStamp * 1000))
-                println(post.timeStamp)
+                    dropDownSelectedItem = { selectedItem ->
+                        profileViewModel.onEvent(
+                            ProfileScreenEvents.Menu(
+                                option = selectedItem,
+                                postId = post.postId
+                            )
+                        )}
+                )
             }
             if (profileState.isLoading){
                 item { CircularProgressIndicator(color = bottomNavigationItem) }

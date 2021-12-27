@@ -44,7 +44,7 @@ object ProfileModule {
     @Provides
     @Singleton
     fun provideGetProfileUseCase(profileRepository: ProfileRepository , sharedPreferences: SharedPreferences) : GetProfileUseCase {
-        return GetProfileUseCase(profileRepository , sharedPreferences)
+        return GetProfileUseCase(profileRepository )
     }
 
     @Provides

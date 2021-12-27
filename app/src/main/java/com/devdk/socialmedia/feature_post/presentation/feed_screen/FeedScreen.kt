@@ -111,6 +111,9 @@ fun Feed(
                       feedScreenViewModel.loadMorePost()
                  }
                  Post(
+                     onProfilePic = {
+                         navController.navigate(Routes.Profile.screen + "?userId=${post.userId}")
+                     },
                      post = post,
                      onLike = {
                          feedScreenViewModel.onEvent(FeedScreenEvents.OnLike(
@@ -127,21 +130,19 @@ fun Feed(
                          }
                      },
                      onPost = {
-                         navController.popBackStack()
                          navController.navigate(Routes.PostDetail.screen + "?postId=${post.postId}")
                      },
                      onComment = {
-                         navController.popBackStack()
                          navController.navigate(Routes.PostDetail.screen + "?postId=${post.postId}")
-                     }
-                 ) { selectedItem ->
-                     feedScreenViewModel.onEvent(
-                         FeedScreenEvents.Menu(
-                             option = selectedItem,
-                             postId = post.postId
-                         )
-                     )
-                 }
+                     } ,
+                     dropDownSelectedItem = { selectedItem ->
+                         feedScreenViewModel.onEvent(
+                             FeedScreenEvents.Menu(
+                                 option = selectedItem,
+                                 postId = post.postId
+                             )
+                     )}
+                 )
                  println(TimeStampConverter().invoke(post.timeStamp * 1000))
                  println(post.timeStamp)
              }

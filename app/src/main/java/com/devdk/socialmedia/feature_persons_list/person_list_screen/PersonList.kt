@@ -69,7 +69,7 @@ fun PersonList(
             horizontalAlignment = Alignment.CenterHorizontally ,
             verticalArrangement = Arrangement.Center
         ){
-            items(personListState.persons){ person ->
+            items(personListState.people){ person ->
                 PersonItem(
                     person = person,
                     OnFollow = {
@@ -80,7 +80,7 @@ fun PersonList(
             if (personListState.isLoading){
                 item { CircularProgressIndicator(color = bottomNavigationItem) }
             }
-            else if (!personListState.isLoading && personListState.persons.isEmpty()){
+            else if (!personListState.isLoading && personListState.people.isEmpty()){
                 item {
                     Text(
                         text = stringResource(id = R.string.nothing_to_show),
