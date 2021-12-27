@@ -13,16 +13,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberImagePainter
+import coil.size.OriginalSize
 import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.ui.theme.container
 import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
+import com.devdk.socialmedia.feature_activity.domain.modal.Activity
 import com.devdk.socialmedia.feature_activity.presentation.util.Action
 import com.devdk.socialmedia.feature_activity.presentation.util.COMMENT
 import com.devdk.socialmedia.feature_activity.presentation.util.POST
@@ -30,17 +32,15 @@ import com.devdk.socialmedia.feature_activity.presentation.util.POST
 @ExperimentalMaterialApi
 @Composable
 fun ActivityItem(
-    profileURL : Painter,
-    username :String,
+    modifier: Modifier = Modifier,
+    activity: Activity ,
     elevation : Dp = 10.dp,
     roundedCornerShape : Dp = 15.dp,
     onProfilePic : () -> Unit = {},
     profile_pic_size : Dp = 45.dp,
     OnClick : () -> Unit = {},
-    action : Action,
     onPostText : () -> Unit = {} ,
     onCommentText : () -> Unit = {},
-    modifier: Modifier = Modifier
 ) {
     Card(
         onClick = OnClick ,
@@ -64,14 +64,17 @@ fun ActivityItem(
                     .size(profile_pic_size)
             ) {
                 Image(
-                    painter = profileURL,
+                    painter = rememberImagePainter(data = activity.userProfileUrl, builder = {
+                        crossfade(true)
+                        size(OriginalSize)
+                    }),
                     contentDescription = stringResource(id = R.string.profile_pic),
                     contentScale = ContentScale.Crop
                 )
             }
             Spacer(modifier = Modifier.width(8.dp))
             Text(
-                text = username,
+                text = activity.username,
                 color = primaryText,
                 fontSize = 17.sp,
                 fontWeight = FontWeight.SemiBold,
@@ -80,7 +83,7 @@ fun ActivityItem(
                         onClick = onProfilePic
                     )
             )
-            when(action){
+            when(val action = activity.action){
                 is Action.Followed -> {
                     Text(
                         text = action.actionText ,

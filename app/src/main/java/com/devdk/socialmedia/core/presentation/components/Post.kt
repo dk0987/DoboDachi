@@ -202,8 +202,6 @@ fun Post(
                         )
                     }
                 }
-
-                Spacer(modifier = Modifier.height(8.dp))
                 post.description?.let {
                     if (it.isNotBlank()){
                         Text(
@@ -216,10 +214,8 @@ fun Post(
                             modifier = Modifier.fillMaxWidth()
                         )
                     }
-
+                    Spacer(modifier = Modifier.height(5.dp))
                 }
-
-                Spacer(modifier = Modifier.height(10.dp))
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,

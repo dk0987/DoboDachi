@@ -154,7 +154,7 @@ fun Navigation() {
                     Profile(navController = navController , scaffoldState = scaffoldState)
                 }
                 composable(Routes.Activity.screen){
-                    Activity(navController = navController)
+                    Activity(navController = navController , scaffoldState = scaffoldState)
                 }
                 composable(
                     route = Routes.EditProfile.screen + "?userId={userId}&imageType={imageType}&croppedImageUri={croppedImageUri}",

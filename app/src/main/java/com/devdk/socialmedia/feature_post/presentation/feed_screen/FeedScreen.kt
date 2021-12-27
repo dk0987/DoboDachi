@@ -149,7 +149,7 @@ fun Feed(
             if (posts.isLoading){
                 item { CircularProgressIndicator(color = bottomNavigationItem) }
             }
-           else if (!posts.isLoading && posts.items.isEmpty()){
+            else if (!posts.isLoading && posts.items.isEmpty()){
                item {
                    Text(
                        text = stringResource(id = R.string.nothing_to_show),

@@ -8,4 +8,5 @@ object BaseUrl {
     const val POST_BASE_URL = "http://192.168.224.141:8080/"
     const val PROFILE_BASE_URL = "http://192.168.224.141:8080/"
     const val SEARCH_BASE_URL = "http://192.168.224.141:8080/"
+    const val ACTIVITY_BASE_URL = "http://192.168.224.141:8080/"
 }
