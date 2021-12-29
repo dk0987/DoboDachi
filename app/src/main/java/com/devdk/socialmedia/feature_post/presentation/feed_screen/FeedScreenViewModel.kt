@@ -76,9 +76,6 @@ class FeedScreenViewModel @Inject constructor(
                 )
                 toggleLike(event.parentId , LikedOn.Post , event.isLiked)
             }
-            is FeedScreenEvents.OnShare -> {
-
-            }
             is FeedScreenEvents.Menu -> {
                 when(event.option) {
                     MenuItems.dropDown[0] -> {
@@ -145,10 +142,6 @@ class FeedScreenViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    private fun sendPost(postId : String) {
-
     }
 
 }

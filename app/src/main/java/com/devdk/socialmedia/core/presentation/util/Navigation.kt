@@ -10,7 +10,6 @@ import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.res.stringResource
-import androidx.navigation.NavDeepLink
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,12 +17,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
-import coil.ImageLoader
 import coil.annotation.ExperimentalCoilApi
 import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.components.StandardScaffold
 import com.devdk.socialmedia.core.presentation.images_screen.Images
-import com.devdk.socialmedia.core.util.BaseUrl.DOBODACHI_BASE_URL
 import com.devdk.socialmedia.feature_activity.presentation.Activity
 import com.devdk.socialmedia.feature_auth.presentation.login_screen.Login
 import com.devdk.socialmedia.feature_auth.presentation.registration_screen.Register
@@ -35,8 +32,9 @@ import com.devdk.socialmedia.feature_post.presentation.post_detail_screen.PostDe
 import com.devdk.socialmedia.feature_profile.presentation.edit_profile_screen.EditProfile
 import com.devdk.socialmedia.feature_profile.presentation.profile_screen.Profile
 import com.devdk.socialmedia.feature_search.presentation.Search
-import javax.inject.Inject
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
 
+@ExperimentalPermissionsApi
 @ExperimentalCoilApi
 @ExperimentalFoundationApi
 @ExperimentalMaterialApi
@@ -203,7 +201,7 @@ fun Navigation() {
                         }
                     )
                 ) {
-                    Images(navController = navController )
+                    Images(navController = navController , scaffoldState = scaffoldState )
                 }
             }
         }

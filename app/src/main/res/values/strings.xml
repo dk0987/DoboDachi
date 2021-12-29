@@ -61,4 +61,5 @@
     <string name="nothing_to_show">Nothing to show</string>
     <string name="images">Images</string>
     <string name="share_intent_text">I got an Awesome post for you</string>
+    <string name="gallery">Gallery</string>
 </resources>
