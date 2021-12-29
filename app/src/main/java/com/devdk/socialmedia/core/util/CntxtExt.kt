@@ -1,18 +1,18 @@
 package com.devdk.socialmedia.core.util
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import androidx.compose.ui.res.stringResource
 import com.devdk.socialmedia.R
 
+@SuppressLint("StringFormatInvalid")
 fun Context.sharePost(postId : String) {
     val intent = Intent().apply {
         action = Intent.ACTION_SEND
         putExtra(
             Intent.EXTRA_TEXT,
-            getString(
-                R.string.share_intent_text,
-                "https://pl-coding.com/$postId"
-            )
+            "https://dobodachi.com/$postId"
         )
         type = "text/plain"
     }
