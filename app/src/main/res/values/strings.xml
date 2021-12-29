@@ -60,4 +60,5 @@
     <string name="save">SAVE</string>
     <string name="nothing_to_show">Nothing to show</string>
     <string name="images">Images</string>
+    <string name="share_intent_text">i got an Awesome post for you</string>
 </resources>

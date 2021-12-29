@@ -3,10 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.devdk.socialmedia">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".SocialMediaApplication"
@@ -21,18 +22,30 @@
         <activity
             android:name=".core.presentation.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.SocialMedia">
+            <tools:validation testUrl="https://dobodachi.com/61c9cb63d7a42e75e4e7f0d9" />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="https"
+                    android:host="dobodachi.com" />
+            </intent-filter>
         </activity>
-        <activity
-            android:name="com.yalantis.ucrop.UCropActivity"
-            android:screenOrientation="fullSensor"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
     </application>
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.SEND" />
+            <category android:name="android.intent.category.DEFAULT" />
+        </intent>
+    </queries>
 
 </manifest>

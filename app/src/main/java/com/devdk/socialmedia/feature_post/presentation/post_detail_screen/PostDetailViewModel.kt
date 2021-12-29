@@ -46,8 +46,8 @@ class PostDetailViewModel @Inject constructor(
 
     private val postId = stateHandle.get<String>("postId") ?: ""
 
-
     init {
+        println("Post Id postDetail :$postId")
         loadPostById(postId)
         loadComments()
     }

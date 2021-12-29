@@ -147,4 +147,8 @@ class FeedScreenViewModel @Inject constructor(
         }
     }
 
+    private fun sendPost(postId : String) {
+
+    }
+
 }

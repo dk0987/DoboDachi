@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -31,6 +32,7 @@ import com.devdk.socialmedia.core.presentation.util.Routes
 import com.devdk.socialmedia.core.presentation.util.TimeStampConverter
 import com.devdk.socialmedia.core.util.Const
 import com.devdk.socialmedia.core.util.UiEvent
+import com.devdk.socialmedia.core.util.sharePost
 import kotlinx.coroutines.flow.collectLatest
 
 @ExperimentalCoilApi
@@ -42,6 +44,7 @@ fun Feed(
     scaffoldState: ScaffoldState,
 ) {
     val posts = feedScreenViewModel.paginatedPost.value
+    val context = LocalContext.current
 
     LaunchedEffect(key1 = true ){
         feedScreenViewModel.eventFlow.collectLatest { event ->
@@ -141,7 +144,10 @@ fun Feed(
                                  option = selectedItem,
                                  postId = post.postId
                              )
-                     )}
+                     )},
+                     onShare = {
+                         context.sharePost(post.postId)
+                     }
                  )
                  println(TimeStampConverter().invoke(post.timeStamp * 1000))
                  println(post.timeStamp)
