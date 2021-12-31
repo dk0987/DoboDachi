@@ -1,4 +1,4 @@
-package com.devdk.socialmedia.feature_persons_list.person_list_screen
+package com.devdk.socialmedia.feature_persons_list.presentation
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -20,7 +20,7 @@ import androidx.navigation.NavController
 import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.ui.theme.bottomNavigationItem
 import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
-import com.devdk.socialmedia.feature_persons_list.person_list_screen.component.PersonItem
+import com.devdk.socialmedia.feature_persons_list.presentation.component.PersonItem
 
 @ExperimentalMaterialApi
 @Composable

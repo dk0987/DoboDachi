@@ -1,4 +1,4 @@
-package com.devdk.socialmedia.feature_persons_list.person_list_screen.component
+package com.devdk.socialmedia.feature_persons_list.presentation.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable

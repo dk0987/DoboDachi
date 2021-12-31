@@ -25,9 +25,11 @@ import com.devdk.socialmedia.feature_activity.presentation.Activity
 import com.devdk.socialmedia.feature_auth.presentation.login_screen.Login
 import com.devdk.socialmedia.feature_auth.presentation.registration_screen.Register
 import com.devdk.socialmedia.feature_auth.presentation.splash_screen.Splash
+import com.devdk.socialmedia.feature_chat.presentation.chats_screen.Chats
+import com.devdk.socialmedia.feature_chat.presentation.message_screen.Message
 import com.devdk.socialmedia.feature_post.presentation.add_post_screen.AddPost
 import com.devdk.socialmedia.feature_post.presentation.feed_screen.Feed
-import com.devdk.socialmedia.feature_persons_list.person_list_screen.PersonList
+import com.devdk.socialmedia.feature_persons_list.presentation.PersonList
 import com.devdk.socialmedia.feature_post.presentation.post_detail_screen.PostDetail
 import com.devdk.socialmedia.feature_profile.presentation.edit_profile_screen.EditProfile
 import com.devdk.socialmedia.feature_profile.presentation.profile_screen.Profile
@@ -202,6 +204,16 @@ fun Navigation() {
                     )
                 ) {
                     Images(navController = navController , scaffoldState = scaffoldState )
+                }
+                composable(
+                    route = Routes.Chat.screen
+                ){
+                    Chats(navController = navController, scaffoldState = scaffoldState )
+                }
+                composable(
+                    route = Routes.Messages.screen
+                ){
+                    Message(navController = navController, scaffoldState = scaffoldState )
                 }
             }
         }

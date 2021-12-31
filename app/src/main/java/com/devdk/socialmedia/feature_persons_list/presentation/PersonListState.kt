@@ -1,4 +1,4 @@
-package com.devdk.socialmedia.feature_persons_list.person_list_screen
+package com.devdk.socialmedia.feature_persons_list.presentation
 
 import com.devdk.socialmedia.core.domain.modal.PersonList
 
