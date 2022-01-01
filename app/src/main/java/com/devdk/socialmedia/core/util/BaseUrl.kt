@@ -9,4 +9,5 @@ object BaseUrl {
     const val PROFILE_BASE_URL = "http://192.168.25.141:8080/"
     const val SEARCH_BASE_URL = "http://192.168.25.141:8080/"
     const val ACTIVITY_BASE_URL = "http://192.168.25.141:8080/"
+    const val CHAT_BASE_URL = "http://192.168.25.141:8080/"
 }
