@@ -4,6 +4,7 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
@@ -43,6 +44,7 @@ fun Chats(
     val collapsingToolbarState = rememberCollapsingToolbarScaffoldState()
     val progress = collapsingToolbarState.toolbarState.progress
     val chatSearchState = chatViewModel.chatSearchTextFieldState.value
+    val chatState = chatViewModel.chatState.value
 
     CollapsingToolbarScaffold(
         modifier = Modifier.fillMaxSize(),
@@ -98,16 +100,14 @@ fun Chats(
                     textDecoration = TextDecoration.Underline,
                     textAlign = TextAlign.Start
                 )
-                LazyRow{
-                    items(5){
+                LazyRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically
+                ){
+                    items(chatState.followingsForChat){ followings ->
                         ChatFollowerList(
-                            userProfileUrl = painterResource(id = R.drawable.profile_pic),
-                            username = " Izuku Midoriya"
-                        )
-                        ChatFollowerList(
-                            userProfileUrl = painterResource(id = R.drawable.post_pic),
-                            username = " YUji Itadori",
-                            isOnline = false
+                            chatFollowings = followings
                         )
                     }
                 }

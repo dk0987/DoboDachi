@@ -3,6 +3,7 @@ package com.devdk.socialmedia.feature_chat.di
 import com.devdk.socialmedia.feature_chat.data.remote.ChatApi
 import com.devdk.socialmedia.feature_chat.data.repository.ChatRepositoryImpl
 import com.devdk.socialmedia.feature_chat.domain.repository.ChatRepository
+import com.devdk.socialmedia.feature_chat.domain.use_cases.GetFollowingsForChatUseCase
 import com.devdk.socialmedia.feature_chat.domain.use_cases.UserOfflineUseCase
 import com.devdk.socialmedia.feature_chat.domain.use_cases.UserOnlineUseCase
 import dagger.Module
@@ -45,6 +46,12 @@ object ChatModule {
     @Singleton
     fun provideUserOfflineUseCase(chatRepository: ChatRepository) : UserOfflineUseCase {
         return UserOfflineUseCase(chatRepository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideGetFollowingsForChatUseCase(chatRepository: ChatRepository) : GetFollowingsForChatUseCase {
+        return GetFollowingsForChatUseCase(chatRepository)
     }
 
 }

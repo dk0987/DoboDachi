@@ -12,22 +12,22 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberImagePainter
+import coil.size.OriginalSize
 import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
+import com.devdk.socialmedia.feature_chat.domain.modal.ChatFollowings
 
 @ExperimentalMaterialApi
 @Composable
 fun ChatFollowerList(
-    userProfileUrl : Painter,
-    username : String,
-    isOnline : Boolean = true,
+    chatFollowings: ChatFollowings ,
     elevation : Dp = 10.dp,
     onClick : () -> Unit = {},
     size : Dp = 50.dp,
@@ -37,8 +37,9 @@ fun ChatFollowerList(
         horizontalAlignment = Alignment.CenterHorizontally ,
         verticalArrangement = Arrangement.SpaceEvenly
     ) {
-        Box(modifier = Modifier
-            .fillMaxSize()
+        Box(
+            modifier = Modifier.fillMaxWidth() ,
+            contentAlignment = Alignment.CenterStart
         ){
             Card(
                 onClick = onClick,
@@ -46,7 +47,10 @@ fun ChatFollowerList(
                 elevation = elevation,
             ) {
                 Image(
-                    painter = userProfileUrl,
+                    painter = rememberImagePainter(data = chatFollowings.userProfileUrl , builder = {
+                        crossfade(true)
+                        size(OriginalSize)
+                    }),
                     contentDescription = stringResource(id = R.string.profile_pic),
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
@@ -55,7 +59,7 @@ fun ChatFollowerList(
                         .align(Alignment.Center)
                 )
             }
-            if (isOnline){
+            if (chatFollowings.isOnline){
                 Box(modifier = Modifier
                     .size(12.dp)
                     .clip(CircleShape)
@@ -66,7 +70,7 @@ fun ChatFollowerList(
         }
         Spacer(modifier = Modifier.height(5.dp))
         Text(
-            text = username,
+            text = chatFollowings.username,
             fontWeight = FontWeight.Normal,
             fontSize = 12.sp,
             color = primaryText,
