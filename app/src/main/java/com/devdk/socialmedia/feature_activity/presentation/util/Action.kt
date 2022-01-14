@@ -3,7 +3,7 @@ package com.devdk.socialmedia.feature_activity.presentation.util
 const val POST = "Post"
 const val COMMENT = "Comment"
 const val FOLLOWED_YOU = " followed you"
-const val COMMENTED_ON_POST = " commented on your post"
+const val COMMENTED_ON_POST = " commented on your "
 
 const val ACTION_FOLLOWED = 0
 const val ACTION_COMMENTED = 1

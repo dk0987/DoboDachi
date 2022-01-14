@@ -66,10 +66,9 @@ fun Activity(
                 .fillMaxWidth()
                 .fillMaxHeight(0.92f),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = if (paginatedActivity.activity.size > 5 || paginatedActivity.activity.isEmpty())Arrangement.Center else Arrangement.Top
+            verticalArrangement = if (paginatedActivity.activity.size < 5 || paginatedActivity.activity.isEmpty())Arrangement.Center else Arrangement.Top
         ){
             items(paginatedActivity.activity.size) { i ->
-
                 val activity = paginatedActivity.activity[i]
                 if ( i >= paginatedActivity.activity.size - 1 && !paginatedActivity.endReached && !paginatedActivity.isLoading){
                        activityViewModel.loadActivities()

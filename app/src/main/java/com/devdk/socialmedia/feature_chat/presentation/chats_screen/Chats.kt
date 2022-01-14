@@ -107,25 +107,23 @@ fun Chats(
                 ){
                     items(chatState.followingsForChat){ followings ->
                         ChatFollowerList(
-                            chatFollowings = followings
+                            chatFollowings = followings ,
+                            onClick = {
+                                navController.navigate(Routes.Messages.screen + "?remoteUserId=${followings.userId}")
+                            }
                         )
                     }
                 }
                 Spacer(modifier = Modifier.height(10.dp))
             }
-
-            items(20){
-                ChatList(
-                    senderProfilePic = painterResource(id = R.drawable.mhawallparer),
-                    receiverProfilePic = painterResource(id = R.drawable.profile_pic),
-                    username = "Yuji Itadori",
-                    isSeen = true,
-                    isTyping = false,
-                    lastMessage = "Hii bro how are you there saw your message today nice to se you are alive i am coming home soon ",
-                    onClick = {
-                        navController.navigate(Routes.Messages.screen)
-                    }
-                )
+            items(chatState.chats.size){ i ->
+                val chat = chatState.chats[i]
+                if (i >= chatState.chats.size - 1 && !chatState.endReached && !chatState.isLoading) {
+                    chatViewModel.loadNextChats()
+                }
+                ChatList(chat = chat , onClick = {
+                    navController.navigate(Routes.Messages.screen + "?remoteUserId=${chat.remoteUserId}&chatId=${chat.chatIds}")
+                })
             }
         }
     }

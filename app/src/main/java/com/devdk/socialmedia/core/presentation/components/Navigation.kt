@@ -1,4 +1,4 @@
-package com.devdk.socialmedia.core.presentation.util
+package com.devdk.socialmedia.core.presentation.components
 
 import android.content.Intent
 import androidx.compose.animation.ExperimentalAnimationApi
@@ -19,8 +19,9 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import coil.annotation.ExperimentalCoilApi
 import com.devdk.socialmedia.R
-import com.devdk.socialmedia.core.presentation.components.StandardScaffold
 import com.devdk.socialmedia.core.presentation.images_screen.Images
+import com.devdk.socialmedia.core.presentation.util.BottomNavigationItem
+import com.devdk.socialmedia.core.presentation.util.Routes
 import com.devdk.socialmedia.feature_activity.presentation.Activity
 import com.devdk.socialmedia.feature_auth.presentation.login_screen.Login
 import com.devdk.socialmedia.feature_auth.presentation.registration_screen.Register
@@ -103,7 +104,8 @@ fun Navigation() {
                 ){
                     Feed(navController = navController , scaffoldState = scaffoldState )
                 }
-                composable(Routes.AddPost.screen+ "?croppedImageUri={croppedImageUri}" ,
+                composable(
+                    Routes.AddPost.screen+ "?croppedImageUri={croppedImageUri}" ,
                     arguments = listOf(
                         navArgument("croppedImageUri") {
                             type = NavType.StringType
@@ -211,7 +213,17 @@ fun Navigation() {
                     Chats(navController = navController, scaffoldState = scaffoldState )
                 }
                 composable(
-                    route = Routes.Messages.screen
+                    route = Routes.Messages.screen ,
+                    arguments = listOf(
+                        navArgument("remoteUserId") {
+                            type = NavType.StringType
+                            defaultValue = ""
+                        },
+                        navArgument("chatId") {
+                            type = NavType.StringType
+                            defaultValue = ""
+                        },
+                )
                 ){
                     Message(navController = navController, scaffoldState = scaffoldState )
                 }

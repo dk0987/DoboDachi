@@ -23,22 +23,20 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberImagePainter
+import coil.size.OriginalSize
 import com.devdk.socialmedia.R
 import com.devdk.socialmedia.core.presentation.ui.theme.container
 import com.devdk.socialmedia.core.presentation.ui.theme.primaryText
+import com.devdk.socialmedia.feature_chat.domain.modal.Chat
 
 @ExperimentalMaterialApi
 @Composable
 fun ChatList(
-    senderProfilePic : Painter,
-    receiverProfilePic : Painter,
-    username : String ,
-    lastMessage : String ,
-    isTyping : Boolean = true ,
-    isSeen : Boolean = false ,
+    chat : Chat,
     senderProfilePicSize : Dp = 50.dp,
     receiverProfilePicSize : Dp = 20.dp,
-    elevation : Dp = 10.dp ,
+    elevation : Dp = 10.dp,
     background : Color = container,
     textColor : Color = primaryText,
     roundedCornerShape : Dp = 15.dp,
@@ -67,7 +65,12 @@ fun ChatList(
                 verticalAlignment = CenterVertically
             ) {
                 Image(
-                    painter = senderProfilePic,
+                    painter = rememberImagePainter(
+                        data = chat.remoteUserUserProfileUrl,
+                        builder = {
+                            size(OriginalSize)
+                            crossfade(true)
+                        }),
                     contentDescription = stringResource(id = R.string.sender_profile_pic),
                     modifier = Modifier
                         .size(senderProfilePicSize)
@@ -77,7 +80,7 @@ fun ChatList(
                 Spacer(modifier = Modifier.width(10.dp))
                 Column(horizontalAlignment = Alignment.Start , modifier = Modifier.fillMaxWidth(0.76f)) {
                     Text(
-                        text = username,
+                        text = chat.remoteUserUsername,
                         fontSize = 18.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = textColor,
@@ -87,7 +90,7 @@ fun ChatList(
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
-                        text = lastMessage,
+                        text = chat.lastMessage,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.Normal,
                         color = textColor,
@@ -101,9 +104,12 @@ fun ChatList(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier.offset(y = chatCardSize - senderProfilePicSize)
             ) {
-                if (isSeen){
+                if (false){
                     Image(
-                        painter = receiverProfilePic,
+                        painter = rememberImagePainter(data = "", builder = {
+                            crossfade(true)
+                            size(OriginalSize)
+                        }),
                         contentDescription = stringResource(id = R.string.sender_profile_pic),
                         modifier = Modifier
                             .size(receiverProfilePicSize)
@@ -111,7 +117,7 @@ fun ChatList(
                         contentScale = ContentScale.Crop ,
                     )
                 }
-                if (isTyping){
+                if (false){
                     Text(
                         text = "Typing...",
                         fontSize = 12.sp,

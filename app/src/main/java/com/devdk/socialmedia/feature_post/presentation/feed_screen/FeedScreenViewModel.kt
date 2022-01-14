@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.devdk.socialmedia.core.domain.use_case.LikeUseCase
 import com.devdk.socialmedia.core.presentation.util.MenuItems
 import com.devdk.socialmedia.core.util.*
+import com.devdk.socialmedia.feature_chat.domain.use_cases.UserOnlineUseCase
 import com.devdk.socialmedia.feature_post.domain.useCases.PostUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -19,6 +20,7 @@ import javax.inject.Inject
 class FeedScreenViewModel @Inject constructor(
     private val likeUseCase: LikeUseCase,
     private val postUseCases: PostUseCases,
+    private val userOnlineUseCase: UserOnlineUseCase ,
     sharedPreferences: SharedPreferences
 ): ViewModel() {
 
@@ -59,6 +61,9 @@ class FeedScreenViewModel @Inject constructor(
     init {
         getProfilePic()
         loadMorePost()
+        viewModelScope.launch {
+            userOnlineUseCase()
+        }
     }
 
     fun onEvent(event : FeedScreenEvents) {

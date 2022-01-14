@@ -15,7 +15,6 @@ import javax.inject.Inject
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val authenticateUseCase: AuthenticateUseCase ,
-    private val userOnlineUseCase: UserOnlineUseCase
 ) : ViewModel()
 {
     private val _eventFlow = MutableSharedFlow<UiEvent>()
@@ -28,7 +27,6 @@ class SplashViewModel @Inject constructor(
     private fun authenticate(){
         viewModelScope.launch {
             val authenticated = authenticateUseCase()
-            userOnlineUseCase()
             if (authenticated){
                 _eventFlow.emit(
                     UiEvent.Navigate(Routes.Feed.screen , null)

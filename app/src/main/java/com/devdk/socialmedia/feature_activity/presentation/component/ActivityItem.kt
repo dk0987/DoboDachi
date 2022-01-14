@@ -37,7 +37,7 @@ fun ActivityItem(
     elevation : Dp = 10.dp,
     roundedCornerShape : Dp = 15.dp,
     onProfilePic : () -> Unit = {},
-    profile_pic_size : Dp = 45.dp,
+    profile_pic_size : Dp = 35.dp,
     OnClick : () -> Unit = {},
     onPostText : () -> Unit = {} ,
     onCommentText : () -> Unit = {},
@@ -76,7 +76,7 @@ fun ActivityItem(
             Text(
                 text = activity.username,
                 color = primaryText,
-                fontSize = 17.sp,
+                fontSize = 12.sp,
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier
                     .clickable(
@@ -88,16 +88,25 @@ fun ActivityItem(
                     Text(
                         text = action.actionText ,
                         color = primaryText,
-                        fontSize = 16.sp,
+                        fontSize = 11.sp,
                         fontWeight = FontWeight.Light,
                     )
                 }
                 is Action.Comment -> {
                     Text(
-                        text = action.actionText ,
+                        text = action.actionText.substringBefore(POST) ,
                         color = primaryText,
-                        fontSize = 16.sp,
+                        fontSize = 11.sp,
                         fontWeight = FontWeight.Light,
+                    )
+                    Text(
+                        text = POST,
+                        color = primaryText,
+                        fontSize = 11.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.clickable(
+                            onClick = onCommentText
+                        )
                     )
                 }
                 is Action.Liked -> {
@@ -107,13 +116,13 @@ fun ActivityItem(
                                 Text(
                                     text = action.actionText.substringBefore(POST) ,
                                     color = primaryText,
-                                    fontSize = 16.sp,
+                                    fontSize = 11.sp,
                                     fontWeight = FontWeight.Light,
                                 )
                                 Text(
                                     text = POST,
                                     color = primaryText,
-                                    fontSize = 16.sp,
+                                    fontSize = 11.sp,
                                     fontWeight = FontWeight.SemiBold,
                                     modifier = Modifier.clickable(
                                         onClick = onPostText
@@ -125,13 +134,13 @@ fun ActivityItem(
                                 Text(
                                     text = action.actionText.substringBefore(COMMENT) ,
                                     color = primaryText,
-                                    fontSize = 16.sp,
+                                    fontSize = 11.sp,
                                     fontWeight = FontWeight.Light,
                                 )
                                 Text(
                                     text = COMMENT,
                                     color = primaryText,
-                                    fontSize = 16.sp,
+                                    fontSize = 11.sp,
                                     fontWeight = FontWeight.SemiBold,
                                     modifier = Modifier.clickable(
                                         onClick = onCommentText

@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -45,6 +46,8 @@ fun Message(
     messageViewModel: MessageViewModel = hiltViewModel()
 ) {
     val messageTextState = messageViewModel.messageTextFieldState.value
+    val messageState = messageViewModel.messageState.value
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -136,9 +139,17 @@ fun Message(
                 .fillMaxWidth()
                 .fillMaxHeight(0.91f)
         ){
-            items(20){
-                OwnerChatBubble(message = "This complete implementation, including UI, logic, and a connection to a real server is roughly 250 lines of code in total. Almost all of this is UI code with Jetpack Compose, the integration with Stream Chat's ViewModels and Views is just a small fraction of it.", timeStamp = 0)
-                RemoteChatBubble(message = "Hii", timeStamp = 0)
+            items(messageState.messages.size){ i ->
+                val message = messageState.messages[i]
+                if (i >= messageState.messages.size - 1 && !messageState.endReached && !messageState.isLoading) {
+                    messageViewModel.loadNextMessages()
+                }
+                if (message.userId == messageViewModel.toUserID){
+                    RemoteChatBubble(message = message.message, timeStamp = message.timeStamp)
+                }
+                else {
+                    OwnerChatBubble(message = message.message, timeStamp = message.timeStamp)
+                }
             }
         }
         Box(modifier = Modifier
@@ -155,7 +166,10 @@ fun Message(
                     messageViewModel.onEvent(MessageEvents.Message(it))
                 },
                 trailingIcon = Icons.Outlined.Send,
-                roundedCornerShape = 25.dp
+                roundedCornerShape = 25.dp,
+                onTrailingIcon = {
+                    messageViewModel.onEvent(MessageEvents.SendMessage)
+                }
             )
         }
 

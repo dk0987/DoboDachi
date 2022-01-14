@@ -3,9 +3,7 @@ package com.devdk.socialmedia.feature_chat.di
 import com.devdk.socialmedia.feature_chat.data.remote.ChatApi
 import com.devdk.socialmedia.feature_chat.data.repository.ChatRepositoryImpl
 import com.devdk.socialmedia.feature_chat.domain.repository.ChatRepository
-import com.devdk.socialmedia.feature_chat.domain.use_cases.GetFollowingsForChatUseCase
-import com.devdk.socialmedia.feature_chat.domain.use_cases.UserOfflineUseCase
-import com.devdk.socialmedia.feature_chat.domain.use_cases.UserOnlineUseCase
+import com.devdk.socialmedia.feature_chat.domain.use_cases.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -32,26 +30,24 @@ object ChatModule {
 
     @Provides
     @Singleton
-    fun provideChatRepository(api: ChatApi) : ChatRepository {
-        return ChatRepositoryImpl(api)
+    fun provideChatRepository(api: ChatApi , okHttpClient: OkHttpClient) : ChatRepository {
+        return ChatRepositoryImpl(api , okHttpClient)
     }
 
     @Provides
     @Singleton
-    fun provideUserOnlineUseCase(chatRepository: ChatRepository) : UserOnlineUseCase {
-        return UserOnlineUseCase(chatRepository)
-    }
-
-    @Provides
-    @Singleton
-    fun provideUserOfflineUseCase(chatRepository: ChatRepository) : UserOfflineUseCase {
-        return UserOfflineUseCase(chatRepository)
-    }
-
-    @Provides
-    @Singleton
-    fun provideGetFollowingsForChatUseCase(chatRepository: ChatRepository) : GetFollowingsForChatUseCase {
-        return GetFollowingsForChatUseCase(chatRepository)
+    fun provideChatUseCase(chatRepository: ChatRepository) : ChatsUseCases {
+        return ChatsUseCases(
+            getChatsUseCase = GetChatsUseCase(chatRepository),
+            getFollowingsForChatUseCase = GetFollowingsForChatUseCase(chatRepository),
+            getMessageUseCase = GetMessageUseCase(chatRepository),
+            initializeRepositoryUseCase = InitializeRepositoryUseCase(chatRepository),
+            observeChatEventsUseCase = ObserveChatEventsUseCase(chatRepository),
+            observeMessageUseCase = ObserveMessageUseCase(chatRepository),
+            sendMessageUseCase = SendMessageUseCase(chatRepository),
+            userOnlineUseCase = UserOnlineUseCase(chatRepository),
+            userOfflineUseCase = UserOfflineUseCase(chatRepository)
+        )
     }
 
 }
