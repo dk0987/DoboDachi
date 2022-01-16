@@ -9,6 +9,7 @@ import androidx.compose.material.ExperimentalMaterialApi
 import coil.annotation.ExperimentalCoilApi
 import com.devdk.socialmedia.core.presentation.ui.theme.SocialMediaTheme
 import com.devdk.socialmedia.core.presentation.components.Navigation
+import com.devdk.socialmedia.feature_chat.domain.use_cases.ChatsUseCases
 import com.devdk.socialmedia.feature_chat.domain.use_cases.UserOfflineUseCase
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,7 +26,7 @@ import javax.inject.Inject
 class MainActivity : ComponentActivity() {
 
     @Inject
-    lateinit var offlineUseCase: UserOfflineUseCase
+    lateinit var chatsUseCases: ChatsUseCases
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +40,7 @@ class MainActivity : ComponentActivity() {
     override fun onStop() {
         super.onStop()
         GlobalScope.launch {
-            offlineUseCase()
+            chatsUseCases.userOfflineUseCase()
         }
     }
 }

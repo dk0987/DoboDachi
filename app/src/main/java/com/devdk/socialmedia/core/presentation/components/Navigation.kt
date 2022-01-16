@@ -213,7 +213,7 @@ fun Navigation() {
                     Chats(navController = navController, scaffoldState = scaffoldState )
                 }
                 composable(
-                    route = Routes.Messages.screen ,
+                    route = Routes.Messages.screen + "?remoteUserId={remoteUserId}&chatId={chatId}" ,
                     arguments = listOf(
                         navArgument("remoteUserId") {
                             type = NavType.StringType

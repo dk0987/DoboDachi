@@ -37,6 +37,7 @@ class MessageViewModel @Inject constructor(
 
     val toUserID = savedStateHandle.get<String>("remoteUserId")!!
 
+
     private val pagination = DefaultPagination<Message>(
         onLoadUpdate = { isLoading ->
             _messageState.value = messageState.value.copy(
@@ -44,7 +45,8 @@ class MessageViewModel @Inject constructor(
             )
         } ,
         onRequest = { page ->
-            savedStateHandle.get<String>("chatID")?.let { chatId ->
+            savedStateHandle.get<String>("chatId")?.let { chatId ->
+                println("ChatIds $chatId")
                 chatsUseCases.getMessageUseCase(page = page , chatId = chatId )
             } ?: Resource.Error("")
         } ,

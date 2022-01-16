@@ -45,6 +45,8 @@ fun Chats(
     val progress = collapsingToolbarState.toolbarState.progress
     val chatSearchState = chatViewModel.chatSearchTextFieldState.value
     val chatState = chatViewModel.chatState.value
+    var chatIDs = ""
+
 
     CollapsingToolbarScaffold(
         modifier = Modifier.fillMaxSize(),
@@ -122,7 +124,11 @@ fun Chats(
                     chatViewModel.loadNextChats()
                 }
                 ChatList(chat = chat , onClick = {
-                    navController.navigate(Routes.Messages.screen + "?remoteUserId=${chat.remoteUserId}&chatId=${chat.chatIds}")
+                    chat.chatIds.forEach{ ids ->
+                        chatIDs += ids
+                    }
+                    println("ChatIds $chatIDs")
+                    navController.navigate(Routes.Messages.screen + "?remoteUserId=${chat.remoteUserId}&chatId=${chatIDs}")
                 })
             }
         }

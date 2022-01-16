@@ -20,7 +20,7 @@ object ScarletInstance {
             .addMessageAdapterFactory(CustomGsonAdapter.Factory(Gson()))
             .addStreamAdapterFactory(CoroutinesStreamAdapterFactory())
             .webSocketFactory(
-                client.newWebSocketFactory("ws://192.168.161.141:8080/api/chat/webSocket")
+                client.newWebSocketFactory("ws://192.168.197.141:8080/api/chat/webSocket")
             )
             .backoffStrategy(LinearBackoffStrategy(Const.RECONNECT_INTERVAL))
             .build()
@@ -30,3 +30,4 @@ object ScarletInstance {
             }
     }
 }
+

@@ -20,7 +20,6 @@ import javax.inject.Inject
 class FeedScreenViewModel @Inject constructor(
     private val likeUseCase: LikeUseCase,
     private val postUseCases: PostUseCases,
-    private val userOnlineUseCase: UserOnlineUseCase ,
     sharedPreferences: SharedPreferences
 ): ViewModel() {
 
@@ -61,9 +60,6 @@ class FeedScreenViewModel @Inject constructor(
     init {
         getProfilePic()
         loadMorePost()
-        viewModelScope.launch {
-            userOnlineUseCase()
-        }
     }
 
     fun onEvent(event : FeedScreenEvents) {
